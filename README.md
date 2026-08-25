@@ -78,3 +78,4 @@ npm run preview
 
 ---
 © 2026 TagSkills. All rights reserved.
+# sap-copilot-platform

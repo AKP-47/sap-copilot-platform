@@ -130,53 +130,53 @@ export const Footer: React.FC = () => {
             <div className="space-y-3">
               <div>
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded border border-blue-800">
-                  STUDENT COUNSELING & SUPPORT
+                  STUDENT COUNSELING & SUPPORT TEAM
                 </span>
                 <h4 className="text-base font-extrabold text-white mt-1 flex items-center">
                   <Headphones className="w-4 h-4 mr-1.5 text-blue-400" />
                   <span>NEED ASSISTANCE?</span>
                 </h4>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Contact us for assistance. You can call or WhatsApp us.
+                  Contact our counseling team for assistance. You can call or WhatsApp us directly.
                 </p>
               </div>
 
-              {/* 3 Contact Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {/* 4 Contact Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {ASSISTANCE_CONTACTS.map((contact) => (
                   <div
                     key={contact.id}
-                    className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-3 flex flex-col justify-between hover:border-slate-700 transition-all shadow-sm"
+                    className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2.5 flex flex-col justify-between hover:border-slate-700 transition-all shadow-sm"
                   >
                     <div className="space-y-1">
-                      <h5 className="text-sm font-bold text-white">
+                      <h5 className="text-xs sm:text-sm font-bold text-white leading-snug">
                         {contact.name}
                       </h5>
-                      <p className="text-[11px] text-slate-400 leading-tight">
+                      <p className="text-[10px] text-slate-400 leading-tight">
                         {contact.role}
                       </p>
-                      <div className="pt-1.5 text-xs font-mono font-bold text-slate-200 flex items-center">
+                      <div className="pt-1 text-[11px] font-mono font-bold text-slate-200 flex items-center">
                         <Phone className="w-3 h-3 text-blue-400 mr-1 shrink-0" />
                         <span>{contact.phone}</span>
                       </div>
                     </div>
 
                     {/* Call & WhatsApp Action Buttons */}
-                    <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-slate-800">
+                    <div className="grid grid-cols-2 gap-1 pt-1 border-t border-slate-800">
                       <a
                         href={contact.callLink}
-                        className="flex items-center justify-center space-x-1 py-1.5 px-2 text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center"
+                        className="flex items-center justify-center space-x-1 py-1.5 px-1.5 text-[10px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center"
                       >
-                        <Phone className="w-3 h-3 shrink-0" />
+                        <Phone className="w-2.5 h-2.5 shrink-0" />
                         <span>Call</span>
                       </a>
                       <a
                         href={contact.whatsappLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center space-x-1 py-1.5 px-2 text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors text-center"
+                        className="flex items-center justify-center space-x-1 py-1.5 px-1.5 text-[10px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors text-center"
                       >
-                        <MessageSquare className="w-3 h-3 shrink-0" />
+                        <MessageSquare className="w-2.5 h-2.5 shrink-0" />
                         <span>WhatsApp</span>
                       </a>
                     </div>

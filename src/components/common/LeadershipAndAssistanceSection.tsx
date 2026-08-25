@@ -1,5 +1,5 @@
 import React from "react";
-import { Phone, MessageSquare, Quote, Sparkles, UserCheck, GraduationCap, Headphones } from "lucide-react";
+import { Phone, MessageSquare, Quote, Sparkles, UserCheck, Headphones } from "lucide-react";
 import { LEADERSHIP_PROFILE, ASSISTANCE_CONTACTS } from "../../data/contacts";
 
 export const LeadershipAndAssistanceSection: React.FC<{ isCompact?: boolean }> = ({ isCompact = false }) => {
@@ -118,7 +118,7 @@ export const LeadershipAndAssistanceSection: React.FC<{ isCompact?: boolean }> =
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                SUPPORT & ADMISSIONS
+                SUPPORT & ADMISSIONS TEAM
               </span>
             </div>
             <h2 className="text-2xl font-extrabold text-slate-900 mt-1 flex items-center">
@@ -126,7 +126,7 @@ export const LeadershipAndAssistanceSection: React.FC<{ isCompact?: boolean }> =
               <span>NEED ASSISTANCE?</span>
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
-              Contact us for assistance. You can call or WhatsApp us.
+              Contact our counseling team for assistance. You can call or WhatsApp us directly.
             </p>
           </div>
 
@@ -136,52 +136,58 @@ export const LeadershipAndAssistanceSection: React.FC<{ isCompact?: boolean }> =
           </div>
         </div>
 
-        {/* 3 Contact Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* 4 Contact Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {ASSISTANCE_CONTACTS.map((contact) => (
             <div
               key={contact.id}
-              className="bg-slate-50 hover:bg-white p-5 rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
+              className="bg-slate-50 hover:bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                    {contact.role.includes("Marketing") ? "Marketing & Community" : "Admissions & Counseling"}
+                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
+                    contact.name.includes("Priyanka")
+                      ? "text-red-700 bg-red-50 border-red-200"
+                      : contact.role.includes("Marketing")
+                      ? "text-teal-700 bg-teal-50 border-teal-200"
+                      : "text-blue-700 bg-blue-50 border-blue-200"
+                  }`}>
+                    {contact.role.includes("Senior") ? "Senior Management" : contact.role.includes("Marketing") ? "Marketing" : "Admissions"}
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" title="Online" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" title="Available" />
                 </div>
 
                 <div>
-                  <h4 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
                     {contact.name}
                   </h4>
-                  <p className="text-xs text-slate-600 font-medium">
+                  <p className="text-[11px] text-slate-600 font-medium leading-tight">
                     {contact.role}
                   </p>
                 </div>
 
-                <div className="pt-2 text-xs sm:text-sm font-mono font-bold text-slate-800 flex items-center">
+                <div className="pt-2 text-xs font-mono font-bold text-slate-800 flex items-center">
                   <Phone className="w-3.5 h-3.5 text-blue-600 mr-1.5 shrink-0" />
                   <span>{contact.phone}</span>
                 </div>
               </div>
 
               {/* Functional [ Call ] and [ WhatsApp ] Action Buttons */}
-              <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-200/80">
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/80">
                 <a
                   href={contact.callLink}
-                  className="flex items-center justify-center space-x-1.5 py-2 px-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-sm transition-all text-center"
+                  className="flex items-center justify-center space-x-1 py-2 px-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-sm transition-all text-center"
                 >
-                  <Phone className="w-3.5 h-3.5 shrink-0" />
+                  <Phone className="w-3 h-3 shrink-0" />
                   <span>☎ Call</span>
                 </a>
                 <a
                   href={contact.whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center space-x-1.5 py-2 px-3 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-sm transition-all text-center"
+                  className="flex items-center justify-center space-x-1 py-2 px-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-sm transition-all text-center"
                 >
-                  <MessageSquare className="w-3.5 h-3.5 shrink-0" />
+                  <MessageSquare className="w-3 h-3 shrink-0" />
                   <span>WhatsApp</span>
                 </a>
               </div>

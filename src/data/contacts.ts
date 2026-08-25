@@ -11,6 +11,16 @@ export const LEADERSHIP_PROFILE: LeadershipProfile = {
 
 export const ASSISTANCE_CONTACTS: AssistanceContact[] = [
   {
+    id: "contact-priyanka",
+    name: "Priyanka Bajoria",
+    role: "Senior Business Development Management",
+    phone: "+91 73280 71375",
+    callLink: "tel:+917328071375",
+    whatsappLink: "https://wa.me/917328071375",
+    email: "priyanka@tagskills.com",
+    avatarBg: "bg-gradient-to-br from-red-600 to-orange-600"
+  },
+  {
     id: "contact-vinanthi",
     name: "Vinanthi Kotian",
     role: "Business Development Manager",
@@ -46,7 +56,7 @@ export const TAGSKILLS_INSTITUTE_INFO = {
   name: "TagSkills",
   tagline: "Enterprise SAP Academy & Career Accelerator",
   websiteUrl: "https://www.tagskills.com",
-  contactNumber: "+91 70229 71079",
+  contactNumber: "+91 73280 71375",
   email: "support@tagskills.com",
   headquarters: "Bengaluru, Karnataka, India",
   mission: "Learn. Practice. Prepare. Become Job-Ready.",

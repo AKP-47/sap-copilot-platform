@@ -10,7 +10,7 @@ export const AssistanceModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200 max-h-[92vh] flex flex-col">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200 max-h-[92vh] flex flex-col">
         
         {/* Modal Header */}
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-5 sm:p-6 relative shrink-0">
@@ -125,19 +125,32 @@ export const AssistanceModal: React.FC = () => {
                 <span>NEED ASSISTANCE?</span>
               </h3>
               <p className="text-xs text-slate-600 mt-0.5">
-                Contact us for assistance. You can call or WhatsApp us.
+                Contact our admissions and counseling team for guidance. You can call or WhatsApp us directly.
               </p>
             </div>
 
-            {/* 3 Contact Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {/* 4 Contact Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {ASSISTANCE_CONTACTS.map((contact) => (
                 <div
                   key={contact.id}
-                  className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-3 flex flex-col justify-between hover:border-blue-400 transition-all shadow-sm"
+                  className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 flex flex-col justify-between hover:border-blue-400 transition-all shadow-sm"
                 >
                   <div className="space-y-1">
-                    <h5 className="text-sm font-bold text-slate-900">
+                    <div className="flex items-center justify-between">
+                      <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
+                        contact.name.includes("Priyanka")
+                          ? "text-red-700 bg-red-50 border-red-200"
+                          : contact.role.includes("Marketing")
+                          ? "text-teal-700 bg-teal-50 border-teal-200"
+                          : "text-blue-700 bg-blue-50 border-blue-200"
+                      }`}>
+                        {contact.role.includes("Senior") ? "Senior Management" : contact.role.includes("Marketing") ? "Marketing" : "Admissions"}
+                      </span>
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" title="Online" />
+                    </div>
+
+                    <h5 className="text-sm sm:text-base font-bold text-slate-900">
                       {contact.name}
                     </h5>
                     <p className="text-[11px] text-slate-600 font-medium leading-tight">
@@ -150,19 +163,19 @@ export const AssistanceModal: React.FC = () => {
                   </div>
 
                   {/* Call & WhatsApp Action Buttons */}
-                  <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-slate-200">
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
                     <a
                       href={contact.callLink}
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2 text-[11px] font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center"
+                      className="flex items-center justify-center space-x-1 py-2 px-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors text-center"
                     >
                       <Phone className="w-3 h-3 shrink-0" />
-                      <span>Call</span>
+                      <span>☎ Call</span>
                     </a>
                     <a
                       href={contact.whatsappLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2 text-[11px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors text-center"
+                      className="flex items-center justify-center space-x-1 py-2 px-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors text-center"
                     >
                       <MessageSquare className="w-3 h-3 shrink-0" />
                       <span>WhatsApp</span>

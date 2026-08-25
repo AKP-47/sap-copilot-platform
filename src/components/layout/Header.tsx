@@ -1,19 +1,16 @@
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { SupportedLanguage } from "../../data/translations";
-import { Search, Globe, Award, Sparkles, HelpCircle, BookOpen, Layers } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { LearningLevel } from "../../types/sap";
 
 export const Header: React.FC = () => {
   const { 
-    currentView, 
-    setCurrentView, 
     learningLevel, 
     setLearningLevel, 
     language, 
     setLanguage, 
     setIsSearchOpen, 
-    setIsAssistanceOpen,
     setIsCopilotOpen,
     setIsWelcomeOpen,
     t 
@@ -39,33 +36,35 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
-          <div className="flex items-center space-x-3">
-            <button 
-              onClick={() => setCurrentView("dashboard")} 
-              className="flex items-center focus:outline-none group"
-              title="TagSkills - Return to Dashboard"
+        <div className="flex items-center justify-between h-16 gap-4">
+          
+          {/* Logo & Institute Branding (Top-Left) */}
+          <div className="flex items-center space-x-3 shrink-0">
+            <button
+              onClick={() => setIsWelcomeOpen(true)}
+              className="flex items-center space-x-2.5 p-1 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none"
+              title="TagSkills Official Institute – Click for Institute Overview"
             >
               <img 
                 src="/tagskills-logo.jpg" 
                 alt="TagSkills Official Institute Logo" 
-                className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+                className="h-8 w-auto object-contain" 
               />
+              <div className="hidden lg:block text-left pl-1 border-l border-slate-200">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block leading-none">
+                  Official Institute
+                </span>
+                <span className="text-xs font-extrabold text-slate-900 tracking-tight leading-tight">
+                  TagSkills Academy
+                </span>
+              </div>
             </button>
-            <div className="hidden md:block h-6 w-px bg-slate-300 mx-2" />
-            <div className="hidden md:flex flex-col">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Enterprise Academy</span>
-              <span className="text-sm font-bold text-slate-800 flex items-center">
-                SAP Copilot <span className="ml-1.5 px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-800 rounded font-semibold">MM & EWM</span>
-              </span>
-            </div>
           </div>
 
-          {/* Search Trigger */}
-          <div className="flex-1 max-w-md mx-4 hidden lg:block">
+          {/* Global Search Bar (Center) */}
+          <div className="flex-1 max-w-xl mx-2">
             <button
               onClick={() => setIsSearchOpen(true)}
               className="w-full flex items-center justify-between px-3.5 py-1.5 text-sm text-slate-500 bg-slate-100 hover:bg-slate-200/80 rounded-lg border border-slate-200 transition-colors"
@@ -80,7 +79,7 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Controls: Level Selector, Language, Assistance, AI Copilot */}
+          {/* Controls: Level Selector, Language, AI Copilot */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Level Selector */}
             <div className="relative hidden sm:block">
@@ -112,16 +111,6 @@ export const Header: React.FC = () => {
                 ))}
               </select>
             </div>
-
-            {/* Assistance Button */}
-            <button
-              onClick={() => setIsAssistanceOpen(true)}
-              className="flex items-center text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-700 px-3 py-1.5 rounded-lg border border-red-200 transition-colors shadow-sm"
-              title="Get direct mentor & admission assistance"
-            >
-              <HelpCircle className="w-3.5 h-3.5 mr-1 text-red-600 animate-pulse" />
-              <span className="hidden md:inline">Assistance</span>
-            </button>
 
             {/* AI Copilot Drawer Trigger */}
             <button

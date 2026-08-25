@@ -1,3 +1,4 @@
+import { PageHeader } from "../common/PageHeader";
 import React, { useState } from "react";
 import { MOVEMENT_TYPES } from "../../data/movementTypes";
 import { RotateCw, Search, ArrowRight, CheckCircle2, DollarSign, Layers, Factory, AlertTriangle } from "lucide-react";
@@ -22,25 +23,23 @@ export const MovementTypeLab: React.FC = () => {
   return (
     <div className="space-y-6 pb-12">
       
-      {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 rounded-2xl p-6 border border-emerald-200">
-        <div className="flex items-center space-x-3 mb-2">
-          <div className="p-2.5 bg-emerald-600 text-white rounded-xl shadow-sm">
-            <RotateCw className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
-              Interactive Lab & Accounting Workbench
-            </span>
-            <h1 className="text-2xl font-extrabold text-slate-900">
-              SAP MM Movement Type Lab
-            </h1>
-          </div>
-        </div>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-3xl leading-relaxed">
-          Search 40+ Movement Types, visualize the physical process flow, inspect real-time Debit/Credit accounting ledgers, and solve multi-industry scenario challenges across Automotive, Pharma, Aerospace, and Food manufacturing.
-        </p>
-      </div>
+      {/* Standardized Page Header */}
+      <PageHeader
+        badge="Interactive Accounting & Process Lab"
+        badgeColor="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+        title="SAP MM Movement Type Lab (40+ Types)"
+        description="Search 40+ Movement Types, visualize physical material flows, inspect real-time Debit/Credit ledger postings (BSX, WRX, GBB), and solve multi-industry challenges across Automotive, Food, Aerospace, and Pharma."
+        breadcrumbs={[
+          { label: "Practice & Labs", view: "movement_lab" },
+          { label: "Movement Type Lab" }
+        ]}
+        learningOutcomes={[
+          "Goods Receipts (101, 103, 105, 501, 561)",
+          "Goods Issues (201 Cost Center, 261 Prod Order, 551 Scrap)",
+          "Stock Transfers (301 Plant-to-Plant, 311 SLoc-to-SLoc, 321 QA)",
+          "Real-time Debit / Credit T-Account Postings"
+        ]}
+      />
 
       {/* Main Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

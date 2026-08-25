@@ -1,3 +1,4 @@
+import { PageHeader } from "../common/PageHeader";
 import React, { useState } from "react";
 import { TCODES_DATA } from "../../data/tcodes";
 import { Terminal, Search, ArrowRight, Table, Layers } from "lucide-react";
@@ -21,25 +22,23 @@ export const TCodeExplorer: React.FC = () => {
   return (
     <div className="space-y-6 pb-12">
       
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500/10 via-blue-500/10 to-indigo-500/10 rounded-2xl p-6 border border-indigo-200">
-        <div className="flex items-center space-x-3 mb-2">
-          <div className="p-2.5 bg-indigo-600 text-white rounded-xl shadow-sm">
-            <Terminal className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-800">
-              Interactive Catalog & Process Mapping
-            </span>
-            <h1 className="text-2xl font-extrabold text-slate-900">
-              SAP MM & EWM T-Code & Fiori App Explorer
-            </h1>
-          </div>
-        </div>
-        <p className="text-xs sm:text-sm text-slate-600 max-w-3xl leading-relaxed">
-          Search and master SAP Transaction Codes and modern Fiori Apps in real business contexts. Understand required inputs, expected outputs, tables updated, and interview questions.
-        </p>
-      </div>
+      {/* Standardized Page Header */}
+      <PageHeader
+        badge="Enterprise Transaction Catalog"
+        badgeColor="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+        title="SAP MM & EWM T-Code & Fiori Explorer"
+        description="Search and master 100+ SAP Transaction Codes and modern Fiori Apps in live business contexts. Inspect required input fields, table updates (EKKO, MARC, /SCWM/AQUA), and consultant interview tips."
+        breadcrumbs={[
+          { label: "Practice & Labs", view: "tcodes" },
+          { label: "T-Code & Fiori Explorer" }
+        ]}
+        learningOutcomes={[
+          "MM Master Data & Sourcing (MM01, BP, ME21N)",
+          "Inventory & Invoicing (MIGO, MIRO, MB5B, MI01)",
+          "EWM Warehouse Execution (/SCWM/PRDI, /SCWM/MON, /SCWM/RFUI)",
+          "Database Tables & Mandatory User Parameters"
+        ]}
+      />
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

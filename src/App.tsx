@@ -4,6 +4,7 @@ import { AiProvider } from "./context/AiContext";
 import { Header } from "./components/layout/Header";
 import { Sidebar } from "./components/layout/Sidebar";
 import { Footer } from "./components/layout/Footer";
+import { MobileNavBar } from "./components/layout/MobileNavBar";
 import { AssistanceModal } from "./components/layout/AssistanceModal";
 import { WelcomeScreen } from "./components/layout/WelcomeScreen";
 import { SearchModal } from "./components/common/SearchModal";
@@ -83,23 +84,26 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200 pb-16 md:pb-0">
       {/* Top Navigation */}
       <Header />
 
       {/* Main Layout Body */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 flex max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8">
         {/* Sidebar */}
         <Sidebar />
 
         {/* View Main Content */}
-        <main className="flex-1 min-w-0 py-6 px-4 sm:px-6 lg:px-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 py-5 sm:py-6 px-2 sm:px-6 lg:px-8 overflow-y-auto">
           {renderCurrentView()}
         </main>
       </div>
 
       {/* Global Footer */}
       <Footer />
+
+      {/* Mobile Bottom Navigation Bar */}
+      <MobileNavBar />
 
       {/* Overlays & Modals */}
       <AssistanceModal />

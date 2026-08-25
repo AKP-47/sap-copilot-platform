@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "../common/Breadcrumbs";
 import React, { useState } from "react";
 import { useSap } from "../../context/SapContext";
 import { SapTopic, IndustryKey } from "../../types/sap";
@@ -53,8 +54,15 @@ export const TopicDetailView: React.FC<{ topic: SapTopic; onBack: () => void }> 
   return (
     <div className="space-y-6 pb-12">
       
-      {/* Top Header Bar */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+      {/* Top Header Bar with Standardized Breadcrumbs */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+        <Breadcrumbs items={[
+          { label: "Learn SAP", view: topic.module === "MM" ? "mm" : "ewm" },
+          { label: topic.module === "MM" ? "SAP MM" : "SAP EWM", view: topic.module === "MM" ? "mm" : "ewm" },
+          { label: topic.category },
+          { label: topic.title }
+        ]} />
+
         <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             onClick={onBack}

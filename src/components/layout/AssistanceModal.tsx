@@ -41,9 +41,9 @@ export const AssistanceModal: React.FC = () => {
         <div className="p-5 sm:p-6 space-y-6 overflow-y-auto">
           
           {/* ============================================================ */}
-          {/* SECTION 1 — LEADERSHIP & MENTORSHIP                          */}
+          {/* SECTION 1 — LEADERSHIP & MENTORSHIP (No Image)               */}
           {/* ============================================================ */}
-          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white rounded-2xl p-5 sm:p-6 border border-slate-700 shadow-md space-y-4">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white rounded-2xl p-5 sm:p-6 border border-slate-700 shadow-md space-y-4">
             
             <div className="flex items-center justify-between border-b border-slate-700/60 pb-3">
               <div>
@@ -57,24 +57,19 @@ export const AssistanceModal: React.FC = () => {
               </div>
             </div>
 
-            {/* CEO Profile Layout */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5">
-              
-              {/* Prashun Shetty Image */}
-              <div className="w-36 sm:w-44 shrink-0">
-                <div className="rounded-xl overflow-hidden border-2 border-amber-400/50 shadow-lg bg-slate-900">
-                  <img
-                    src={LEADERSHIP_PROFILE.image}
-                    alt="Prashun Shetty – Founder & CEO, TagSkills"
-                    className="w-full h-auto object-cover rounded-lg"
-                  />
-                </div>
-              </div>
-
-              {/* Profile Details */}
-              <div className="flex-1 space-y-2.5 text-left w-full">
+            {/* CEO Profile Details (Clean, balanced layout without image) */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h4 className="text-lg font-bold text-white">
+                  <div className="flex items-center space-x-2">
+                    <span className="p-1 bg-amber-400/20 text-amber-400 rounded border border-amber-400/30">
+                      <UserCheck className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                      TagSkills Founder & Visionary
+                    </span>
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-extrabold text-white mt-1">
                     {LEADERSHIP_PROFILE.name}
                   </h4>
                   <p className="text-xs font-semibold text-amber-300">
@@ -82,31 +77,33 @@ export const AssistanceModal: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Quote */}
-                <div className="bg-slate-900/80 p-3 rounded-xl border border-slate-700 text-slate-200">
-                  <p className="text-xs italic leading-relaxed">
-                    "{LEADERSHIP_PROFILE.quote}"
-                  </p>
-                </div>
-
-                <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                  <div className="text-xs font-mono font-bold text-amber-400">
-                    {LEADERSHIP_PROFILE.phone}
-                  </div>
-
-                  {/* WhatsApp ONLY button */}
-                  <a
-                    href={LEADERSHIP_PROFILE.whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center space-x-1.5 py-2 px-4 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow transition-colors"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    <span>WhatsApp Prashun</span>
-                  </a>
-                </div>
+                {/* Direct WhatsApp Action Button */}
+                <a
+                  href={LEADERSHIP_PROFILE.whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center space-x-1.5 py-2.5 px-4 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow transition-colors"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>WhatsApp Prashun</span>
+                </a>
               </div>
 
+              {/* Quote */}
+              <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-700 text-slate-200">
+                <p className="text-xs sm:text-sm italic leading-relaxed">
+                  "{LEADERSHIP_PROFILE.quote}"
+                </p>
+              </div>
+
+              <div className="pt-1 flex items-center justify-between text-xs">
+                <div className="text-xs font-mono font-bold text-amber-400">
+                  Direct WhatsApp: {LEADERSHIP_PROFILE.phone}
+                </div>
+                <div className="text-[11px] text-slate-400">
+                  Official TagSkills Leadership
+                </div>
+              </div>
             </div>
 
           </div>

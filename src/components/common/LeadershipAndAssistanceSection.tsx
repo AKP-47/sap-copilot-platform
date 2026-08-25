@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MessageSquare, Quote, Sparkles, UserCheck, Crown, ArrowUpRight } from "lucide-react";
 import { LEADERSHIP_PROFILE } from "../../data/contacts";
-import prashunImage from "../../assets/prashun-shetty.png";
+import { InteractiveExecutivePortrait } from "./InteractiveExecutivePortrait";
 
 export const LeadershipAndAssistanceSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export const LeadershipAndAssistanceSection: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Subtle 3D Depth on Cursor Movement (Desktop Only, Max 1.4deg)
+  // Subtle 3D Depth on Cursor Movement (Desktop Only, Max 1.2deg)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouchDevice || !cardRef.current) return;
 
@@ -50,8 +50,8 @@ export const LeadershipAndAssistanceSection: React.FC = () => {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -1.2;
-    const rotateY = ((x - centerX) / centerX) * 1.2;
+    const rotateX = ((y - centerY) / centerY) * -1.0;
+    const rotateY = ((x - centerX) / centerX) * 1.0;
 
     setTilt({ rotateX, rotateY });
     setMousePos({ x, y });
@@ -150,27 +150,8 @@ export const LeadershipAndAssistanceSection: React.FC = () => {
             {/* ============================================================ */}
             <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-10">
               
-              {/* LEFT: VISUAL ANCHOR (ORIGINAL PRASHUN SHETTY PORTRAIT) */}
-              <div className="w-full sm:w-[280px] md:w-[300px] lg:w-[320px] shrink-0 flex justify-center">
-                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400/40 group-hover:border-amber-400/70 shadow-2xl bg-slate-950 ring-1 ring-amber-400/20 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-amber-500/10">
-                  
-                  {/* Floating Editorial Badge */}
-                  <div className="absolute top-3 left-3 z-20 flex items-center space-x-1 px-2.5 py-1 bg-slate-950/85 backdrop-blur-md rounded-md border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider uppercase shadow-md">
-                    <Crown className="w-3 h-3 text-amber-400" />
-                    <span>FOUNDER & CEO</span>
-                  </div>
-
-                  {/* Original Photograph Asset */}
-                  <img
-                    src={prashunImage || "/prashun-shetty.png"}
-                    alt="Prashun Shetty – Founder & CEO, TagSkills"
-                    className="w-full h-auto object-contain block rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.01]"
-                  />
-
-                  {/* Elegant Subtle Gold Hairline Glow on Outer Frame Only */}
-                  <div className="absolute inset-0 rounded-2xl border border-amber-400/20 pointer-events-none" />
-                </div>
-              </div>
+              {/* LEFT: ULTIMATE INTERACTIVE 3D EXECUTIVE PORTRAIT */}
+              <InteractiveExecutivePortrait />
 
               {/* RIGHT: EDITORIAL TYPOGRAPHY & MENTORSHIP CALLOUTS */}
               <div className="flex-1 flex flex-col justify-between space-y-6 text-left w-full">

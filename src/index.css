@@ -98,3 +98,31 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Outer Border Light Sweep Animation (Single 650ms cycle) */
+@keyframes borderSweep {
+  0% {
+    clip-path: inset(0 100% 100% 0);
+    opacity: 1;
+  }
+  25% {
+    clip-path: inset(0 0 100% 0);
+    opacity: 1;
+  }
+  50% {
+    clip-path: inset(0 0 0 100%);
+    opacity: 1;
+  }
+  75% {
+    clip-path: inset(100% 0 0 0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+}
+
+.animate-border-sweep {
+  animation: borderSweep 650ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

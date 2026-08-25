@@ -71,10 +71,13 @@ npm run preview
 
 ---
 
-## 📞 Assistance & Contact
+## 📞 Leadership & Assistance Contacts
 - **Institution**: [TagSkills](https://www.tagskills.com)
-- **Direct Assistance**: Priyanka Bajoria (Senior Business Development Management) — 📞 `+91 73280 71375` | 💬 [WhatsApp](https://wa.me/917328071375)
-- **Leadership**: Prashun Shetty (Founder & CEO, TagSkills)
+- **CEO & Mentor**: Prashun Shetty (Founder & CEO, TagSkills) — 💬 [WhatsApp](https://wa.me/918971164999) (`+91 89711 64999`)
+- **Student Assistance Team**:
+  - **Vinanthi Kotian** (Business Development Manager) — 📞 `+91 70229 71079` | 💬 [WhatsApp](https://wa.me/917022971079)
+  - **Adhvi Gowda** (Business Development Manager) — 📞 `+91 87925 69719` | 💬 [WhatsApp](https://wa.me/918792569719)
+  - **Sejal Naik** (Marketing Manager) — 📞 `+91 74830 08210` | 💬 [WhatsApp](https://wa.me/917483008210)
 
 ---
 © 2026 TagSkills. All rights reserved.

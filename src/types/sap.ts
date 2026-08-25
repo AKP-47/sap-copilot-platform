@@ -361,11 +361,20 @@ export interface AssistanceContact {
   id: string;
   name: string;
   role: string;
-  phone?: string;
-  whatsappLink?: string;
+  phone: string;
+  callLink: string;
+  whatsappLink: string;
   email?: string;
   avatarBg?: string;
-  isLeadershipOnly?: boolean;
+}
+
+export interface LeadershipProfile {
+  name: string;
+  role: string;
+  quote: string;
+  phone: string;
+  whatsappLink: string;
+  image: string;
 }
 
 export interface UserNote {

@@ -1,3 +1,4 @@
+import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { TagSkillsBanner } from "../common/TagSkillsBanner";
@@ -246,6 +247,9 @@ export const DashboardView: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Leadership & Mentorship + Need Assistance Section */}
+      <LeadershipAndAssistanceSection />
 
     </div>
   );

@@ -1,108 +1,240 @@
-import React from "react";
-import { MessageSquare, Quote, Sparkles, UserCheck } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { MessageSquare, Quote, Sparkles, UserCheck, Crown, ArrowUpRight } from "lucide-react";
 import { LEADERSHIP_PROFILE } from "../../data/contacts";
 import prashunImage from "../../assets/prashun-shetty.png";
 
 export const LeadershipAndAssistanceSection: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  const [isVisible, setIsVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Detect touch device & Reduced Motion preference
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsTouchDevice(!window.matchMedia("(hover: hover)").matches);
+    }
+  }, []);
+
+  // Cinematic Intersection Observer Entrance
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Subtle 3D Depth on Cursor Movement (Desktop Only, Max 1.4deg)
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice || !cardRef.current) return;
+
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -1.2;
+    const rotateY = ((x - centerX) / centerX) * 1.2;
+
+    setTilt({ rotateX, rotateY });
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ rotateX: 0, rotateY: 0 });
+    setIsHovered(false);
+  };
+
   return (
-    <div className="w-full">
+    <section 
+      ref={sectionRef} 
+      className="w-full relative select-none"
+      aria-label="Leadership and Mentorship Showcase"
+    >
       {/* ============================================================ */}
-      {/* LEADERSHIP & MENTORSHIP SECTION                              */}
+      {/* LAYER 1: OUTER EXECUTIVE CONTAINER                            */}
       {/* ============================================================ */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-xl relative overflow-hidden">
+      <div className={`relative rounded-3xl p-6 sm:p-10 lg:p-12 overflow-hidden bg-gradient-to-b from-slate-950 via-[#0b1120] to-slate-950 border border-slate-800/80 shadow-2xl transition-all duration-700 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      }`}>
         
-        {/* Subtle Gold / Amber Glow Accents */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-2xl pointer-events-none" />
+        {/* Soft Ambient Radial Lights (Warm Amber + Royal Blue) */}
+        <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-amber-500/[0.07] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-600/[0.06] rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 space-y-8 max-w-6xl mx-auto">
           
-          {/* Section Header */}
-          <div>
-            <div className="inline-flex items-center space-x-2">
-              <span className="text-[11px] font-mono font-extrabold uppercase tracking-wider px-2.5 py-0.5 bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded">
-                LEADERSHIP & MENTORSHIP
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 flex items-center">
-              <span>Meet Our CEO & Mentor</span>
-              <Sparkles className="w-5 h-5 ml-2 text-amber-400 inline shrink-0" />
-            </h2>
-          </div>
+          {/* Section Header with Micro-Interaction Tooltip */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div>
+              {/* Interactive Badge with Discovery Tooltip */}
+              <div className="relative inline-block">
+                <button
+                  type="button"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                  onFocus={() => setShowTooltip(true)}
+                  onBlur={() => setShowTooltip(false)}
+                  className="inline-flex items-center space-x-1.5 px-3 py-1 bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded-full text-[11px] font-mono font-extrabold uppercase tracking-wider transition-colors duration-200 cursor-default focus:outline-none"
+                >
+                  <Crown className="w-3.5 h-3.5 text-amber-400" />
+                  <span>LEADERSHIP & MENTORSHIP</span>
+                </button>
 
-          {/* CEO Profile Card: Image Left + Info Right, Quote & WhatsApp Number Below */}
-          <div className="bg-slate-800/90 rounded-2xl border border-slate-700/90 p-6 sm:p-8 shadow-lg space-y-6">
-            
-            {/* Top Row: Image on Left (260-300px) + Profile Info & WhatsApp Button on Right */}
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
-              
-              {/* Left: Original Prashun Shetty Image Asset */}
-              <div className="w-full sm:w-[280px] md:w-[290px] shrink-0 flex justify-center">
-                <div className="rounded-2xl overflow-hidden border-2 border-amber-400/40 shadow-2xl bg-slate-950 ring-4 ring-amber-400/10 w-full max-w-[290px]">
-                  <img
-                    src={prashunImage || "/prashun-shetty.png"}
-                    alt="Prashun Shetty – Founder & CEO, TagSkills"
-                    className="w-full h-auto object-contain block rounded-xl"
-                  />
+                {/* Floating Discovery Tooltip */}
+                <div className={`absolute left-0 bottom-full mb-2 px-3 py-1.5 bg-slate-900 text-amber-200 text-xs font-semibold rounded-lg shadow-xl border border-amber-400/30 whitespace-nowrap pointer-events-none transition-all duration-300 ease-out ${
+                  showTooltip ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
+                }`}>
+                  <span>"Learn. Practice. Prepare. Become Job-Ready."</span>
+                  <div className="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-slate-900" />
                 </div>
               </div>
 
-              {/* Right: Name, Designation & [WhatsApp Prashun] Button */}
-              <div className="flex-1 flex flex-col justify-center space-y-4 text-left w-full pt-2 md:pt-4">
-                <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mt-2.5 tracking-tight flex items-center">
+                <span>Meet Our CEO & Mentor</span>
+                <Sparkles className="w-5 h-5 ml-2.5 text-amber-400 shrink-0" />
+              </h2>
+            </div>
+
+            <div className="hidden sm:flex items-center space-x-2 text-xs text-slate-400 font-medium pb-1">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span>TagSkills Enterprise Mentorship</span>
+            </div>
+          </div>
+
+          {/* ============================================================ */}
+          {/* LAYER 2: EXECUTIVE CARD WITH 3D CURSOR INTERACTION           */}
+          {/* ============================================================ */}
+          <div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              transform: !isTouchDevice && isHovered
+                ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`
+                : "perspective(1000px) rotateX(0deg) rotateY(0deg)",
+              transition: isHovered ? "transform 0.1s ease-out" : "transform 0.5s ease-out"
+            }}
+            className="relative bg-slate-900/90 rounded-2xl sm:rounded-3xl border border-slate-700/80 hover:border-amber-400/40 p-6 sm:p-8 lg:p-10 shadow-2xl overflow-hidden group"
+          >
+            {/* Subtle Cursor-Following Radial Glow (Desktop) */}
+            {!isTouchDevice && isHovered && (
+              <div 
+                className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-100"
+                style={{
+                  background: `radial-gradient(500px circle at ${mousePos.x}px ${mousePos.y}px, rgba(245, 158, 11, 0.05), transparent 70%)`
+                }}
+              />
+            )}
+
+            {/* ============================================================ */}
+            {/* LAYER 3: IMAGE + EDITORIAL INFORMATION COMPOSITION          */}
+            {/* ============================================================ */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-10">
+              
+              {/* LEFT: VISUAL ANCHOR (ORIGINAL PRASHUN SHETTY PORTRAIT) */}
+              <div className="w-full sm:w-[280px] md:w-[300px] lg:w-[320px] shrink-0 flex justify-center">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400/40 group-hover:border-amber-400/70 shadow-2xl bg-slate-950 ring-1 ring-amber-400/20 transition-all duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-amber-500/10">
+                  
+                  {/* Floating Editorial Badge */}
+                  <div className="absolute top-3 left-3 z-20 flex items-center space-x-1 px-2.5 py-1 bg-slate-950/85 backdrop-blur-md rounded-md border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider uppercase shadow-md">
+                    <Crown className="w-3 h-3 text-amber-400" />
+                    <span>FOUNDER & CEO</span>
+                  </div>
+
+                  {/* Original Photograph Asset */}
+                  <img
+                    src={prashunImage || "/prashun-shetty.png"}
+                    alt="Prashun Shetty – Founder & CEO, TagSkills"
+                    className="w-full h-auto object-contain block rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.01]"
+                  />
+
+                  {/* Elegant Subtle Gold Hairline Glow on Outer Frame Only */}
+                  <div className="absolute inset-0 rounded-2xl border border-amber-400/20 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* RIGHT: EDITORIAL TYPOGRAPHY & MENTORSHIP CALLOUTS */}
+              <div className="flex-1 flex flex-col justify-between space-y-6 text-left w-full">
+                
+                {/* Header Profile Info */}
+                <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <span className="p-1.5 bg-amber-400/20 text-amber-400 rounded-lg border border-amber-400/30">
+                    <span className="p-1.5 bg-amber-400/15 text-amber-400 rounded-lg border border-amber-400/30">
                       <UserCheck className="w-4 h-4" />
                     </span>
-                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
-                      TagSkills Founder & Visionary
+                    <span className="text-xs font-bold text-amber-400 uppercase tracking-widest font-mono">
+                      TAGSKILLS FOUNDER & VISIONARY
                     </span>
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight pt-1">
+                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight pt-1">
                     {LEADERSHIP_PROFILE.name}
                   </h3>
-                  <p className="text-sm sm:text-base font-semibold text-amber-300/90">
+                  
+                  <p className="text-sm sm:text-base font-semibold text-amber-300/90 tracking-wide">
                     {LEADERSHIP_PROFILE.role}
                   </p>
                 </div>
 
-                {/* WhatsApp Prashun Button */}
-                <div className="pt-2">
+                {/* Leadership Mentor Quote */}
+                <div className="relative bg-slate-950/75 hover:bg-slate-950/90 p-5 sm:p-6 rounded-2xl border-l-2 border-l-amber-400 border border-slate-800/80 text-slate-200 shadow-inner transition-colors duration-300">
+                  <Quote className="w-6 h-6 text-amber-400/40 absolute top-4 left-4 -scale-x-100 pointer-events-none" />
+                  <p className="text-xs sm:text-sm lg:text-base text-slate-200 italic leading-relaxed pl-7 sm:pl-8">
+                    "{LEADERSHIP_PROFILE.quote}"
+                  </p>
+                </div>
+
+                {/* Mentorship CTA Row */}
+                <div className="pt-2 border-t border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-0.5">
+                    <span className="text-[11px] text-slate-400 font-medium uppercase tracking-wider block">
+                      Direct WhatsApp Mentorship
+                    </span>
+                    <div className="text-base sm:text-lg font-mono font-bold text-amber-400">
+                      {LEADERSHIP_PROFILE.phone}
+                    </div>
+                  </div>
+
+                  {/* Primary CTA Button (WhatsApp Only) */}
                   <a
                     href={LEADERSHIP_PROFILE.whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center space-x-2 py-3 px-6 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/35 transition-all group"
+                    className="inline-flex items-center justify-center space-x-2 py-3 px-6 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all duration-200 group/btn"
                   >
-                    <MessageSquare className="w-4 h-4 transition-transform group-hover:scale-110" />
+                    <MessageSquare className="w-4 h-4 transition-transform group-hover/btn:scale-110" />
                     <span>WhatsApp Prashun</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover/btn:opacity-100 transition-opacity" />
                   </a>
                 </div>
+
+                {/* Subtle Official Footer Tag */}
+                <div className="pt-1 flex items-center space-x-2 text-[11px] text-slate-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+                  <span>Official TagSkills Leadership & Career Mentorship</span>
+                </div>
+
               </div>
 
-            </div>
-
-            {/* Quote Section */}
-            <div className="relative bg-slate-900/80 p-5 sm:p-6 rounded-2xl border border-slate-700/80 text-slate-200 shadow-inner">
-              <Quote className="w-7 h-7 text-amber-400/30 absolute top-4 left-4 -scale-x-100 pointer-events-none" />
-              <p className="text-sm sm:text-base text-slate-200 italic leading-relaxed pl-7 sm:pl-8">
-                "{LEADERSHIP_PROFILE.quote}"
-              </p>
-            </div>
-
-            {/* Direct WhatsApp Mentorship Number Footer */}
-            <div className="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-slate-300 text-xs sm:text-sm">
-              <div className="flex items-center space-x-2">
-                <span className="text-slate-400 font-medium">Direct WhatsApp Mentorship:</span>
-                <span className="font-mono font-bold text-amber-400 text-sm sm:text-base">
-                  {LEADERSHIP_PROFILE.phone}
-                </span>
-              </div>
-
-              <div className="text-[11px] text-slate-400">
-                Official TagSkills Leadership & Career Mentorship
-              </div>
             </div>
 
           </div>
@@ -110,6 +242,6 @@ export const LeadershipAndAssistanceSection: React.FC = () => {
         </div>
 
       </div>
-    </div>
+    </section>
   );
 };

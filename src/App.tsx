@@ -7,6 +7,7 @@ import { Footer } from "./components/layout/Footer";
 import { AssistanceModal } from "./components/layout/AssistanceModal";
 import { WelcomeScreen } from "./components/layout/WelcomeScreen";
 import { SearchModal } from "./components/common/SearchModal";
+import { AppearanceModal } from "./components/common/AppearanceModal";
 import { AiCopilotDrawer } from "./components/copilot/AiCopilotDrawer";
 
 // Views
@@ -82,7 +83,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
       {/* Top Navigation */}
       <Header />
 
@@ -104,6 +105,7 @@ const AppContent: React.FC = () => {
       <AssistanceModal />
       <WelcomeScreen />
       <SearchModal />
+      <AppearanceModal />
       <AiCopilotDrawer />
     </div>
   );

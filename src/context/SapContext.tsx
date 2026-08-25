@@ -4,6 +4,8 @@ import { SupportedLanguage, TRANSLATIONS } from "../data/translations";
 import { MM_TOPICS } from "../data/mmTopics";
 import { EWM_TOPICS } from "../data/ewmTopics";
 import { INTEGRATION_FLOWS } from "../data/integrationFlows";
+import { DEFAULT_THEME_ID, AppearanceMode, THEMES } from "../data/themes";
+import { applyTheme } from "../utils/themeManager";
 
 export type AppView = 
   | "dashboard"
@@ -52,6 +54,14 @@ interface SapContextType {
   setIsWelcomeOpen: (open: boolean) => void;
   isCopilotOpen: boolean;
   setIsCopilotOpen: (open: boolean) => void;
+  isAppearanceOpen: boolean;
+  setIsAppearanceOpen: (open: boolean) => void;
+  colorTheme: string;
+  setColorTheme: (themeId: string) => void;
+  previewTheme: string | null;
+  setPreviewTheme: (themeId: string | null) => void;
+  appearanceMode: AppearanceMode;
+  setAppearanceMode: (mode: AppearanceMode) => void;
   t: typeof TRANSLATIONS["en"];
   allTopics: SapTopic[];
   selectedTopic: SapTopic | undefined;
@@ -64,6 +74,56 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [learningLevel, setLearningLevel] = useState<LearningLevel>("BEGINNER");
   const [language, setLanguage] = useState<SupportedLanguage>("en");
+  
+  // Appearance & Theme State with LocalStorage Persistence
+  const [colorTheme, setColorThemeState] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem("selectedColorTheme");
+      return saved && THEMES[saved] ? saved : DEFAULT_THEME_ID;
+    } catch {
+      return DEFAULT_THEME_ID;
+    }
+  });
+
+  const [previewTheme, setPreviewTheme] = useState<string | null>(null);
+
+  const [appearanceMode, setAppearanceModeState] = useState<AppearanceMode>(() => {
+    try {
+      const saved = localStorage.getItem("selectedAppearanceMode");
+      return saved === "dark" || saved === "system" || saved === "light" ? saved : "light";
+    } catch {
+      return "light";
+    }
+  });
+
+  const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(false);
+
+  // Apply theme tokens to DOM dynamically
+  useEffect(() => {
+    const activeTheme = previewTheme || colorTheme;
+    applyTheme(activeTheme, appearanceMode);
+  }, [colorTheme, previewTheme, appearanceMode]);
+
+  const setColorTheme = (themeId: string) => {
+    if (THEMES[themeId]) {
+      setColorThemeState(themeId);
+      try {
+        localStorage.setItem("selectedColorTheme", themeId);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const setAppearanceMode = (mode: AppearanceMode) => {
+    setAppearanceModeState(mode);
+    try {
+      localStorage.setItem("selectedAppearanceMode", mode);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("sap_copilot_bookmarks");
@@ -72,6 +132,7 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return ["mm-material-master", "ewm-posc-losc"];
     }
   });
+
   const [completedScenarios, setCompletedScenarios] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem("sap_copilot_completed_scen");
@@ -80,6 +141,7 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return [];
     }
   });
+
   const [scenarioScores, setScenarioScores] = useState<Record<string, number>>(() => {
     try {
       const saved = localStorage.getItem("sap_copilot_scen_scores");
@@ -88,6 +150,7 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return {};
     }
   });
+
   const [notes, setNotes] = useState<UserNote[]>(() => {
     try {
       const saved = localStorage.getItem("sap_copilot_notes");
@@ -98,7 +161,7 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           title: "Important: OMS2 Quantity vs Value updating",
           content: "Remember to always verify MENGU and WERTU in OMS2 whenever extending a new plant in enterprise structure.",
           createdAt: new Date().toISOString(),
-          tags: ["MM", "SPRO", "Cutover"]
+          tags: ["Config", "OMS2", "Master Data"]
         }
       ];
     } catch {
@@ -108,25 +171,39 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAssistanceOpen, setIsAssistanceOpen] = useState(false);
-  const [isWelcomeOpen, setIsWelcomeOpen] = useState(() => {
-    return !localStorage.getItem("sap_welcome_seen");
-  });
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("sap_copilot_bookmarks", JSON.stringify(bookmarks));
+    try {
+      localStorage.setItem("sap_copilot_bookmarks", JSON.stringify(bookmarks));
+    } catch (e) {
+      console.error(e);
+    }
   }, [bookmarks]);
 
   useEffect(() => {
-    localStorage.setItem("sap_copilot_completed_scen", JSON.stringify(completedScenarios));
+    try {
+      localStorage.setItem("sap_copilot_completed_scen", JSON.stringify(completedScenarios));
+    } catch (e) {
+      console.error(e);
+    }
   }, [completedScenarios]);
 
   useEffect(() => {
-    localStorage.setItem("sap_copilot_scen_scores", JSON.stringify(scenarioScores));
+    try {
+      localStorage.setItem("sap_copilot_scen_scores", JSON.stringify(scenarioScores));
+    } catch (e) {
+      console.error(e);
+    }
   }, [scenarioScores]);
 
   useEffect(() => {
-    localStorage.setItem("sap_copilot_notes", JSON.stringify(notes));
+    try {
+      localStorage.setItem("sap_copilot_notes", JSON.stringify(notes));
+    } catch (e) {
+      console.error(e);
+    }
   }, [notes]);
 
   const toggleBookmark = (topicId: string) => {
@@ -136,16 +213,17 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const markScenarioCompleted = (scenarioId: string, score: number) => {
-    if (!completedScenarios.includes(scenarioId)) {
-      setCompletedScenarios(prev => [...prev, scenarioId]);
-    }
-    setScenarioScores(prev => ({ ...prev, [scenarioId]: Math.max(prev[scenarioId] || 0, score) }));
+    setCompletedScenarios(prev => prev.includes(scenarioId) ? prev : [...prev, scenarioId]);
+    setScenarioScores(prev => ({
+      ...prev,
+      [scenarioId]: Math.max(prev[scenarioId] || 0, score)
+    }));
   };
 
   const addNote = (note: Omit<UserNote, "id" | "createdAt">) => {
     const newNote: UserNote = {
       ...note,
-      id: "note-" + Date.now(),
+      id: `note-${Date.now()}`,
       createdAt: new Date().toISOString()
     };
     setNotes(prev => [newNote, ...prev]);
@@ -157,7 +235,6 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const allTopics: SapTopic[] = [...MM_TOPICS, ...EWM_TOPICS];
   const selectedTopic = allTopics.find(t => t.id === selectedTopicId);
-
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
   return (
@@ -187,6 +264,14 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsWelcomeOpen,
         isCopilotOpen,
         setIsCopilotOpen,
+        isAppearanceOpen,
+        setIsAppearanceOpen,
+        colorTheme,
+        setColorTheme,
+        previewTheme,
+        setPreviewTheme,
+        appearanceMode,
+        setAppearanceMode,
         t,
         allTopics,
         selectedTopic
@@ -199,6 +284,8 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
 export const useSap = () => {
   const context = useContext(SapContext);
-  if (!context) throw new Error("useSap must be used within a SapProvider");
+  if (!context) {
+    throw new Error("useSap must be used within a SapProvider");
+  }
   return context;
 };

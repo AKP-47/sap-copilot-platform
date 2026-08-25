@@ -2,9 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Default SAP Blue 500 */
+  --primary: #0A6ED1;
+  --primary-rgb: 10, 110, 209;
+  --primary-hover: #0857A6;
+  --primary-active: #064687;
+  --primary-focus: #4DA7E4;
+  --primary-selected: #D8EBFA;
+  --primary-disabled: #B6DCF5;
+  --primary-soft: #D8EBFA;
+  --primary-subtle: #EEF6FC;
+  --primary-border: #B6DCF5;
+  --primary-glow: rgba(10, 110, 209, 0.35);
+
+  --primary-50: #EEF6FC;
+  --primary-100: #D8EBFA;
+  --primary-200: #B6DCF5;
+  --primary-300: #85C5EE;
+  --primary-400: #4DA7E4;
+  --primary-500: #0A6ED1;
+  --primary-600: #0857A6;
+  --primary-700: #064687;
+  --primary-800: #053A6D;
+  --primary-900: #053059;
+  --primary-950: #031E3B;
+
+  /* Semantic Tokens */
+  --success: #16A34A;
+  --success-soft: #DCFCE7;
+  --warning: #D97706;
+  --warning-soft: #FEF3C7;
+  --error: #DC2626;
+  --error-soft: #FEE2E2;
+  --info: #0284C7;
+  --info-soft: #E0F2FE;
+
+  /* Surface & Typography Tokens */
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F5F9;
+  --surface-active: #E2E8F0;
+  --surface-elevated: #FFFFFF;
+  --border: #E2E8F0;
+  --border-hover: #CBD5E1;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+}
+
+.dark {
+  --background: #090D16;
+  --surface: #0F172A;
+  --surface-hover: #1E293B;
+  --surface-active: #334155;
+  --surface-elevated: #1E293B;
+  --border: #1E293B;
+  --border-hover: #334155;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+}
+
 @layer base {
   body {
-    @apply antialiased bg-slate-50 text-slate-900;
+    @apply antialiased bg-slate-50 text-slate-900 transition-colors duration-200;
   }
 }
 
@@ -25,4 +87,14 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.8);
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { SupportedLanguage } from "../../data/translations";
-import { Search, Sparkles } from "lucide-react";
+import { Search, Sparkles, Palette } from "lucide-react";
 import { LearningLevel } from "../../types/sap";
 
 export const Header: React.FC = () => {
@@ -13,6 +13,7 @@ export const Header: React.FC = () => {
     setIsSearchOpen, 
     setIsCopilotOpen,
     setIsWelcomeOpen,
+    setIsAppearanceOpen,
     t 
   } = useSap();
 
@@ -36,7 +37,7 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           
@@ -44,7 +45,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center space-x-3 shrink-0">
             <button
               onClick={() => setIsWelcomeOpen(true)}
-              className="flex items-center space-x-2.5 p-1 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none"
+              className="flex items-center space-x-2.5 p-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors focus:outline-none"
               title="TagSkills Official Institute – Click for Institute Overview"
             >
               <img 
@@ -52,11 +53,11 @@ export const Header: React.FC = () => {
                 alt="TagSkills Official Institute Logo" 
                 className="h-8 w-auto object-contain" 
               />
-              <div className="hidden lg:block text-left pl-1 border-l border-slate-200">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block leading-none">
+              <div className="hidden lg:block text-left pl-1 border-l border-slate-200 dark:border-slate-700">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400 block leading-none">
                   Official Institute
                 </span>
-                <span className="text-xs font-extrabold text-slate-900 tracking-tight leading-tight">
+                <span className="text-xs font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                   TagSkills Academy
                 </span>
               </div>
@@ -67,26 +68,26 @@ export const Header: React.FC = () => {
           <div className="flex-1 max-w-xl mx-2">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="w-full flex items-center justify-between px-3.5 py-1.5 text-sm text-slate-500 bg-slate-100 hover:bg-slate-200/80 rounded-lg border border-slate-200 transition-colors"
+              className="w-full flex items-center justify-between px-3.5 py-1.5 text-sm text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors"
             >
               <span className="flex items-center">
                 <Search className="w-4 h-4 mr-2 text-slate-400" />
                 <span className="truncate">{t.searchPlaceholder}</span>
               </span>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-xs text-slate-400 bg-white rounded border border-slate-200">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-xs text-slate-400 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600">
                 ⌘K
               </kbd>
             </button>
           </div>
 
-          {/* Controls: Level Selector, Language, AI Copilot */}
+          {/* Controls: Level Selector, Language, Theme Palette, AI Copilot */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Level Selector */}
             <div className="relative hidden sm:block">
               <select
                 value={learningLevel}
                 onChange={(e) => setLearningLevel(e.target.value as LearningLevel)}
-                className="text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-800 py-1.5 pl-3 pr-7 rounded-lg border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/80 dark:hover:bg-slate-700 py-1.5 pl-3 pr-7 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {levels.map(l => (
                   <option key={l.key} value={l.key}>
@@ -101,7 +102,7 @@ export const Header: React.FC = () => {
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-                className="text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-800 py-1.5 pl-2.5 pr-6 rounded-lg border border-slate-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200/80 dark:hover:bg-slate-700 py-1.5 pl-2.5 pr-6 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
                 title="Select Explanation Language"
               >
                 {languages.map(lang => (
@@ -111,6 +112,17 @@ export const Header: React.FC = () => {
                 ))}
               </select>
             </div>
+
+            {/* Theme & Palette Library Modal Trigger */}
+            <button
+              onClick={() => setIsAppearanceOpen(true)}
+              className="flex items-center text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-2.5 sm:px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-all shadow-sm"
+              title="Appearance & Color Palette Library (29 Themes)"
+              aria-label="Open Appearance and Color Theme Library"
+            >
+              <Palette className="w-3.5 h-3.5 sm:mr-1.5 text-amber-500" />
+              <span className="hidden md:inline">Themes</span>
+            </button>
 
             {/* AI Copilot Drawer Trigger */}
             <button

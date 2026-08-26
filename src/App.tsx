@@ -1,3 +1,4 @@
+import { BusinessSapReasoningView } from "./components/reasoning/BusinessSapReasoningView";
 import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
 import { ImpactSimulator } from "./components/consultant/ImpactSimulator";
 import { ConsultantInvestigationView } from "./components/consultant/ConsultantInvestigationView";
@@ -49,6 +50,8 @@ const AppContent: React.FC = () => {
         return <DashboardView />;
       case "foundations":
         return <BeginnerFoundationsView />;
+      case "business_reasoning":
+        return <BusinessSapReasoningView />;
       case "enterprise_map":
         return <EnterpriseConnectionMap />;
       case "impact_sim":

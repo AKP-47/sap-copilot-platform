@@ -3,9 +3,10 @@ import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
 import { 
   Package,
+  Brain,
   Dna,
   Network,
-  Sliders, 
+  Sliders,
   Warehouse, 
   GitMerge, 
   RotateCw, 
@@ -530,6 +531,102 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
+
+      {/* ============================================================ */}
+      {/* SECTION: THINK LIKE AN SAP CONSULTANT (METHODOLOGY SUITE)     */}
+      {/* ============================================================ */}
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 rounded border border-amber-200 dark:border-amber-800">
+              SIGNATURE PEDAGOGY
+            </span>
+          </div>
+          <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-1">
+            "Think Like an SAP Consultant" Framework
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            A distinctive enterprise learning methodology: Business ➔ Industry ➔ Requirement ➔ Process ➔ Decision ➔ Reasoning ➔ Solution ➔ Consequence.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            {
+              title: "Business -> SAP Reasoning",
+              desc: "Signature 8-stage interactive framework translating business pain points into SAP solutions.",
+              icon: <Brain className="w-6 h-6 text-amber-500" />,
+              view: "business_reasoning" as const,
+              badge: "Signature Framework"
+            },
+            {
+              title: "Enterprise Connection Map",
+              desc: "Interactive end-to-end process map from Customer Order to Financial Balance Sheet.",
+              icon: <GitMerge className="w-6 h-6 text-purple-500" />,
+              view: "enterprise_map" as const,
+              badge: "End-to-End Flow"
+            },
+            {
+              title: "SAP Concept DNA (360°)",
+              desc: "Deep architectural breakdown with dynamic 'What Would Change If...' mutations.",
+              icon: <Dna className="w-6 h-6 text-indigo-500" />,
+              view: "concept_dna" as const,
+              badge: "What If? Engine"
+            },
+            {
+              title: "Impact & Trade-Off Simulator",
+              desc: "Simulate how changing safety stock & POSC steps impacts carrying cost vs stockout risk.",
+              icon: <Sliders className="w-6 h-6 text-amber-500" />,
+              view: "impact_sim" as const,
+              badge: "Trade-Off Analysis"
+            },
+            {
+              title: "Consultant Investigation Mode",
+              desc: "Gather clues across POs, MRP, and Warehouse Bins to diagnose assembly line shutdowns.",
+              icon: <Search className="w-6 h-6 text-emerald-500" />,
+              view: "investigation" as const,
+              badge: "Evidence RCA"
+            },
+            {
+              title: "Knowledge Map & Mastery Tree",
+              desc: "4-tier competence mastery tree tracking your MM, EWM, and Cross-Module skills.",
+              icon: <Network className="w-6 h-6 text-teal-500" />,
+              view: "knowledge_map" as const,
+              badge: "Mastery Tree"
+            }
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3 group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:scale-110 transition-transform">
+                    {item.icon}
+                  </div>
+                  <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {item.badge}
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white group-hover:text-theme-primary transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setCurrentView(item.view)}
+                className="w-full flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-bold text-theme-primary group-hover:underline"
+              >
+                <span>Launch Framework Tool</span>
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ============================================================ */}
       {/* SECTION 6: INTERACTIVE LABORATORIES & SIMULATORS GRID        */}

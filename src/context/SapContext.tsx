@@ -10,6 +10,7 @@ import { applyTheme } from "../utils/themeManager";
 export type AppView = 
   | "dashboard"
   | "foundations"
+  | "business_reasoning"
   | "enterprise_map"
   | "impact_sim"
   | "investigation"

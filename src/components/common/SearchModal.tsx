@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSap } from "../../context/SapContext";
 import { 
-  Search, 
+  Search,
+  Brain, 
   X, 
   Package, 
   Warehouse, 
@@ -104,6 +105,8 @@ export const SearchModal: React.FC = () => {
     !q || tc.tcode.toLowerCase().includes(q) || tc.name.toLowerCase().includes(q) || tc.purpose.toLowerCase().includes(q)
   ).slice(0, 4);
 
+  const isReasoningMatch = !q || "business reasoning".includes(q) || "business to sap".includes(q) || "reasoning".includes(q) || "decision".includes(q) || "consequence".includes(q);
+
   const isFoundationsMatch = learningLevel === "BEGINNER" && (
     !q ||
     "business foundations".includes(q) ||
@@ -120,7 +123,7 @@ export const SearchModal: React.FC = () => {
     !q || e.errorCode.toLowerCase().includes(q) || e.title.toLowerCase().includes(q) || e.messageText.toLowerCase().includes(q)
   ).slice(0, 2);
 
-  const hasAnyResults = isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
+  const hasAnyResults = isReasoningMatch || isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
 
   return (
     <div 
@@ -210,6 +213,34 @@ export const SearchModal: React.FC = () => {
           {q && hasAnyResults && (
             <div className="space-y-6">
               
+              {/* Category: Business -> SAP Reasoning Signature Framework */}
+              {isReasoningMatch && (
+                <div className="space-y-2">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center">
+                    <Brain className="w-3.5 h-3.5 mr-1" />
+                    <span>Signature Framework: Business ➔ SAP Reasoning</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      saveRecentSearch("Business -> SAP Reasoning");
+                      setCurrentView("business_reasoning");
+                      setIsSearchOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-300 dark:border-amber-700 hover:border-amber-500 transition-all flex items-center justify-between group"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-600">
+                        🧠 Business Problem ➔ Industry ➔ Process ➔ SAP ➔ Decision ➔ Solution
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Interactive 8-stage consultant methodology: learn how real business pain points become SAP solutions.
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform shrink-0" />
+                  </button>
+                </div>
+              )}
+
               {/* Category 0: Beginner Academy Foundations */}
               {isFoundationsMatch && (
                 <div className="space-y-2">

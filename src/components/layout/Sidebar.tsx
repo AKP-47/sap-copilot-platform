@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { 
   LayoutDashboard,
+  Search,
+  Dna,
+  Network,
+  Sliders,
   Building2,
   Sparkles, 
   Package, 
@@ -80,6 +84,19 @@ export const Sidebar: React.FC = () => {
         { view: "posc_visualizer" as AppView, label: "POSC & LOSC Visualizer", icon: <GitMerge className="w-4 h-4 text-violet-500" /> },
         { view: "error_doctor" as AppView, label: "SAP Error & Dump Doctor", icon: <Stethoscope className="w-4 h-4 text-rose-500" />, badge: "RCA" },
         { view: "industry_labs" as AppView, label: "11 Industry Workbenches", icon: <Factory className="w-4 h-4 text-sky-500" /> }
+      ]
+    },
+    {
+      id: "consultant_suite",
+      title: "Think Like a Consultant",
+      icon: <Briefcase className="w-3.5 h-3.5 text-amber-400" />,
+      items: [
+        { view: "enterprise_map" as AppView, label: "Enterprise Connection Map", icon: <GitMerge className="w-4 h-4 text-purple-400" />, badge: "E2E" },
+        { view: "concept_dna" as AppView, label: "Concept DNA (360°)", icon: <Dna className="w-4 h-4 text-indigo-400" /> },
+        { view: "impact_sim" as AppView, label: "Impact & Trade-Off Sim", icon: <Sliders className="w-4 h-4 text-amber-400" /> },
+        { view: "investigation" as AppView, label: "Consultant Investigation", icon: <Search className="w-4 h-4 text-emerald-400" />, badge: "RCA" },
+        { view: "knowledge_map" as AppView, label: "Knowledge Map & Mastery", icon: <Network className="w-4 h-4 text-teal-400" /> },
+        { view: "passport" as AppView, label: "Consultant Passport", icon: <Award className="w-4 h-4 text-yellow-400" />, badge: "Skill Radar" }
       ]
     },
     {

@@ -2,7 +2,10 @@ import React from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
 import { 
-  Package, 
+  Package,
+  Dna,
+  Network,
+  Sliders, 
   Warehouse, 
   GitMerge, 
   RotateCw, 

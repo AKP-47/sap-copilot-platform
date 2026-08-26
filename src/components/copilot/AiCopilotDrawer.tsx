@@ -5,7 +5,7 @@ import { X, Send, Sparkles, Trash2, Bot, User, HelpCircle, MessageSquare } from 
 
 export const AiCopilotDrawer: React.FC = () => {
   const { isCopilotOpen, setIsCopilotOpen } = useSap();
-  const { messages, sendMessage, isGenerating, activePersona, setActivePersona, clearChat } = useAi();
+  const { messages, sendMessage, isGenerating, activePersona, setActivePersona, clearChat, isThinkFirstMode, setIsThinkFirstMode } = useAi();
   const [inputText, setInputText] = useState("");
 
   if (!isCopilotOpen) return null;
@@ -62,6 +62,31 @@ export const AiCopilotDrawer: React.FC = () => {
               className="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Socratic Think First vs Direct Explanation Mode Toggle */}
+        <div className="px-4 py-2 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs shrink-0">
+          <span className="text-[10px] font-mono font-bold uppercase text-slate-400">
+            Consultant Socratic AI:
+          </span>
+          <div className="inline-flex rounded-lg bg-slate-800 p-0.5 border border-slate-700">
+            <button
+              onClick={() => setIsThinkFirstMode(true)}
+              className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
+                isThinkFirstMode ? "bg-amber-400 text-slate-950 shadow-xs" : "text-slate-400 hover:text-white"
+              }`}
+            >
+              💡 Think First
+            </button>
+            <button
+              onClick={() => setIsThinkFirstMode(false)}
+              className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
+                !isThinkFirstMode ? "bg-blue-600 text-white shadow-xs" : "text-slate-400 hover:text-white"
+              }`}
+            >
+              ⚡ Direct
             </button>
           </div>
         </div>

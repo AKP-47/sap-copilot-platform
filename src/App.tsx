@@ -1,3 +1,9 @@
+import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
+import { ImpactSimulator } from "./components/consultant/ImpactSimulator";
+import { ConsultantInvestigationView } from "./components/consultant/ConsultantInvestigationView";
+import { ConceptDnaView } from "./components/consultant/ConceptDnaView";
+import { KnowledgeMapView } from "./components/consultant/KnowledgeMapView";
+import { ConsultantPassportView } from "./components/consultant/ConsultantPassportView";
 import { BeginnerFoundationsView } from "./components/foundations/BeginnerFoundationsView";
 import React from "react";
 import { SapProvider, useSap } from "./context/SapContext";
@@ -43,6 +49,18 @@ const AppContent: React.FC = () => {
         return <DashboardView />;
       case "foundations":
         return <BeginnerFoundationsView />;
+      case "enterprise_map":
+        return <EnterpriseConnectionMap />;
+      case "impact_sim":
+        return <ImpactSimulator />;
+      case "investigation":
+        return <ConsultantInvestigationView />;
+      case "concept_dna":
+        return <ConceptDnaView />;
+      case "knowledge_map":
+        return <KnowledgeMapView />;
+      case "passport":
+        return <ConsultantPassportView />;
       case "mm":
         return <MMExplorer />;
       case "ewm":

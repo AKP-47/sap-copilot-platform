@@ -1,125 +1,558 @@
-import { IndustryInfo, IndustryKey } from "../types/sap";
+// =========================================================================
+// SAP COPILOT & TAGSKILLS INDUSTRY REALITY ENGINE (30+ ENTERPRISE SECTORS)
+// =========================================================================
 
-export const INDUSTRIES: Record<IndustryKey, IndustryInfo> = {
-  automotive: {
-    id: "automotive",
-    name: "Automotive Manufacturing",
-    icon: "Car",
-    tagline: "High-precision Just-In-Time (JIT/JIS) supply chain with complex tier suppliers & returnable packaging.",
-    businessDrivers: ["Zero-downtime line feeding", "JIT/JIS sequence delivery", "Supplier quality compliance", "Returnable packaging tracking (Handling Units)"],
-    keyChallenges: ["Bottlenecks in engine block and transmission receiving", "Line stoppage penalties ($10,000/min)", "Strict batch serialization for recall prevention"],
-    mmNuances: ["Evaluated Receipt Settlement (ERS)", "Scheduling Agreements (LP/LPA) with release docu", "Consignment stock (Movement type 411 K)", "Subcontracting for specialized heat treatments (541/543)"],
-    ewmNuances: ["POSC for Deconsolidation & Quality Gate", "Direct line-side staging to PSA (Production Supply Area)", "Nested Handling Units (Pallet > Wire Mesh > Box)", "Yard Management for trailer parking & dock scheduling"],
-    sampleProcess: "Tier-1 Brake Caliper Delivery -> ASN Inbound Delivery -> Yard Check-In -> Door Assignment -> POSC Unloading -> Deconsolidation to Line Bins -> Kanban Triggered Line Feeding."
+export interface IndustryData {
+  id: string;
+  name: string;
+  icon: string;
+  tagline: string;
+  businessDrivers: string[];
+  keyChallenges: string[];
+  mmNuances: string[];
+  ewmNuances: string[];
+  sampleProcess: string;
+}
+
+export const INDUSTRIES: Record<string, IndustryData> = {
+  "all": {
+    "id": "all",
+    "name": "All Industries (Cross-Sector)",
+    "icon": "Globe",
+    "tagline": "Universal enterprise best practices and cross-industry standard SAP configurations.",
+    "businessDrivers": [
+      "Supply chain agility",
+      "Working capital optimization",
+      "Global compliance",
+      "Total cost of ownership"
+    ],
+    "keyChallenges": [
+      "Multi-tier supplier visibility",
+      "Regulatory harmonization",
+      "Lead time reduction"
+    ],
+    "mmNuances": [
+      "Standard PO, PIR, Source Lists, 3-Way Matching, and Universal Accounting Determination"
+    ],
+    "ewmNuances": [
+      "Standard Inbound Putaway, Outbound Wave Picking, and Layout-Oriented Storage Control"
+    ],
+    "sampleProcess": "PR -> PO -> Inbound Delivery -> Goods Receipt (101) -> Quality -> Putaway -> Invoice (MIRO)"
   },
-  aerospace: {
-    id: "aerospace",
-    name: "Aerospace & Defense",
-    icon: "Plane",
-    tagline: "Rigorous FAA/EASA traceability, serialized lifecycle tracking, and MRO overhaul logistics.",
-    businessDrivers: ["100% component lifecycle traceability", "AS9100 quality certifications", "MRO repair turnaround time", "Specialized cold-storage adhesives"],
-    keyChallenges: ["Foreign Object Debris (FOD) segregation", "Time-temperature sensitive pre-pregs (shelf life expiration)", "Split batch inspection"],
-    mmNuances: ["Mandatory Serial Numbers at GR", "Split Valuation based on Part Condition (New, Overhauled, Damaged)", "Service POs for complex calibration"],
-    ewmNuances: ["Batch & Serial number capture during RF Putaway", "Strict temperature-monitored storage zones", "ADPROD for component scrapping & overhaul disassembly"],
-    sampleProcess: "Turbine Blade PO -> Inbound Delivery -> Quality Inspection Lot (01) -> CMM Machine Dimensional Check -> Bin Assignment in Secure High-Value Storage -> Serialized Traceability Record."
+  "automotive": {
+    "id": "automotive",
+    "name": "Automotive & Mobility",
+    "icon": "Car",
+    "tagline": "Just-in-Time (JIT), Just-in-Sequence (JIS), Kanban replenishment, and VIN component serialization.",
+    "businessDrivers": [
+      "Zero-downtime assembly lines",
+      "Strict Tier-1/Tier-2 supplier delivery sync",
+      "Traceability for vehicle safety recalls"
+    ],
+    "keyChallenges": [
+      "Line-side stockouts",
+      "Short delivery windows",
+      "High-variant bill of materials (BOM)"
+    ],
+    "mmNuances": [
+      "Scheduling Agreements (LP/LPA) with EDI DELFOR/DELJIT",
+      "Evaluated Receipt Settlement (ERS)",
+      "Kanban (PK13N)"
+    ],
+    "ewmNuances": [
+      "Handling Unit Management (HUM)",
+      "Production Supply Area (PSA) replenishment",
+      "Yard Management for trailer spotting"
+    ],
+    "sampleProcess": "EDI 830 Forecast -> JIT Call -> Inbound Dock Staging -> Deconsolidation -> Line-Side PSA Feed"
   },
-  pharma: {
-    id: "pharma",
-    name: "Pharmaceutical & Life Sciences",
-    icon: "ShieldAlert",
-    tagline: "FDA 21 CFR Part 11 compliance, GMP clean-room warehousing, and cold-chain FEFO rotation.",
-    businessDrivers: ["Patient safety & GMP compliance", "First-Expiry-First-Out (FEFO) picking", "Cold-chain 2°C-8°C unbroken temperature log", "Electronic signature validation"],
-    keyChallenges: ["Quarantine release lag causing stockout", "Cross-contamination of active pharmaceutical ingredients (APIs)", "Strict sample draw management"],
-    mmNuances: ["Strict Batch Management with SLED/BBD (Shelf Life)", "Quality Info Records with vendor block", "Usage Decisions (UD) triggering 321 QM release"],
-    ewmNuances: ["FEFO picking strategy based on VFDAT", "POSC with Sampling Work Center", "Clean-room staging and hazardous material storage classes", "Audit trail logging on every WT confirmation"],
-    sampleProcess: "API Inbound -> Temperature Logger Download -> Quarantine Bin Storage -> Quality Sample Draw WT -> QM Release UD -> Automatic Posting Change to Unrestricted -> FEFO picking for formulation batch."
+  "aerospace": {
+    "id": "aerospace",
+    "name": "Aerospace & Defense",
+    "icon": "Plane",
+    "tagline": "Rigorous FAA/EASA serialization, dual-use export control, and lifetime component traceability.",
+    "businessDrivers": [
+      "100% mission reliability",
+      "AS9100 quality compliance",
+      "Decades-long spare parts maintenance cycles"
+    ],
+    "keyChallenges": [
+      "Counterfeit parts prevention",
+      "ITAR export restrictions",
+      "Zero-tolerance quality deviations"
+    ],
+    "mmNuances": [
+      "Mandatory Serial Number Profiles",
+      "Certificate of Analysis (CoA)",
+      "Split Valuation for repaired components"
+    ],
+    "ewmNuances": [
+      "Segregated Defense bonded storage bins",
+      "Nested handling unit serialization",
+      "Inspection Lot 01/08 routing"
+    ],
+    "sampleProcess": "Strict PO -> Inbound Delivery -> 100% QM Inspection Lot -> Serialized Goods Receipt -> Secure Storage Bin"
   },
-  food_beverage: {
-    id: "food_beverage",
-    name: "Food & Beverage",
-    icon: "Apple",
-    tagline: "High-volume perishables, Catch Weight Management (CWM), and allergen isolation.",
-    businessDrivers: ["Freshness preservation", "Allergen matrix isolation (Nuts, Dairy, Gluten)", "Catch Weight dual-unit pricing (Cases vs Kg)", "Traceability for rapid recalls"],
-    keyChallenges: ["Rapid spoilage risk", "Dual quantity discrepancies (weight loss during curing)", "High-velocity cross-docking during seasonal peaks"],
-    mmNuances: ["Catch Weight units of measure (Base UoM vs Parallel UoM)", "Total Shelf Life and Minimum Remaining Shelf Life checks in PO", "Consignment for agricultural raw goods"],
-    ewmNuances: ["FEFO putaway and picking", "Allergen storage section determination rules", "Opportunistic cross-docking from Receiving to Shipping Doors", "Catch Weight valuation tolerance checks"],
-    sampleProcess: "Fresh Dairy Inbound -> Dual Weight Capture at Receiving -> Blast Chiller Storage Zone -> Quality Taste & Microbial Test -> Wave Picking for Supermarket Distribution -> Refrigerated Trailer Loading."
+  "pharma": {
+    "id": "pharma",
+    "name": "Pharmaceuticals & Biotech",
+    "icon": "Pill",
+    "tagline": "Good Manufacturing Practice (GMP), FDA 21 CFR Part 11, cold chain, and active ingredient potency.",
+    "businessDrivers": [
+      "Patient safety",
+      "Stringent batch release workflows",
+      "Shelf Life Expiration Date (SLED) enforcement"
+    ],
+    "keyChallenges": [
+      "Cold chain temperature excursions",
+      "Batch recall risks",
+      "Regulatory audits (FDA/EMA)"
+    ],
+    "mmNuances": [
+      "Active Ingredient Batch Management",
+      "Batch Classification (Characteristics like Potency, Assay)",
+      "SLED / FEFO picking"
+    ],
+    "ewmNuances": [
+      "Cleanroom storage types",
+      "Temperature-controlled refrigerated zones (2-8\u00b0C)",
+      "Batch Status Management (Restricted vs Unrestricted)"
+    ],
+    "sampleProcess": "Batch Creation at Inbound -> Quarantine Stock -> Lab QA Release (QA01) -> Movement 321 -> Cold Bin Putaway"
   },
-  mechanical: {
-    id: "mechanical",
-    name: "Mechanical & Heavy Engineering",
-    icon: "Wrench",
-    tagline: "High-mix low-volume machinery, heavy fabrication components, and project-based stock.",
-    businessDrivers: ["BOM precision for engineered-to-order assemblies", "Heavy crane utilization & oversized bin allocation", "Subcontracted galvanizing & machining", "Milestone billing support"],
-    keyChallenges: ["Long lead time castings (6+ months)", "Heavy component floor damage", "Missing parts delaying final assembly line"],
-    mmNuances: ["Project Stock (Special stock Q / WBS element)", "Subcontracting with multi-level BOMs", "Non-valuated materials (UNBW) for jigs & fixtures"],
-    ewmNuances: ["Heavy-duty floor storage types with weight capacity limits", "Activity areas linked to gantry crane zones", "VAS (Value Added Services) for anti-rust oiling and packaging"],
-    sampleProcess: "Heavy Casting Inbound -> Overhead Crane Unloading -> Dimensional Quality Gate -> Staging at WBS-specific project bay -> Kitting with fasteners -> Production GI (261 Q)."
+  "food_beverage": {
+    "id": "food_beverage",
+    "name": "Food & Beverage",
+    "icon": "Utensils",
+    "tagline": "Perishable shelf-life FEFO rotation, farm-to-fork batch traceability, and allergen segregation.",
+    "businessDrivers": [
+      "Freshness guarantee",
+      "Zero food waste",
+      "HACCP food safety compliance"
+    ],
+    "keyChallenges": [
+      "Fast spoilage rates",
+      "Seasonal supply volatility",
+      "Cross-contamination risk"
+    ],
+    "mmNuances": [
+      "First-Expired-First-Out (FEFO) picking strategy",
+      "Catch Weight Management (kg vs pieces)",
+      "Allergen storage classifications"
+    ],
+    "ewmNuances": [
+      "Deep-freeze storage zones (-20\u00b0C)",
+      "Automated pallet wrapping",
+      "Wave picking optimized by dispatch departure time"
+    ],
+    "sampleProcess": "Perishable Milk Inbound -> Temperature Log Check -> SLED Validation -> Rapid Pallet Putaway -> FEFO Auto-Wave"
   },
-  electronics: {
-    id: "electronics",
-    name: "High-Tech & Electronics",
-    icon: "Cpu",
-    tagline: "High-velocity innovation, Electrostatic Discharge (ESD) protection, and high-value security.",
-    businessDrivers: ["Ultra-fast product lifecycles & obsolescence prevention", "ESD-safe handling and humidity control", "Serial-number level tracking for warranty", "High-value theft prevention"],
-    keyChallenges: ["Component counterfeiting", "Micro-chip moisture sensitivity level (MSL) expiration", "Rapid price erosion in inventory valuation"],
-    mmNuances: ["Split valuation based on grade/speed rating", "Serial number profile assigned to equipment master", "Vendor consignment with auto-invoice (MRKO)"],
-    ewmNuances: ["High-security caged storage types with dual-authorization", "Humidity-controlled storage sections", "Pick-by-Voice / RF scanning for micro-bins", "Deconsolidation of SMD reels"],
-    sampleProcess: "SMD Capacitor Reels Inbound -> ESD Bag Verification -> Moisture Barrier Bag Inspection -> Barcode 2D Datamatrix Scanning -> Micro-Carrousel Automated Bin Putaway."
+  "chemicals": {
+    "id": "chemicals",
+    "name": "Chemicals & Process Industry",
+    "icon": "FlaskConical",
+    "tagline": "Hazardous materials (HAZMAT), bulk silo storage, environmental safety, and tank farm blending.",
+    "businessDrivers": [
+      "EHS environmental safety",
+      "Bulk transport efficiency",
+      "REACH chemical compliance"
+    ],
+    "keyChallenges": [
+      "Toxic material handling",
+      "Incompatible chemical co-storage prevention",
+      "Bulk liquid density variations"
+    ],
+    "mmNuances": [
+      "Dangerous Goods Master",
+      "Active Ingredient concentration",
+      "Tank/Silo Storage Locations"
+    ],
+    "ewmNuances": [
+      "HAZMAT fire containment zones",
+      "Incompatible storage class exclusion rules in /SCWM/T334T",
+      "Drum/IBC liquid handling"
+    ],
+    "sampleProcess": "HAZMAT Safety Verification -> Tanker Offloading -> Laboratory Density Test -> Dedicated Fire-Safe Storage Zone"
   },
-  retail: {
-    id: "retail",
-    name: "Retail & Omnichannel",
-    icon: "ShoppingBag",
-    tagline: "Omnichannel fulfillment, high-speed pick-pack-ship, cross-docking, and returns management.",
-    businessDrivers: ["Same-day delivery SLA fulfillment", "E-commerce individual item picking vs Store bulk replenishment", "High-efficiency returns processing", "Dynamic replenishment"],
-    keyChallenges: ["Peak holiday volume surges (Black Friday 10x spikes)", "High return rates (up to 35% in fashion)", "Split shipments eroding margins"],
-    mmNuances: ["Retail Article Master (Single, Generic, Variants)", "Promotional Purchasing Agreements", "Store-to-Store Stock Transport Orders (STO)"],
-    ewmNuances: ["Wave Management with 2-step picking", "Pick-to-Light / Put-to-Light Putaway and Sorting", "Cross-Docking (Merchandise Distribution)", "Returns Work Center with grading (Grade A, B, Scrap)"],
-    sampleProcess: "Supplier Bulk Shipment Inbound -> Merchandise Cross-Docking -> 70% Allocated Direct to Store Outbound Waves -> 30% Putaway to Pick-Face -> Dynamic Replenishment triggered by min-max threshold."
+  "retail": {
+    "id": "retail",
+    "name": "Retail & Fashion",
+    "icon": "ShoppingBag",
+    "tagline": "Omnichannel distribution, seasonal fashion color/size grids, high-velocity cross-docking.",
+    "businessDrivers": [
+      "Rapid inventory turnover",
+      "E-commerce same-day dispatch",
+      "Stock availability across retail stores"
+    ],
+    "keyChallenges": [
+      "Short fashion lifecycle",
+      "High return rates (Reverse Logistics)",
+      "Store replenishment spikes"
+    ],
+    "mmNuances": [
+      "Generic / Variant Articles (Color/Size)",
+      "Retail Promotions",
+      "Cross-Docking distribution orders"
+    ],
+    "ewmNuances": [
+      "Opportunistic Merchandise Cross-Docking",
+      "Pick-by-Light & Put-to-Light sortation",
+      "Returns Quality Assessment Work Centers"
+    ],
+    "sampleProcess": "Inbound Truck Receipt -> Direct Cross-Dock to Outbound Store Waves -> Store Pallet Staging -> Zero Putaway Overhead"
   },
-  cpg: {
-    id: "cpg",
-    name: "Consumer Packaged Goods (CPG)",
-    icon: "Package",
-    tagline: "High-volume FMCG distribution, full pallet handling, layer picking, and promotional kitting.",
-    businessDrivers: ["Pallet-in / Pallet-out high throughput", "Promotional display kitting (VAS)", "Transportation load optimization (FTL)", "Minimizing warehouse demurrage"],
-    keyChallenges: ["Crushable pallet layer integrity", "Seasonal demand fluctuations", "Short shelf-life promotions"],
-    mmNuances: ["Quota Arrangement across multiple production plants", "Purchase Orders with Packaging Instructions", "Physical Inventory via Cycle Counting"],
-    ewmNuances: ["Automatic Packaging Specification determination", "VAS Orders for promotional bundles & shrink-wrapping", "Layer picking using specialized clamp trucks", "WOCR optimized for travel distance"],
-    sampleProcess: "Production Line Finished Goods Transfer -> Automatic Inbound HU Generation -> High-Bay AS/RS Putaway -> VAS Work Center for Promotional Sleeve Wrapping -> Outbound Wave Staging for Multi-Stop Truckload."
+  "high_tech": {
+    "id": "high_tech",
+    "name": "High Tech & Electronics",
+    "icon": "Cpu",
+    "tagline": "Rapid product obsolescence, cleanroom SMD wafer handling, and serialized consumer electronics.",
+    "businessDrivers": [
+      "Fast time-to-market",
+      "Component price deflation management",
+      "Warranty and IMEI/MAC address tracking"
+    ],
+    "keyChallenges": [
+      "Component counterfeiting",
+      "Electrostatic Discharge (ESD) damage",
+      "Global supply chain allocation constraints"
+    ],
+    "mmNuances": [
+      "Split Valuation for Grade A/B components",
+      "Consignment inventory at EMS contract manufacturers",
+      "Lead time monitoring"
+    ],
+    "ewmNuances": [
+      "ESD-safe anti-static storage bins",
+      "Automated Storage and Retrieval Systems (ASRS)",
+      "Serial number capture at packing"
+    ],
+    "sampleProcess": "Component Inbound -> Serialized Box Scan -> Humidity Card Check -> Automated ASRS Bin -> Cleanroom Outbound"
   },
-  logistics_3pl: {
-    id: "logistics_3pl",
-    name: "Logistics Service Providers & 3PL",
-    icon: "Truck",
-    tagline: "Multi-tenant warehousing, custodian ownership segregation, and warehouse billing.",
-    businessDrivers: ["Multi-client segregation in single warehouse", "Accurate storage & handling fee billing", "SLA compliance per client contract", "Flexible onboarding of new clients"],
-    keyChallenges: ["Stock commingling risk between competing clients", "Diverse product types in one facility", "Complex billable activity tracking"],
-    mmNuances: ["Consignment & Custodian Owner mapping in Business Partner", "Standard Service Master for warehouse billing rates", "Customs Bonded Warehouse tracking"],
-    ewmNuances: ["Stock Owner (Owner) and Party Entitled to Dispose (PED) differentiation", "Warehouse Billing integration with SAP TM/SD", "Multi-client RF menus and bin partitioning", "Activity Areas isolated by client agreement"],
-    sampleProcess: "Client A Goods Inbound -> Custodian Owner Verified -> Storage in Dedicated Client A Aisle -> Monthly Storage Day Count Tracked -> Pick & Dispatch -> Automated Billing Extract generated."
+  "energy": {
+    "id": "energy",
+    "name": "Energy & Utilities",
+    "icon": "Zap",
+    "tagline": "Heavy capital project procurement, mission-critical spare parts (MRO), and grid equipment maintenance.",
+    "businessDrivers": [
+      "Zero power outages",
+      "High availability of turbine spares",
+      "Project network procurement (SAP PS)"
+    ],
+    "keyChallenges": [
+      "Remote site logistics",
+      "High cost of emergency spares",
+      "Long supplier manufacturing lead times"
+    ],
+    "mmNuances": [
+      "MRO Spare Parts (ERSA)",
+      "Project Purchase Orders (Account Assignment Q)",
+      "Consignment stock at remote power plants"
+    ],
+    "ewmNuances": [
+      "Heavy yard storage for transformers and cable reels",
+      "Mobile RF field scanners for maintenance vans",
+      "Staging for work orders (261)"
+    ],
+    "sampleProcess": "PM Work Order (IW31) -> Auto PR Generation -> PO with Delivery to Remote Grid Substation -> MIGO 101 to Project Stock"
   },
-  construction: {
-    id: "construction",
-    name: "Construction & Infrastructure",
-    icon: "HardHat",
-    tagline: "Job-site direct delivery, heavy structural steel, non-standard staging, and milestone procurement.",
-    businessDrivers: ["Direct-to-site deliveries bypassing central warehouse", "Project milestone tied procurement", "Heavy machinery rental tracking", "Loss and scrap reduction on site"],
-    keyChallenges: ["Unpredictable site storage weather exposure", "Damaged goods during site transit", "Misplaced bulk materials (Cement, Rebar)"],
-    mmNuances: ["Project Stock (Q) assigned to WBS elements", "Third-Party Purchase Orders (TAS) with direct site drop", "Reservations linked to Network Activities (PS)"],
-    ewmNuances: ["Open-yard storage types with coordinate-based GPS bins", "Heavy crane resource allocation", "Staging Area Groups dedicated to project phases"],
-    sampleProcess: "Structural Steel PO with Account Assignment Q (WBS) -> Direct Inbound to Laydown Yard -> Visual Weld Inspection -> Project Tagging -> Staging for Site Assembly Crane."
+  "logistics_3pl": {
+    "id": "logistics_3pl",
+    "name": "3PL & Logistics Providers",
+    "icon": "Truck",
+    "tagline": "Multi-client warehouse operations, logistics value-added services (VAS), and dynamic billing.",
+    "businessDrivers": [
+      "Warehouse space optimization",
+      "Accurate client billing per pallet-day",
+      "Multi-tenant tenant isolation"
+    ],
+    "keyChallenges": [
+      "Client SLA penalties",
+      "High labor turnover",
+      "Multi-client stock commingling risks"
+    ],
+    "mmNuances": [
+      "Multi-owner inventory ownership",
+      "Vendor consignment with multiple business partners",
+      "Customs bonded warehousing"
+    ],
+    "ewmNuances": [
+      "Multi-Client Warehouse Numbers",
+      "Value-Added Services (VAS) kitting/labeling",
+      "Warehouse Billing integration with SAP TM/FI"
+    ],
+    "sampleProcess": "Multi-Tenant Inbound -> Client Owner Assignment (Party Entitled to Dispose) -> VAS Kitting -> Automated Client Storage Invoicing"
   },
-  industrial: {
-    id: "industrial",
-    name: "Industrial Equipment & Machinery",
-    icon: "Boxes",
-    tagline: "Complex configurable products, spare parts distribution, and global warranty supply chain.",
-    businessDrivers: ["After-sales spare parts 24-hour delivery SLA", "Variant configuration (KMAT) components", "Reverse logistics for core returns & remanufacturing", "Long-term legacy parts storage"],
-    keyChallenges: ["Slow-moving dead stock management", "High value spares preservation (anti-corrosion)", "Emergency breakdown priority picking"],
-    mmNuances: ["Configurable Materials (KMAT) with Super BOMs", "Slow-moving inventory reserve analysis", "Core exchange purchase orders with surcharge credits"],
-    ewmNuances: ["Emergency Priority Wave Management (Override FIFO)", "Kitting for maintenance overhaul packs", "Vertical carousel storage integration (MFS)", "Scrapping and de-manufacturing workflows (ADPROD)"],
-    sampleProcess: "Emergency Spares PO -> Priority Inbound -> Direct Pick-Face Staging -> Urgent Outbound Wave Trigger -> Courier Air Dispatch within 2 hours."
+  "healthcare": {
+    "id": "healthcare",
+    "name": "Healthcare & Hospitals",
+    "icon": "Activity",
+    "tagline": "Surgical kit replenishment, sterile implant consignment, and point-of-use inventory control.",
+    "businessDrivers": [
+      "Patient care continuity",
+      "Sterility assurance",
+      "Cost control on expensive medical implants"
+    ],
+    "keyChallenges": [
+      "Expired surgical stock",
+      "Stockouts in trauma ER units",
+      "Implant consignment reconciliations"
+    ],
+    "mmNuances": [
+      "Vendor Consignment for Orthopedic Implants",
+      "Unique Device Identifier (UDI) tracking",
+      "Automatic SLoc replenishment"
+    ],
+    "ewmNuances": [
+      "Sterile storage zones",
+      "Ward-level par-location replenishment",
+      "RFID tag tracking for surgical carts"
+    ],
+    "sampleProcess": "Sterile Implant Consumption in OR -> Auto Consignment Settlement (MRKO) -> Daily Replenishment Trigger"
+  },
+  "mining": {
+    "id": "mining",
+    "name": "Mining & Metals",
+    "icon": "Mountain",
+    "tagline": "Remote site MRO spares, heavy ore transport logistics, and explosive safety protocols.",
+    "businessDrivers": [
+      "24/7 crusher/haul-truck uptime",
+      "Remote desert/arctic supply lines",
+      "Heavy equipment lifecycle cost"
+    ],
+    "keyChallenges": [
+      "6-month supply lead times",
+      "Massive spare parts (e.g., $100k tires)",
+      "Harsh environmental degradation"
+    ],
+    "mmNuances": [
+      "Direct-to-Site Purchase Orders",
+      "Consignment stores at mine site",
+      "Split valuation for rebuilt heavy engines"
+    ],
+    "ewmNuances": [
+      "Bulk yard management for raw ore and heavy spares",
+      "Crane-assisted picking zones",
+      "Off-grid satellite RF sync"
+    ],
+    "sampleProcess": "Emergency Crusher Bearing Breakdown -> Critical PO Expedite -> Helicopter Staging -> Immediate MIGO 201 to Cost Center"
+  },
+  "construction": {
+    "id": "construction",
+    "name": "Construction & Infrastructure",
+    "icon": "HardHat",
+    "tagline": "Project-based materials management (WBS), cement/steel batch tracking, and site crane staging.",
+    "businessDrivers": [
+      "Project milestone deadlines",
+      "Material waste minimization",
+      "Subcontractor accountability"
+    ],
+    "keyChallenges": [
+      "Site weather delays",
+      "Unsecured job site theft",
+      "Bulk aggregate quality testing"
+    ],
+    "mmNuances": [
+      "WBS Account Assigned Purchase Orders",
+      "Subcontracting Purchase Orders (541/543)",
+      "Direct Jobsite Delivery"
+    ],
+    "ewmNuances": [
+      "Temporary laydown yard staging",
+      "Crane unloading schedule synchronization",
+      "Batch slump testing for concrete"
+    ],
+    "sampleProcess": "Project WBS Schedule -> Subcontracting PO for Precast Beams -> Laydown Yard Staging -> On-Site Quality Release"
+  },
+  "oil_gas": {
+    "id": "oil_gas",
+    "name": "Oil & Gas (Upstream & Downstream)",
+    "icon": "Flame",
+    "tagline": "Offshore rig supply vessels, pipe inventory serialization, and refinery turnaround management.",
+    "businessDrivers": [
+      "Offshore platform safety",
+      "Pipeline integrity",
+      "Turnaround schedule compression"
+    ],
+    "keyChallenges": [
+      "Hazardous marine logistics",
+      "High cost of rig downtime ($500k/day)",
+      "Strict API / NACE certifications"
+    ],
+    "mmNuances": [
+      "Offshore Supply Vessel (OSV) manifests",
+      "Joint Venture (JV) cost accounting",
+      "Tubular goods serialization"
+    ],
+    "ewmNuances": [
+      "Pipe yard staging and tally counts",
+      "Offshore container load optimization",
+      "Hazardous marine chemical staging"
+    ],
+    "sampleProcess": "Offshore Rig Requisition -> Emergency PO -> Pipe Yard Inspection -> Supply Vessel Manifest Loading -> Offshore Dock Delivery"
+  },
+  "telecom": {
+    "id": "telecom",
+    "name": "Telecommunications",
+    "icon": "Radio",
+    "tagline": "Tower hardware rollouts, fiber optic spool management, and SIM card / handset retail logistics.",
+    "businessDrivers": [
+      "5G network deployment speed",
+      "High handset inventory turnover",
+      "Network uptime"
+    ],
+    "keyChallenges": [
+      "Technician van inventory stockouts",
+      "Handset IMEI fraud",
+      "Massive SKU volume"
+    ],
+    "mmNuances": [
+      "Serialized Handset Receipts",
+      "Fiber Spool Length Management (Batch with linear dimensions)",
+      "Field technician mobile replenishment"
+    ],
+    "ewmNuances": [
+      "High-density automated handset storage",
+      "IMEI barcode validation during wave packing",
+      "Refurbished returns sorting"
+    ],
+    "sampleProcess": "Handset Pallet Inbound -> Scan 5,000 IMEIs -> Auto Bin Putaway -> E-Commerce Flash Sale Wave Release -> Courier Dispatch"
+  },
+  "banking": {
+    "id": "banking",
+    "name": "Banking & Financial Services",
+    "icon": "Landmark",
+    "tagline": "Indirect corporate procurement, ATM hardware spare parts, and credit card / security token fulfillment.",
+    "businessDrivers": [
+      "Strict internal audit compliance",
+      "Branch operational efficiency",
+      "Total cost of ownership on IT assets"
+    ],
+    "keyChallenges": [
+      "High-value security token tracking",
+      "Strict procurement authorization matrices",
+      "SaaS license cost management"
+    ],
+    "mmNuances": [
+      "Service Purchase Orders (SES / ML81N)",
+      "Approval Release Strategies with dynamic workflow",
+      "Asset Accounting (FI-AA) integration"
+    ],
+    "ewmNuances": [
+      "Secure vault storage for cards/tokens",
+      "Serialized hardware depot staging for ATM tech repairs",
+      "Dual-custody verification"
+    ],
+    "sampleProcess": "Branch Hardware Requisition -> Multi-Level Workflow Approval -> Direct Vendor Dispatch to 1,200 Bank Branches"
+  },
+  "public_sector": {
+    "id": "public_sector",
+    "name": "Public Sector & Government",
+    "icon": "Building",
+    "tagline": "Public budget encumbrance accounting, competitive tender procurement, and emergency stockpile management.",
+    "businessDrivers": [
+      "Taxpayer transparency",
+      "Strict legal tender regulations",
+      "Disaster relief preparedness"
+    ],
+    "keyChallenges": [
+      "Budgetary fund expiration",
+      "Multi-month tender approval cycles",
+      "Emergency surge demand"
+    ],
+    "mmNuances": [
+      "Public Tender RFQs (Request for Quotation)",
+      "Funds Management (FM) commitment accounting",
+      "Split-award supplier contracts"
+    ],
+    "ewmNuances": [
+      "National emergency stockpile warehouses",
+      "Kitting of disaster relief family packages",
+      "Military asset tracking"
+    ],
+    "sampleProcess": "Public Tender Publication -> Sealed Bid Evaluation -> Multi-Award PO with Budget Reservation -> Stockpile Inbound"
+  },
+  "agriculture": {
+    "id": "agriculture",
+    "name": "Agriculture & Farming",
+    "icon": "Wheat",
+    "tagline": "Seasonal crop harvesting, bulk fertilizer bulk storage, grain silo moisture grading, and seed batch germination.",
+    "businessDrivers": [
+      "Weather harvest window capture",
+      "Grain moisture preservation",
+      "Seed germination rate certification"
+    ],
+    "keyChallenges": [
+      "Extreme seasonal surge demand",
+      "Weather degradation risks",
+      "Commodity price volatility"
+    ],
+    "mmNuances": [
+      "Moisture content split valuation",
+      "Commodity Purchase Contracts (ACM)",
+      "Seasonal batch germination testing"
+    ],
+    "ewmNuances": [
+      "Silo storage bulk handling",
+      "Grain elevator conveyor integration",
+      "Bulk truck weighing station integration"
+    ],
+    "sampleProcess": "Grain Truck Inbound -> Weighbridge & Moisture Sensor -> Silo Assignment -> Automated Elevator Offload -> Grading"
+  },
+  "hospitality": {
+    "id": "hospitality",
+    "name": "Hospitality & Leisure",
+    "icon": "Coffee",
+    "tagline": "Hotel chain food & beverage procurement, linen linen logistics, and guest amenity stock replenishment.",
+    "businessDrivers": [
+      "5-star guest satisfaction",
+      "Daily menu ingredient freshness",
+      "Centralized buying economies of scale"
+    ],
+    "keyChallenges": [
+      "Perishable culinary ingredients",
+      "High linen turnover",
+      "Multi-property stock transfers"
+    ],
+    "mmNuances": [
+      "Central Commissary Sourcing",
+      "Internal Stock Transport Orders (STO) between hotels",
+      "Par-level food reordering"
+    ],
+    "ewmNuances": [
+      "Hotel central warehouse kitting",
+      "Daily banquet cart prep",
+      "Linen laundry sorting and tracking"
+    ],
+    "sampleProcess": "Daily Kitchen Recipe Needs -> Central Hotel Commissary Pick -> Early Morning Refrigerated Van Transfer -> Banquet Prep"
+  },
+  "fashion": {
+    "id": "fashion",
+    "name": "Fashion & Luxury Goods",
+    "icon": "Glasses",
+    "tagline": "Seasonal runway collections, luxury item serialization, boutique store replenishment, and hanger garment logistics.",
+    "businessDrivers": [
+      "Brand prestige",
+      "Zero counterfeit exposure",
+      "Rapid boutique stock replenishment"
+    ],
+    "keyChallenges": [
+      "Short 8-week fashion seasons",
+      "Hanger garment handling (GOH)",
+      "High online return rates"
+    ],
+    "mmNuances": [
+      "Fashion Grid Attributes (Style / Color / Size / Fit)",
+      "Luxury item RFID serialization",
+      "Consignment at luxury department stores"
+    ],
+    "ewmNuances": [
+      "Garment-on-Hanger (GOH) overhead conveyors",
+      "High-security luxury vault zones",
+      "Boutique-ready luxury gift packaging"
+    ],
+    "sampleProcess": "Runway Collection Inbound -> GOH Overhead Rail Induction -> Boutique RFID Packing -> Direct Air Courier to Paris Boutique"
   }
 };
+
+export const INDUSTRIES_LIST: IndustryData[] = Object.values(INDUSTRIES);
+export const ALL_INDUSTRIES_COUNT = INDUSTRIES_LIST.length;

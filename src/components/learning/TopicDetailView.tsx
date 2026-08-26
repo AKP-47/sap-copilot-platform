@@ -526,56 +526,59 @@ export const TopicDetailView: React.FC<{ topic: SapTopic; onBack: () => void }> 
         </div>
       )}
 
-      {/* Tab 6: 11 Industry Variations */}
-      {activeTab === "industries" && (
-        <div className="space-y-6">
-          <div className="flex items-center space-x-2 overflow-x-auto pb-2">
-            {Object.keys(INDUSTRIES).map((indKey) => {
-              const ind = INDUSTRIES[indKey as IndustryKey];
-              const isSelected = selectedIndustry === indKey;
-              return (
-                <button
-                  key={indKey}
-                  onClick={() => setSelectedIndustry(indKey as IndustryKey)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all ${
-                    isSelected
-                      ? "bg-slate-900 text-white"
-                      : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
-                  }`}
-                >
-                  {ind.name}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">
-                {INDUSTRIES[selectedIndustry].name} Specific Nuance
-              </h3>
-              <span className="text-xs text-slate-500 font-medium italic">
-                {INDUSTRIES[selectedIndustry].tagline}
-              </span>
+      {/* Tab 6: Industry Variations */}
+      {activeTab === "industries" && (() => {
+        const activeInd = INDUSTRIES[selectedIndustry] || INDUSTRIES["automotive"] || Object.values(INDUSTRIES)[0];
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center space-x-2 overflow-x-auto pb-2">
+              {Object.keys(INDUSTRIES).map((indKey) => {
+                const ind = INDUSTRIES[indKey];
+                const isSelected = selectedIndustry === indKey;
+                return (
+                  <button
+                    key={indKey}
+                    onClick={() => setSelectedIndustry(indKey)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all ${
+                      isSelected
+                        ? "bg-slate-900 text-white"
+                        : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
+                    }`}
+                  >
+                    {ind.name}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs sm:text-sm text-slate-800 leading-relaxed">
-              {p.industryExamples[selectedIndustry] || "Standard industry baseline implementation applies."}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="p-3.5 bg-blue-50/50 rounded-xl border border-blue-100 text-xs space-y-1">
-                <span className="font-bold text-blue-900">Key Business Drivers:</span>
-                <p className="text-slate-700">{INDUSTRIES[selectedIndustry].businessDrivers.join(" • ")}</p>
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-base font-bold text-slate-900">
+                  {activeInd.name} Specific Nuance
+                </h3>
+                <span className="text-xs text-slate-500 font-medium italic">
+                  {activeInd.tagline}
+                </span>
               </div>
-              <div className="p-3.5 bg-purple-50/50 rounded-xl border border-purple-100 text-xs space-y-1">
-                <span className="font-bold text-purple-900">Operational Challenges:</span>
-                <p className="text-slate-700">{INDUSTRIES[selectedIndustry].keyChallenges.join(" • ")}</p>
+
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                {(p.industryExamples as Record<string, string>)[selectedIndustry] || "Standard industry baseline implementation applies."}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div className="p-3.5 bg-blue-50/50 rounded-xl border border-blue-100 text-xs space-y-1">
+                  <span className="font-bold text-blue-900">Key Business Drivers:</span>
+                  <p className="text-slate-700">{activeInd.businessDrivers.join(" • ")}</p>
+                </div>
+                <div className="p-3.5 bg-purple-50/50 rounded-xl border border-purple-100 text-xs space-y-1">
+                  <span className="font-bold text-purple-900">Operational Challenges:</span>
+                  <p className="text-slate-700">{activeInd.keyChallenges.join(" • ")}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Tab 7: Scenario Solver */}
       {activeTab === "quiz" && (

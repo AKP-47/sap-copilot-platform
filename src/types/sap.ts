@@ -4,18 +4,7 @@ export type ModuleType = "MM" | "EWM" | "INTEGRATION";
 
 export type LearningLevel = "BEGINNER" | "INTERMEDIATE" | "PROFESSIONAL" | "CONSULTANT" | "INTERVIEW";
 
-export type IndustryKey = 
-  | "automotive"
-  | "aerospace"
-  | "pharma"
-  | "food_beverage"
-  | "mechanical"
-  | "electronics"
-  | "retail"
-  | "cpg"
-  | "logistics_3pl"
-  | "construction"
-  | "industrial";
+export type IndustryKey = string;
 
 export interface IndustryInfo {
   id: IndustryKey;

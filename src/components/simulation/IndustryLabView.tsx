@@ -6,7 +6,7 @@ import { IndustryKey } from "../../types/sap";
 export const IndustryLabView: React.FC = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<IndustryKey>("automotive");
 
-  const currentInd = INDUSTRIES[selectedIndustry];
+  const currentInd = INDUSTRIES[selectedIndustry] || INDUSTRIES["automotive"] || Object.values(INDUSTRIES)[0];
 
   return (
     <div className="space-y-6 pb-12">
@@ -77,7 +77,7 @@ export const IndustryLabView: React.FC = () => {
               SAP MM Domain Nuances & Solutions
             </h4>
             <ul className="space-y-1.5">
-              {currentInd.mmNuances.map((n, i) => (
+              {currentInd.mmNuances.map((n: string, i: number) => (
                 <li key={i} className="text-xs text-amber-950 flex items-start">
                   <span className="text-amber-600 mr-2">•</span>
                   <span>{n}</span>
@@ -91,7 +91,7 @@ export const IndustryLabView: React.FC = () => {
               SAP EWM Domain Nuances & Solutions
             </h4>
             <ul className="space-y-1.5">
-              {currentInd.ewmNuances.map((n, i) => (
+              {currentInd.ewmNuances.map((n: string, i: number) => (
                 <li key={i} className="text-xs text-blue-950 flex items-start">
                   <span className="text-blue-600 mr-2">•</span>
                   <span>{n}</span>

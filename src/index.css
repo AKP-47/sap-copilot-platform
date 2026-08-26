@@ -3,90 +3,183 @@
 @tailwind utilities;
 
 :root {
-  /* Default SAP Blue 500 */
-  --primary: #0A6ED1;
-  --primary-rgb: 10, 110, 209;
-  --primary-hover: #0857A6;
-  --primary-active: #064687;
-  --primary-focus: #4DA7E4;
-  --primary-selected: #D8EBFA;
-  --primary-disabled: #B6DCF5;
-  --primary-soft: #D8EBFA;
-  --primary-subtle: #EEF6FC;
-  --primary-border: #B6DCF5;
-  --primary-glow: rgba(10, 110, 209, 0.35);
+  /* Default SAP Blue Design Tokens */
+  --theme-primary: #0A6ED1;
+  --theme-primary-rgb: 10, 110, 209;
+  --theme-primary-hover: #0857A6;
+  --theme-primary-active: #064687;
+  --theme-primary-focus: #4DA7E4;
+  --theme-primary-soft: #D8EBFA;
+  --theme-primary-subtle: #EEF6FC;
+  --theme-primary-border: #B6DCF5;
+  --theme-primary-glow: rgba(10, 110, 209, 0.25);
+  --theme-secondary: #F59E0B;
+  --theme-accent: #F59E0B;
+  --theme-accent-soft: rgba(245, 158, 11, 0.15);
+  
+  --theme-gradient-start: #0A6ED1;
+  --theme-gradient-end: #1D4ED8;
+  --theme-gradient: linear-gradient(135deg, #0A6ED1 0%, #1D4ED8 100%);
+  --theme-gradient-subtle: linear-gradient(135deg, #F4F7FB 0%, #EBF1F8 100%);
 
-  --primary-50: #EEF6FC;
-  --primary-100: #D8EBFA;
-  --primary-200: #B6DCF5;
-  --primary-300: #85C5EE;
-  --primary-400: #4DA7E4;
-  --primary-500: #0A6ED1;
-  --primary-600: #0857A6;
-  --primary-700: #064687;
-  --primary-800: #053A6D;
-  --primary-900: #053059;
-  --primary-950: #031E3B;
+  --theme-background: #F4F7FB;
+  --theme-background-secondary: #EBF1F8;
+  --theme-surface: #FFFFFF;
+  --theme-surface-elevated: #FFFFFF;
+  --theme-surface-hover: #F0F5FA;
+  --theme-card: #FFFFFF;
+  --theme-card-hover: #F0F5FA;
+  --theme-border: #D6E2F0;
+  --theme-border-hover: #B8D0EB;
 
-  /* Semantic Tokens */
-  --success: #16A34A;
-  --success-soft: #DCFCE7;
-  --warning: #D97706;
-  --warning-soft: #FEF3C7;
-  --error: #DC2626;
-  --error-soft: #FEE2E2;
-  --info: #0284C7;
-  --info-soft: #E0F2FE;
+  --theme-text-primary: #0F172A;
+  --theme-text-secondary: #475569;
+  --theme-text-muted: #94A3B8;
 
-  /* Surface & Typography Tokens */
-  --background: #F8FAFC;
-  --surface: #FFFFFF;
-  --surface-hover: #F1F5F9;
-  --surface-active: #E2E8F0;
-  --surface-elevated: #FFFFFF;
-  --border: #E2E8F0;
-  --border-hover: #CBD5E1;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --theme-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --theme-glow: 0 0 25px rgba(10, 110, 209, 0.25);
+
+  --theme-success: #10B981;
+  --theme-warning: #F59E0B;
+  --theme-danger: #EF4444;
+  --theme-info: #06B6D4;
+
+  /* Legacy Sync */
+  --primary: var(--theme-primary);
+  --background: var(--theme-background);
+  --surface: var(--theme-surface);
+  --border: var(--theme-border);
 }
 
 .dark {
-  --background: #090D16;
-  --surface: #0F172A;
-  --surface-hover: #1E293B;
-  --surface-active: #334155;
-  --surface-elevated: #1E293B;
-  --border: #1E293B;
-  --border-hover: #334155;
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --theme-primary: #0A6ED1;
+  --theme-primary-rgb: 10, 110, 209;
+  --theme-primary-hover: #0857A6;
+  --theme-primary-active: #064687;
+  --theme-primary-focus: #4DA7E4;
+  --theme-primary-soft: rgba(10, 110, 209, 0.2);
+  --theme-primary-subtle: rgba(10, 110, 209, 0.1);
+  --theme-primary-border: #1E324F;
+  --theme-primary-glow: rgba(10, 110, 209, 0.35);
+  --theme-secondary: #F59E0B;
+  --theme-accent: #F59E0B;
+  --theme-accent-soft: rgba(245, 158, 11, 0.2);
+
+  --theme-gradient-start: #0A6ED1;
+  --theme-gradient-end: #1D4ED8;
+  --theme-gradient: linear-gradient(135deg, #0A6ED1 0%, #1D4ED8 100%);
+  --theme-gradient-subtle: linear-gradient(135deg, #080E1A 0%, #0D1726 100%);
+
+  --theme-background: #080E1A;
+  --theme-background-secondary: #0D1726;
+  --theme-surface: #111D30;
+  --theme-surface-elevated: #17263C;
+  --theme-surface-hover: #17263C;
+  --theme-card: #0F1A2C;
+  --theme-card-hover: #16253E;
+  --theme-border: #1E324F;
+  --theme-border-hover: #2D4B75;
+
+  --theme-text-primary: #F8FAFC;
+  --theme-text-secondary: #94A3B8;
+  --theme-text-muted: #64748B;
+
+  --theme-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+  --theme-glow: 0 0 25px rgba(10, 110, 209, 0.25);
 }
 
 @layer base {
   body {
-    @apply antialiased bg-slate-50 text-slate-900 transition-colors duration-200;
+    background-color: var(--theme-background);
+    color: var(--theme-text-primary);
+    transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease;
+    @apply antialiased;
+  }
+
+  /* Universal Theme Token Adapters */
+  .theme-bg {
+    background-color: var(--theme-background);
+  }
+  .theme-surface {
+    background-color: var(--theme-surface);
+  }
+  .theme-card {
+    background-color: var(--theme-card);
+    border-color: var(--theme-border);
+  }
+  .theme-border {
+    border-color: var(--theme-border);
+  }
+  .theme-text-primary {
+    color: var(--theme-text-primary);
+  }
+  .theme-text-secondary {
+    color: var(--theme-text-secondary);
+  }
+  .theme-text-muted {
+    color: var(--theme-text-muted);
   }
 }
 
-/* Custom Scrollbar for Sleek Enterprise Look */
+/* Dynamic Global Theme Adapters for Application UI */
+.bg-blue-600, .bg-blue-700 {
+  background-color: var(--theme-primary) !important;
+}
+
+.hover\:bg-blue-700:hover, .hover\:bg-blue-600:hover {
+  background-color: var(--theme-primary-hover) !important;
+}
+
+.text-blue-600, .text-blue-700, .dark .text-blue-400 {
+  color: var(--theme-primary) !important;
+}
+
+.hover\:text-blue-700:hover, .hover\:text-blue-600:hover {
+  color: var(--theme-primary-hover) !important;
+}
+
+.border-blue-200, .border-blue-300, .border-blue-400, .border-blue-500, .border-blue-600 {
+  border-color: var(--theme-primary-border) !important;
+}
+
+.bg-blue-50, .bg-blue-100 {
+  background-color: var(--theme-primary-soft) !important;
+}
+
+.ring-blue-500, .focus\:ring-blue-500:focus {
+  --tw-ring-color: var(--theme-primary) !important;
+}
+
+.from-blue-600.to-indigo-600, .from-blue-700.to-indigo-700, .from-blue-500.to-indigo-500 {
+  background-image: var(--theme-gradient) !important;
+}
+
+/* Authentic WhatsApp Protection: STRICTLY KEEP WHATSAPP GREEN */
+a[href*="wa.me"], a[href*="whatsapp"], .btn-whatsapp, .bg-emerald-600.hover\:bg-emerald-700 {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+}
+a[href*="wa.me"]:hover, a[href*="whatsapp"]:hover {
+  background-color: #047857 !important;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.6);
+  background: var(--theme-background-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.6);
+  background: var(--theme-border-hover);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.8);
+  background: var(--theme-primary);
 }
 
 /* Reduced Motion Override */
@@ -99,7 +192,7 @@
   }
 }
 
-/* Outer Border Light Sweep Animation (Single 650ms cycle) */
+/* Outer Border Light Sweep Animation */
 @keyframes borderSweep {
   0% {
     clip-path: inset(0 100% 100% 0);

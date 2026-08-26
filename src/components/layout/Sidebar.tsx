@@ -46,10 +46,10 @@ export const Sidebar: React.FC = () => {
     {
       id: "learn",
       title: "Learn SAP",
-      icon: <BookOpen className="w-3.5 h-3.5 text-blue-400" />,
+      icon: <BookOpen className="w-3.5 h-3.5 text-theme-primary" />,
       items: [
         { view: "mm" as AppView, label: "SAP MM (Sourcing & Procurement)", icon: <Package className="w-4 h-4 text-amber-500" />, badge: "P2P" },
-        { view: "ewm" as AppView, label: "SAP EWM (Warehouse Execution)", icon: <Warehouse className="w-4 h-4 text-blue-500" />, badge: "Full" },
+        { view: "ewm" as AppView, label: "SAP EWM (Warehouse Execution)", icon: <Warehouse className="w-4 h-4 text-theme-primary" />, badge: "Full" },
         { view: "integration" as AppView, label: "MM + EWM Integration Hub", icon: <GitMerge className="w-4 h-4 text-purple-500" />, badge: "E2E" }
       ]
     },
@@ -75,7 +75,7 @@ export const Sidebar: React.FC = () => {
       title: "Career & Interview",
       icon: <Target className="w-3.5 h-3.5 text-amber-400" />,
       items: [
-        { view: "interview_prep" as AppView, label: "7-Tier Interview Prep", icon: <GraduationCap className="w-4 h-4 text-blue-400" />, badge: "150+ Q" },
+        { view: "interview_prep" as AppView, label: "7-Tier Interview Prep", icon: <GraduationCap className="w-4 h-4 text-theme-primary" />, badge: "150+ Q" },
         { view: "consultant_sim" as AppView, label: "Consultant Simulator", icon: <Briefcase className="w-4 h-4 text-yellow-500" />, badge: "Pro" },
         { view: "wricef_builder" as AppView, label: "WRICEF Spec Builder", icon: <FileCode2 className="w-4 h-4 text-indigo-400" /> },
         { view: "flashcards" as AppView, label: "Interactive Flashcards", icon: <Layers className="w-4 h-4 text-cyan-400" /> },
@@ -86,7 +86,14 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 shrink-0 hidden md:flex flex-col bg-slate-900 text-slate-300 border-r border-slate-800 min-h-[calc(100vh-4rem)] select-none">
+    <aside 
+      style={{
+        backgroundColor: "var(--theme-surface)",
+        borderColor: "var(--theme-border)",
+        color: "var(--theme-text-secondary)"
+      }}
+      className="w-64 shrink-0 hidden md:flex flex-col border-r min-h-[calc(100vh-4rem)] select-none transition-colors duration-200"
+    >
       <div className="flex-1 py-4 px-3 space-y-4 overflow-y-auto">
         
         {/* Primary Dashboard Link */}
@@ -96,12 +103,13 @@ export const Sidebar: React.FC = () => {
             setSelectedTopicId(null);
           }}
           style={{
-            backgroundColor: currentView === "dashboard" ? "var(--primary)" : undefined
+            backgroundColor: currentView === "dashboard" ? "var(--theme-primary)" : "transparent",
+            color: currentView === "dashboard" ? "#ffffff" : "var(--theme-text-primary)"
           }}
           className={`w-full flex items-center space-x-2.5 px-3 py-2.5 text-xs font-bold rounded-xl transition-all ${
             currentView === "dashboard"
-              ? "text-white shadow-md shadow-black/20"
-              : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+              ? "shadow-md shadow-black/20"
+              : "hover:bg-theme-surface-hover"
           }`}
         >
           <LayoutDashboard className="w-4 h-4" />
@@ -115,16 +123,17 @@ export const Sidebar: React.FC = () => {
             <div key={category.id} className="space-y-1 pt-1">
               <button
                 onClick={() => toggleSection(category.id)}
-                className="w-full flex items-center justify-between px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200 transition-colors"
+                style={{ color: "var(--theme-text-muted)" }}
+                className="w-full flex items-center justify-between px-2 py-1 text-[11px] font-bold uppercase tracking-wider hover:opacity-80 transition-opacity"
               >
                 <div className="flex items-center space-x-1.5">
                   {category.icon}
                   <span>{category.title}</span>
                 </div>
                 {isOpen ? (
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                  <ChevronDown className="w-3.5 h-3.5" />
                 ) : (
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 )}
               </button>
 
@@ -140,12 +149,13 @@ export const Sidebar: React.FC = () => {
                           setSelectedTopicId(null);
                         }}
                         style={{
-                          backgroundColor: isActive ? "var(--primary)" : undefined
+                          backgroundColor: isActive ? "var(--theme-primary)" : "transparent",
+                          color: isActive ? "#ffffff" : "var(--theme-text-secondary)"
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all ${
                           isActive
-                            ? "text-white font-semibold shadow-md shadow-black/20"
-                            : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/80"
+                            ? "font-semibold shadow-md shadow-black/20"
+                            : "hover:bg-theme-surface-hover hover:text-theme-text-primary"
                         }`}
                       >
                         <div className="flex items-center space-x-2.5 truncate">
@@ -153,9 +163,13 @@ export const Sidebar: React.FC = () => {
                           <span className="truncate">{item.label}</span>
                         </div>
                         {item.badge && (
-                          <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                            isActive ? "bg-black/20 text-white" : "bg-slate-800 text-slate-400"
-                          }`}>
+                          <span 
+                            style={{
+                              backgroundColor: isActive ? "rgba(0,0,0,0.2)" : "var(--theme-primary-soft)",
+                              color: isActive ? "#ffffff" : "var(--theme-primary)"
+                            }}
+                            className="text-[10px] px-1.5 py-0.2 rounded font-bold"
+                          >
                             {item.badge}
                           </span>
                         )}
@@ -170,24 +184,41 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Settings & Appearance */}
-      <div className="px-3 py-2 border-t border-slate-800 space-y-1">
+      <div 
+        style={{ borderColor: "var(--theme-border)" }}
+        className="px-3 py-2 border-t space-y-1"
+      >
         <button
           onClick={() => setIsAppearanceOpen(true)}
-          className="w-full flex items-center justify-between px-2.5 py-2 text-xs font-medium text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-lg border border-slate-700/60 transition-colors"
+          style={{
+            backgroundColor: "var(--theme-primary-soft)",
+            borderColor: "var(--theme-primary-border)",
+            color: "var(--theme-text-primary)"
+          }}
+          className="w-full flex items-center justify-between px-2.5 py-2 text-xs font-medium rounded-lg border transition-all hover:scale-[1.02]"
         >
           <div className="flex items-center space-x-2">
-            <Palette className="w-3.5 h-3.5 text-amber-400" />
+            <Palette className="w-3.5 h-3.5 text-theme-primary" />
             <span>Theme & Colors</span>
           </div>
-          <span className="text-[10px] font-mono px-1.5 py-0.2 bg-amber-400/20 text-amber-300 rounded font-bold">
-            29 Themes
+          <span 
+            style={{ backgroundColor: "var(--theme-primary)", color: "#ffffff" }}
+            className="text-[10px] font-mono px-1.5 py-0.2 rounded font-bold"
+          >
+            28 Themes
           </span>
         </button>
       </div>
 
       {/* TagSkills Institute Direct Link Banner */}
-      <div className="p-3 border-t border-slate-800 bg-slate-950/80 m-2 rounded-xl">
-        <div className="text-xs text-slate-400 mb-2 font-medium">
+      <div 
+        style={{
+          backgroundColor: "var(--theme-card)",
+          borderColor: "var(--theme-border)"
+        }}
+        className="p-3 border m-2 rounded-xl"
+      >
+        <div style={{ color: "var(--theme-text-muted)" }} className="text-xs mb-2 font-medium">
           Accelerate your career with live mentorship from industry leaders.
         </div>
         <a

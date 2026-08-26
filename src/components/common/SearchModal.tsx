@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSap } from "../../context/SapContext";
 import { 
   Search,
+  Sliders,
   Brain, 
   X, 
   Package, 
@@ -105,6 +106,8 @@ export const SearchModal: React.FC = () => {
     !q || tc.tcode.toLowerCase().includes(q) || tc.name.toLowerCase().includes(q) || tc.purpose.toLowerCase().includes(q)
   ).slice(0, 4);
 
+  const isAdaptiveMatch = !q || "adaptive".includes(q) || "level".includes(q) || "fresher".includes(q) || "intermediate".includes(q) || "professional".includes(q) || "adaptive mastery".includes(q);
+
   const isReasoningMatch = !q || "business reasoning".includes(q) || "business to sap".includes(q) || "reasoning".includes(q) || "decision".includes(q) || "consequence".includes(q);
 
   const isFoundationsMatch = learningLevel === "BEGINNER" && (
@@ -123,7 +126,7 @@ export const SearchModal: React.FC = () => {
     !q || e.errorCode.toLowerCase().includes(q) || e.title.toLowerCase().includes(q) || e.messageText.toLowerCase().includes(q)
   ).slice(0, 2);
 
-  const hasAnyResults = isReasoningMatch || isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
+  const hasAnyResults = isAdaptiveMatch || isReasoningMatch || isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
 
   return (
     <div 
@@ -213,6 +216,34 @@ export const SearchModal: React.FC = () => {
           {q && hasAnyResults && (
             <div className="space-y-6">
               
+              {/* Category: Level-Adaptive Mastery Engine */}
+              {isAdaptiveMatch && (
+                <div className="space-y-2">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 flex items-center">
+                    <Sliders className="w-3.5 h-3.5 mr-1" />
+                    <span>Level-Adaptive Learning Engine (Fresher ➔ Inter ➔ Pro)</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      saveRecentSearch("Level-Adaptive Mastery");
+                      setCurrentView("adaptive_mastery");
+                      setIsSearchOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl bg-gradient-to-r from-sky-500/10 to-blue-500/10 border border-sky-300 dark:border-sky-700 hover:border-sky-500 transition-all flex items-center justify-between group"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-sky-600">
+                        🎯 Unified Adaptive Architecture: 1 Framework, 3 Depth Tiers
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Same 10-stage progression with content scaling dynamically from Fresher to Professional.
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-sky-600 group-hover:translate-x-1 transition-transform shrink-0" />
+                  </button>
+                </div>
+              )}
+
               {/* Category: Business -> SAP Reasoning Signature Framework */}
               {isReasoningMatch && (
                 <div className="space-y-2">

@@ -9,6 +9,7 @@ import { applyTheme } from "../utils/themeManager";
 
 export type AppView = 
   | "dashboard"
+  | "adaptive_mastery"
   | "foundations"
   | "business_reasoning"
   | "enterprise_map"

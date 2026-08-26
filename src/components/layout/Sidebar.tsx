@@ -92,6 +92,7 @@ export const Sidebar: React.FC = () => {
       title: "Think Like a Consultant",
       icon: <Briefcase className="w-3.5 h-3.5 text-amber-400" />,
       items: [
+        { view: "adaptive_mastery" as AppView, label: "Level-Adaptive Mastery", icon: <SlidersHorizontal className="w-4 h-4 text-sky-400" />, badge: "Adaptive" },
         { view: "business_reasoning" as AppView, label: "Business ➔ SAP Reasoning", icon: <Brain className="w-4 h-4 text-amber-400" />, badge: "Signature" },
         { view: "enterprise_map" as AppView, label: "Enterprise Connection Map", icon: <GitMerge className="w-4 h-4 text-purple-400" />, badge: "E2E" },
         { view: "concept_dna" as AppView, label: "Concept DNA (360°)", icon: <Dna className="w-4 h-4 text-indigo-400" /> },

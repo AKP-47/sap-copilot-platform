@@ -1,3 +1,4 @@
+import { AdaptiveMasteryView } from "./components/adaptive/AdaptiveMasteryView";
 import { BusinessSapReasoningView } from "./components/reasoning/BusinessSapReasoningView";
 import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
 import { ImpactSimulator } from "./components/consultant/ImpactSimulator";
@@ -50,6 +51,8 @@ const AppContent: React.FC = () => {
         return <DashboardView />;
       case "foundations":
         return <BeginnerFoundationsView />;
+      case "adaptive_mastery":
+        return <AdaptiveMasteryView />;
       case "business_reasoning":
         return <BusinessSapReasoningView />;
       case "enterprise_map":

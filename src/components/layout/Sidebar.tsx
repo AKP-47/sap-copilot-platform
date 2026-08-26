@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { 
-  LayoutDashboard, 
+  LayoutDashboard,
+  Building2,
+  Sparkles, 
   Package, 
   Warehouse, 
   GitMerge, 
@@ -29,7 +31,7 @@ import {
 } from "lucide-react";
 
 export const Sidebar: React.FC = () => {
-  const { currentView, setCurrentView, setSelectedTopicId, setIsAppearanceOpen } = useSap();
+  const { currentView, setCurrentView, setSelectedTopicId, setIsAppearanceOpen, learningLevel } = useSap();
 
   // Accordion state for clean collapsible categories
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -42,7 +44,17 @@ export const Sidebar: React.FC = () => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
+  const beginnerCategory = {
+    id: "foundations",
+    title: "Beginner Academy (Start Here)",
+    icon: <Sparkles className="w-3.5 h-3.5 text-amber-400" />,
+    items: [
+      { view: "foundations" as AppView, label: "Business & SAP Foundations", icon: <Building2 className="w-4 h-4 text-emerald-400" />, badge: "Zero Pre-req" }
+    ]
+  };
+
   const navCategories = [
+    ...(learningLevel === "BEGINNER" ? [beginnerCategory] : []),
     {
       id: "learn",
       title: "Learn SAP",

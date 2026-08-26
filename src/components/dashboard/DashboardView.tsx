@@ -37,6 +37,7 @@ export const DashboardView: React.FC = () => {
     setSelectedTopicId, 
     setIsSearchOpen, 
     setIsCopilotOpen,
+    learningLevel,
     completedScenarios, 
     bookmarks 
   } = useSap();
@@ -298,6 +299,34 @@ export const DashboardView: React.FC = () => {
 
       </div>
 
+
+      {/* ============================================================ */}
+      {/* BEGINNER-ONLY ACADEMY LAUNCHPAD BANNER                       */}
+      {/* ============================================================ */}
+      {learningLevel === "BEGINNER" && (
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-200">
+          <div className="space-y-1.5 max-w-2xl">
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-white/20 rounded-full text-[10px] font-mono font-bold uppercase">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>RECOMMENDED START FOR BEGINNERS</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+              New to Business & SAP? Start Here
+            </h3>
+            <p className="text-xs text-emerald-100 leading-relaxed">
+              Understand what a business is, how ERP works, why companies use SAP, official pronunciation ("S-A-P"), founding history, and module ecosystems before diving into MM & EWM.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setCurrentView("foundations")}
+            className="inline-flex items-center justify-center space-x-2 py-3 px-5 rounded-2xl bg-white text-slate-950 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105"
+          >
+            <span>Open Beginner Academy</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* ============================================================ */}
       {/* SECTION 2: QUICK ACTION LAUNCHPAD (6 CORE ACTIONS)           */}

@@ -1,3 +1,4 @@
+import { BeginnerFoundationsView } from "./components/foundations/BeginnerFoundationsView";
 import React from "react";
 import { SapProvider, useSap } from "./context/SapContext";
 import { AiProvider } from "./context/AiContext";
@@ -40,6 +41,8 @@ const AppContent: React.FC = () => {
     switch (currentView) {
       case "dashboard":
         return <DashboardView />;
+      case "foundations":
+        return <BeginnerFoundationsView />;
       case "mm":
         return <MMExplorer />;
       case "ewm":

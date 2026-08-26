@@ -34,7 +34,7 @@ const POPULAR_SEARCHES = [
 ];
 
 export const SearchModal: React.FC = () => {
-  const { isSearchOpen, setIsSearchOpen, setCurrentView, setSelectedTopicId } = useSap();
+  const { isSearchOpen, setIsSearchOpen, setCurrentView, setSelectedTopicId, learningLevel } = useSap();
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
@@ -104,11 +104,23 @@ export const SearchModal: React.FC = () => {
     !q || tc.tcode.toLowerCase().includes(q) || tc.name.toLowerCase().includes(q) || tc.purpose.toLowerCase().includes(q)
   ).slice(0, 4);
 
+  const isFoundationsMatch = learningLevel === "BEGINNER" && (
+    !q ||
+    "business foundations".includes(q) ||
+    "what is sap".includes(q) ||
+    "what is erp".includes(q) ||
+    "founders".includes(q) ||
+    "pronounce".includes(q) ||
+    "history".includes(q) ||
+    "walldorf".includes(q) ||
+    "s/4hana evolution".includes(q)
+  );
+
   const matchedErrors = ERROR_DOCTOR_DATA.filter(e =>
     !q || e.errorCode.toLowerCase().includes(q) || e.title.toLowerCase().includes(q) || e.messageText.toLowerCase().includes(q)
   ).slice(0, 2);
 
-  const hasAnyResults = matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
+  const hasAnyResults = isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
 
   return (
     <div 
@@ -198,6 +210,34 @@ export const SearchModal: React.FC = () => {
           {q && hasAnyResults && (
             <div className="space-y-6">
               
+              {/* Category 0: Beginner Academy Foundations */}
+              {isFoundationsMatch && (
+                <div className="space-y-2">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center">
+                    <Sparkles className="w-3.5 h-3.5 mr-1" />
+                    <span>Beginner Academy Foundations</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      saveRecentSearch("Business & SAP Foundations");
+                      setCurrentView("foundations");
+                      setIsSearchOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-300 dark:border-emerald-700 hover:border-emerald-500 transition-all flex items-center justify-between group"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600">
+                        🎓 Business Foundations, What is ERP & SAP Origin
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        Zero prerequisites: 10-stage process flow, pronunciation, 5 founders, Walldorf HQ & S/4HANA timeline.
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-emerald-600 group-hover:translate-x-1 transition-transform shrink-0" />
+                  </button>
+                </div>
+              )}
+
               {/* Category 1: Movement Types */}
               {matchedMovements.length > 0 && (
                 <div className="space-y-2">

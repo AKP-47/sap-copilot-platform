@@ -9,6 +9,7 @@ import { applyTheme } from "../utils/themeManager";
 
 export type AppView = 
   | "dashboard"
+  | "foundations"
   | "mm"
   | "ewm"
   | "integration"

@@ -19,7 +19,7 @@ export const OwnerLoginView: React.FC = () => {
   const { setCurrentView } = useSap();
 
   // Login form state
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("akshatpandey12805@gmail.com");
   const [passkey, setPasskey] = useState("");
   const [showPasskey, setShowPasskey] = useState(false);
 
@@ -253,7 +253,6 @@ export const OwnerLoginView: React.FC = () => {
               name="username"
               type="text"
               autoComplete="username"
-              autoFocus
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -305,7 +304,7 @@ export const OwnerLoginView: React.FC = () => {
               <span>Authenticating Passkey...</span>
             ) : (
               <>
-                <span>Authenticate & Access Owner Tracker</span>
+                <span>Authenticate & View Learner Sign-Ins</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}

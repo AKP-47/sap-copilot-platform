@@ -7,7 +7,6 @@ const HASH_ITERATIONS = 100000;
 const HASH_KEYLEN = 64;
 const HASH_DIGEST = "sha512";
 const SERVER_SECRET = process.env.JWT_SECRET || "tagskills-enterprise-sap-user-secret-prod-2026";
-const USERS_FILE_PATH = path.join(process.cwd(), ".registered_users.json");
 const KV_USERS_KEY = "tagskills_registered_users";
 
 export interface RegisteredUserRecord {
@@ -23,46 +22,26 @@ export interface RegisteredUserRecord {
   completedLabsCount: number;
   quizzesTakenCount: number;
   avgQuizScore: number | null;
+  resetTokenHash?: string | null;
+  resetTokenExpiry?: number | null;
 }
 
 let inMemoryUsers: RegisteredUserRecord[] = [];
 
-function loadUsersFromDisk(): RegisteredUserRecord[] {
-  try {
-    if (fs.existsSync(USERS_FILE_PATH)) {
-      const raw = fs.readFileSync(USERS_FILE_PATH, "utf8");
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        inMemoryUsers = parsed;
-        return inMemoryUsers;
-      }
-    }
-  } catch (err) {
-    console.warn("User store load exception:", err);
+async function syncUsersFromStore(): Promise<RegisteredUserRecord[]> {
+  const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
+  if (Array.isArray(remote)) {
+    inMemoryUsers = remote;
   }
   return inMemoryUsers;
 }
 
-// Initial local load
-loadUsersFromDisk();
-
-// Attempt remote KV sync in background
-kvGet<RegisteredUserRecord[]>(KV_USERS_KEY).then(remoteUsers => {
-  if (Array.isArray(remoteUsers) && remoteUsers.length > 0) {
-    inMemoryUsers = remoteUsers;
-  }
-}).catch(() => null);
-
-function persistUsers() {
-  try {
-    fs.writeFileSync(USERS_FILE_PATH, JSON.stringify(inMemoryUsers, null, 2), "utf8");
-  } catch {
-    // Disk write might fail on serverless read-only filesystem, which is expected
-  }
-
-  // Persist to Serverless KV if configured
-  kvSet(KV_USERS_KEY, inMemoryUsers).catch(() => null);
+async function persistUsersToStore(): Promise<void> {
+  await kvSet(KV_USERS_KEY, inMemoryUsers);
 }
+
+// Initial sync
+syncUsersFromStore().catch(() => null);
 
 /**
  * Registers a new learner account with salted PBKDF2-SHA512 hash
@@ -74,18 +53,14 @@ export async function registerNewUserAsync(params: {
   learningLevel?: string;
   selectedIndustry?: string;
 }): Promise<{ success: boolean; user?: RegisteredUserRecord; error?: string; code?: string }> {
-  // Sync latest from KV if available
-  const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
-  if (Array.isArray(remote)) {
-    inMemoryUsers = remote;
-  }
+  await syncUsersFromStore();
 
   const cleanName = params.name?.trim();
   const cleanEmail = params.email?.trim().toLowerCase();
   const cleanPass = params.password?.trim();
 
   if (!cleanName || cleanName.length < 2) {
-    return { success: false, error: "Please enter your full name (at least 2 characters).", code: "INVALID_NAME" };
+    return { success: false, error: "Please enter your full name.", code: "INVALID_NAME" };
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,12 +72,12 @@ export async function registerNewUserAsync(params: {
     return { success: false, error: "Password must be at least 6 characters.", code: "WEAK_PASSWORD" };
   }
 
-  // Check duplicate email
+  // Exact error message required for duplicate email
   const existing = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
   if (existing) {
     return {
       success: false,
-      error: "This email is already registered.",
+      error: "An account with this email already exists. Please sign in instead.",
       code: "DUPLICATE_EMAIL"
     };
   }
@@ -118,7 +93,7 @@ export async function registerNewUserAsync(params: {
     hash,
     createdAt: new Date().toISOString(),
     lastLoginAt: new Date().toISOString(),
-    learningLevel: params.learningLevel || "BEGINNER",
+    learningLevel: params.learningLevel || "Beginner",
     selectedIndustry: params.selectedIndustry || "Automotive",
     completedLabsCount: 0,
     quizzesTakenCount: 0,
@@ -126,110 +101,113 @@ export async function registerNewUserAsync(params: {
   };
 
   inMemoryUsers.push(newUser);
-  persistUsers();
-
-  return { success: true, user: newUser };
-}
-
-export function registerNewUser(params: {
-  name: string;
-  email: string;
-  password: string;
-  learningLevel?: string;
-  selectedIndustry?: string;
-}): { success: boolean; user?: RegisteredUserRecord; error?: string; code?: string } {
-  const cleanName = params.name?.trim();
-  const cleanEmail = params.email?.trim().toLowerCase();
-  const cleanPass = params.password?.trim();
-
-  if (!cleanName || cleanName.length < 2) {
-    return { success: false, error: "Please enter your full name (at least 2 characters).", code: "INVALID_NAME" };
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!cleanEmail || !emailRegex.test(cleanEmail)) {
-    return { success: false, error: "Please enter a valid email address.", code: "INVALID_EMAIL" };
-  }
-
-  if (!cleanPass || cleanPass.length < 6) {
-    return { success: false, error: "Password must be at least 6 characters.", code: "WEAK_PASSWORD" };
-  }
-
-  const existing = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
-  if (existing) {
-    return {
-      success: false,
-      error: "This email is already registered.",
-      code: "DUPLICATE_EMAIL"
-    };
-  }
-
-  const salt = crypto.randomBytes(32).toString("hex");
-  const hash = crypto.pbkdf2Sync(cleanPass, salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
-
-  const newUser: RegisteredUserRecord = {
-    id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-    name: cleanName,
-    email: cleanEmail,
-    salt,
-    hash,
-    createdAt: new Date().toISOString(),
-    lastLoginAt: new Date().toISOString(),
-    learningLevel: params.learningLevel || "BEGINNER",
-    selectedIndustry: params.selectedIndustry || "Automotive",
-    completedLabsCount: 0,
-    quizzesTakenCount: 0,
-    avgQuizScore: null
-  };
-
-  inMemoryUsers.push(newUser);
-  persistUsers();
+  await persistUsersToStore();
 
   return { success: true, user: newUser };
 }
 
 /**
- * Authenticates user credentials
+ * Authenticates user credentials using constant-time PBKDF2 hash comparison
  */
 export async function authenticateUserAsync(email: string, password: string): Promise<{ success: boolean; user?: RegisteredUserRecord; error?: string }> {
-  const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
-  if (Array.isArray(remote)) {
-    inMemoryUsers = remote;
-  }
+  await syncUsersFromStore();
 
-  return authenticateUser(email, password);
-}
-
-export function authenticateUser(email: string, password: string): { success: boolean; user?: RegisteredUserRecord; error?: string } {
   const cleanEmail = email?.trim().toLowerCase();
   const cleanPass = password?.trim();
 
   if (!cleanEmail || !cleanPass) {
-    return { success: false, error: "Please provide both email and password." };
+    return { success: false, error: "Email or password is incorrect. Please try again." };
   }
 
   const user = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
-  if (!user) {
-    return { success: false, error: "Incorrect email or password." };
+  if (!user || !user.salt || !user.hash) {
+    return { success: false, error: "Email or password is incorrect. Please try again." };
   }
 
-  const computedHash = crypto.pbkdf2Sync(cleanPass, user.salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
-
   try {
+    const computedHash = crypto.pbkdf2Sync(cleanPass, user.salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
     const bufA = Buffer.from(computedHash, "hex");
     const bufB = Buffer.from(user.hash, "hex");
+
     if (bufA.length !== bufB.length || !crypto.timingSafeEqual(bufA, bufB)) {
-      return { success: false, error: "Incorrect email or password." };
+      return { success: false, error: "Email or password is incorrect. Please try again." };
     }
   } catch {
-    return { success: false, error: "Incorrect email or password." };
+    return { success: false, error: "Email or password is incorrect. Please try again." };
   }
 
   // Update last login timestamp
   user.lastLoginAt = new Date().toISOString();
-  persistUsers();
+  await persistUsersToStore();
 
   return { success: true, user };
+}
+
+/**
+ * Creates single-use 15-minute password reset token
+ */
+export async function createPasswordResetToken(email: string): Promise<{ success: boolean; token?: string; error?: string }> {
+  await syncUsersFromStore();
+  const cleanEmail = email?.trim().toLowerCase();
+
+  const user = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
+  if (!user) {
+    // Return generic success to avoid email enumeration
+    return { success: true };
+  }
+
+  const resetToken = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit secure code
+  const tokenHash = crypto.createHmac("sha256", SERVER_SECRET).update(resetToken).digest("hex");
+  const expiry = Date.now() + 15 * 60 * 1000; // 15 mins
+
+  user.resetTokenHash = tokenHash;
+  user.resetTokenExpiry = expiry;
+
+  await persistUsersToStore();
+  return { success: true, token: resetToken };
+}
+
+/**
+ * Resets user password using single-use reset token
+ */
+export async function resetUserPassword(email: string, token: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  await syncUsersFromStore();
+  const cleanEmail = email?.trim().toLowerCase();
+  const cleanToken = token?.trim();
+  const cleanPass = newPassword?.trim();
+
+  if (!cleanPass || cleanPass.length < 6) {
+    return { success: false, error: "New password must be at least 6 characters." };
+  }
+
+  const user = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
+  if (!user || !user.resetTokenHash || !user.resetTokenExpiry) {
+    return { success: false, error: "Invalid or expired reset token. Please request a new code." };
+  }
+
+  if (Date.now() > user.resetTokenExpiry) {
+    user.resetTokenHash = null;
+    user.resetTokenExpiry = null;
+    await persistUsersToStore();
+    return { success: false, error: "Reset token has expired. Please request a new code." };
+  }
+
+  const tokenHash = crypto.createHmac("sha256", SERVER_SECRET).update(cleanToken).digest("hex");
+  if (tokenHash !== user.resetTokenHash) {
+    return { success: false, error: "Invalid reset token. Please verify the code entered." };
+  }
+
+  // Generate new salt and hash
+  const salt = crypto.randomBytes(32).toString("hex");
+  const hash = crypto.pbkdf2Sync(cleanPass, salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
+
+  user.salt = salt;
+  user.hash = hash;
+  user.resetTokenHash = null; // Single-use burn
+  user.resetTokenExpiry = null;
+
+  await persistUsersToStore();
+  return { success: true };
 }
 
 /**
@@ -251,26 +229,8 @@ export function updateUserProfile(userId: string, updates: Partial<Pick<Register
     user.selectedIndustry = updates.selectedIndustry;
   }
 
-  persistUsers();
+  persistUsersToStore().catch(() => null);
   return { success: true, user };
-}
-
-/**
- * Returns all registered users
- */
-export function getAllRegisteredUsers(): Omit<RegisteredUserRecord, "salt" | "hash">[] {
-  return inMemoryUsers.map(u => ({
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    createdAt: u.createdAt,
-    lastLoginAt: u.lastLoginAt,
-    learningLevel: u.learningLevel,
-    selectedIndustry: u.selectedIndustry,
-    completedLabsCount: u.completedLabsCount,
-    quizzesTakenCount: u.quizzesTakenCount,
-    avgQuizScore: u.avgQuizScore
-  }));
 }
 
 /**

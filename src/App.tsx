@@ -1,3 +1,5 @@
+import { OwnerAuthProvider } from "./context/OwnerAuthContext";
+import { OwnerRouteGuard } from "./components/admin/OwnerRouteGuard";
 import { AdaptiveMasteryView } from "./components/adaptive/AdaptiveMasteryView";
 import { BusinessSapReasoningView } from "./components/reasoning/BusinessSapReasoningView";
 import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
@@ -43,12 +45,32 @@ import { FlashcardStudyLab } from "./components/career/FlashcardStudyLab";
 import { StudyNotesView } from "./components/career/StudyNotesView";
 
 const AppContent: React.FC = () => {
-  const { currentView } = useSap();
+  const { currentView, setCurrentView } = useSap();
+
+  React.useEffect(() => {
+    // Check initial URL pathname, search query, or hash for /admin or /owner
+    const path = window.location.pathname.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+
+    if (
+      path === "/admin" || 
+      path === "/owner" || 
+      search.includes("view=admin") || 
+      search.includes("view=owner") ||
+      hash.includes("/admin") ||
+      hash.includes("/owner")
+    ) {
+      setCurrentView("owner_analytics");
+    }
+  }, [setCurrentView]);
 
   const renderCurrentView = () => {
     switch (currentView) {
       case "dashboard":
         return <DashboardView />;
+      case "owner_analytics":
+        return <OwnerRouteGuard />;
       case "foundations":
         return <BeginnerFoundationsView />;
       case "adaptive_mastery":
@@ -144,11 +166,13 @@ const AppContent: React.FC = () => {
 
 export function App() {
   return (
-    <SapProvider>
-      <AiProvider>
-        <AppContent />
-      </AiProvider>
-    </SapProvider>
+    <OwnerAuthProvider>
+      <SapProvider>
+        <AiProvider>
+          <AppContent />
+        </AiProvider>
+      </SapProvider>
+    </OwnerAuthProvider>
   );
 }
 

@@ -1,8 +1,11 @@
+import { useSap } from "../../context/SapContext";
+import { ShieldCheck, Lock } from "lucide-react";
 import React from "react";
 import { ExternalLink, Phone, MessageSquare, Headphones } from "lucide-react";
 import { ASSISTANCE_CONTACTS, TAGSKILLS_INSTITUTE_INFO } from "../../data/contacts";
 
 export const Footer: React.FC = () => {
+  const { setCurrentView } = useSap();
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-800 pt-12 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -130,6 +133,15 @@ export const Footer: React.FC = () => {
             </a>
             <span>•</span>
             <span>Bengaluru, Karnataka, India</span>
+            <span>•</span>
+            <button
+              onClick={() => setCurrentView("owner_analytics")}
+              className="hover:text-amber-400 text-slate-500 transition-colors flex items-center space-x-1"
+              title="Restricted Website Owner Access"
+            >
+              <Lock className="w-3 h-3" />
+              <span>Owner Portal</span>
+            </button>
           </div>
         </div>
 

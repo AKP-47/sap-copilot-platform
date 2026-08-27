@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import { useUserAuth } from "../../context/UserAuthContext";
 import { User as UserIcon } from "lucide-react";
 import React from "react";
@@ -7,7 +8,7 @@ import { Search, Sparkles, Palette, ShieldCheck, Lock } from "lucide-react";
 import { LearningLevel } from "../../types/sap";
 
 export const Header: React.FC = () => {
-  const { currentUser, isAuthenticated, openAuthModal } = useUserAuth();
+  const { currentUser, isAuthenticated, openAuthModal, signOutUser } = useUserAuth();
   const { 
     learningLevel, 
     setLearningLevel, 
@@ -169,20 +170,34 @@ export const Header: React.FC = () => {
 
             {/* User Account / Sign In Trigger */}
             {isAuthenticated && currentUser ? (
-              <button
-                onClick={() => openAuthModal("profile")}
-                style={{
-                  backgroundColor: "var(--theme-background-secondary)",
-                  borderColor: "var(--theme-border)"
-                }}
-                className="flex items-center space-x-1.5 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
-                title="View Learning Profile"
-              >
-                <div className="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-black">
-                  {currentUser.name.charAt(0).toUpperCase()}
-                </div>
-                <span className="hidden sm:inline truncate max-w-[80px]">{currentUser.name.split(" ")[0]}</span>
-              </button>
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={() => openAuthModal("profile")}
+                  style={{
+                    backgroundColor: "var(--theme-background-secondary)",
+                    borderColor: "var(--theme-border)"
+                  }}
+                  className="flex items-center space-x-1.5 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
+                  title="View Learning Profile & Settings"
+                >
+                  <div className="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-black">
+                    {currentUser.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="hidden sm:inline truncate max-w-[90px]">{currentUser.name.split(" ")[0]}</span>
+                </button>
+                <button
+                  onClick={signOutUser}
+                  style={{
+                    backgroundColor: "var(--theme-background-secondary)",
+                    borderColor: "var(--theme-border)"
+                  }}
+                  className="p-1.5 rounded-lg border text-slate-400 hover:text-rose-500 transition-colors"
+                  title="Sign Out of SAP Copilot"
+                  aria-label="Sign Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
             ) : (
               <div className="flex items-center space-x-1.5">
                 <button

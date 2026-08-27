@@ -58,6 +58,35 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<"signin" | "signup" | "profile" | "forgot">("signin");
 
+  // Validate and sync session with server on mount
+  useEffect(() => {
+    const token = localStorage.getItem(USER_TOKEN_KEY);
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+
+    fetch("/api/user/profile", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && data.user) {
+          setCurrentUser(data.user);
+          localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(data.user));
+          setIsAuthenticated(true);
+        } else if (data && data.error && (data.error.includes("expired") || data.error.includes("Invalid") || data.error.includes("required"))) {
+          localStorage.removeItem(USER_TOKEN_KEY);
+          localStorage.removeItem(USER_PROFILE_KEY);
+          setCurrentUser(null);
+          setIsAuthenticated(false);
+        }
+      })
+      .catch(() => {
+        // Keep active session in case of brief network hiccup
+      });
+  }, []);
+
   const openAuthModal = (mode: "signin" | "signup" | "profile" | "forgot" = "signin") => {
     setAuthModalMode(mode);
     setAuthError(null);
@@ -161,6 +190,8 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const signOutUser = () => {
     localStorage.removeItem(USER_TOKEN_KEY);
     localStorage.removeItem(USER_PROFILE_KEY);
+    sessionStorage.removeItem(USER_TOKEN_KEY);
+    sessionStorage.removeItem(USER_PROFILE_KEY);
     setCurrentUser(null);
     setIsAuthenticated(false);
     closeAuthModal();

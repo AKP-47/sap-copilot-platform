@@ -156,7 +156,7 @@ export const UserAuthModal: React.FC = () => {
                 <GraduationCap className="w-6 h-6" />
               </div>
               <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Welcome to SAP Copilot
+                Welcome to TagSkills SAP Copilot
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Create your account and start your SAP learning journey.
@@ -247,8 +247,7 @@ export const UserAuthModal: React.FC = () => {
                 disabled={authLoading}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
               >
-                <span>{authLoading ? "Creating Account..." : "Create Account"}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{authLoading ? "Creating Account..." : "Create Account →"}</span>
               </button>
             </form>
 
@@ -277,10 +276,10 @@ export const UserAuthModal: React.FC = () => {
                 <BookOpen className="w-6 h-6" />
               </div>
               <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Welcome Back
+                Welcome to TagSkills SAP Copilot
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Sign in to continue your SAP MM & EWM learning journey.
+                Sign in to continue your SAP learning journey.
               </p>
             </div>
 
@@ -343,14 +342,13 @@ export const UserAuthModal: React.FC = () => {
                 disabled={authLoading}
                 className="w-full py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-850 dark:bg-amber-400 dark:hover:bg-amber-300 text-white dark:text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
               >
-                <span>{authLoading ? "Signing In..." : "Sign In"}</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{authLoading ? "Signing In..." : "Sign In →"}</span>
               </button>
             </form>
 
             <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
               <p className="text-xs text-slate-500">
-                Don't have an account?{" "}
+                New to SAP Copilot?{" "}
                 <button
                   type="button"
                   onClick={() => setAuthModalMode("signup")}

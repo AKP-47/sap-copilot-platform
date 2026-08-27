@@ -18,14 +18,12 @@ export async function sendOwnerNewUserAlert(user: NewUserRegistrationPayload): P
   const emailSubject = `🔔 New SAP Copilot Learner Registration: ${user.name}`;
   const emailBodyText = `
 ==================================================
-NEW SAP COPILOT USER REGISTRATION
+NEW SAP COPILOT USER
 ==================================================
 
 Name:              ${user.name}
 Email:             ${user.email}
-Registered:        ${timestampFormatted}
-Initial Level:     ${user.learningLevel || "Beginner"}
-Selected Industry: ${user.selectedIndustry || "Automotive"}
+Registration Time: ${timestampFormatted}
 
 ==================================================
 TagSkills Intelligent SAP MM & EWM Learning Platform

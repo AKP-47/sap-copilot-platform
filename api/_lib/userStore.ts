@@ -84,7 +84,7 @@ export function registerNewUser(params: {
   if (existing) {
     return {
       success: false,
-      error: "An account with this email already exists.",
+      error: "This email is already registered.",
       code: "DUPLICATE_EMAIL"
     };
   }
@@ -126,7 +126,7 @@ export function authenticateUser(email: string, password: string): { success: bo
 
   const user = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
   if (!user) {
-    return { success: false, error: "Invalid email or password. Please check your credentials." };
+    return { success: false, error: "Incorrect email or password." };
   }
 
   const computedHash = crypto.pbkdf2Sync(cleanPass, user.salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
@@ -135,10 +135,10 @@ export function authenticateUser(email: string, password: string): { success: bo
     const bufA = Buffer.from(computedHash, "hex");
     const bufB = Buffer.from(user.hash, "hex");
     if (bufA.length !== bufB.length || !crypto.timingSafeEqual(bufA, bufB)) {
-      return { success: false, error: "Invalid email or password. Please check your credentials." };
+      return { success: false, error: "Incorrect email or password." };
     }
   } catch {
-    return { success: false, error: "Invalid email or password. Please check your credentials." };
+    return { success: false, error: "Incorrect email or password." };
   }
 
   // Update last login timestamp

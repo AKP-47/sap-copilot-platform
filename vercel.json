@@ -1,7 +1,22 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/user/signup.cjs":         { "runtime": "@vercel/node" },
+    "api/user/signin.cjs":         { "runtime": "@vercel/node" },
+    "api/user/profile.cjs":        { "runtime": "@vercel/node" },
+    "api/user/forgot-password.cjs":{ "runtime": "@vercel/node" },
+    "api/user/reset-password.cjs": { "runtime": "@vercel/node" },
+    "api/track.cjs":               { "runtime": "@vercel/node" }
+  },
   "rewrites": [
+    { "source": "/api/user/signup",          "destination": "/api/user/signup.cjs" },
+    { "source": "/api/user/signin",          "destination": "/api/user/signin.cjs" },
+    { "source": "/api/user/profile",         "destination": "/api/user/profile.cjs" },
+    { "source": "/api/user/me",              "destination": "/api/user/profile.cjs" },
+    { "source": "/api/user/forgot-password", "destination": "/api/user/forgot-password.cjs" },
+    { "source": "/api/user/reset-password",  "destination": "/api/user/reset-password.cjs" },
+    { "source": "/api/track",                "destination": "/api/track.cjs" },
     {
       "source": "/((?!api/|assets/|favicon.ico|tagskills-logo.jpg).*)",
       "destination": "/index.html"
@@ -10,9 +25,7 @@
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/(.*)",

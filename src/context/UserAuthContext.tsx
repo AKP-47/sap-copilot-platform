@@ -33,6 +33,7 @@ const UserAuthContext = createContext<UserAuthContextType | undefined>(undefined
 
 const USER_TOKEN_KEY = "tagskills_learner_token";
 const USER_PROFILE_KEY = "tagskills_learner_profile";
+const CRED_TOKEN_PREFIX = "tagskills_cred_";
 
 export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
@@ -119,6 +120,11 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         return { success: false, error: err };
       }
 
+      // Store credential token keyed by email for future sign-ins (no server-side DB required)
+      if (data.credentialToken) {
+        localStorage.setItem(CRED_TOKEN_PREFIX + data.user.email.toLowerCase(), data.credentialToken);
+      }
+
       localStorage.setItem(USER_TOKEN_KEY, data.token);
       localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(data.user));
       setVoluntaryUserName(data.user.name);
@@ -148,10 +154,14 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setAuthError(null);
 
     try {
+      const cleanEmail = email.trim().toLowerCase();
+      // Read credential token stored during registration — enables sign-in without server DB
+      const credentialToken = localStorage.getItem(CRED_TOKEN_PREFIX + cleanEmail) || undefined;
+
       const res = await fetch("/api/user/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: pass })
+        body: JSON.stringify({ email: cleanEmail, password: pass, credentialToken })
       });
 
       const data = await res.json().catch(() => ({}));
@@ -185,6 +195,9 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return { success: false, error: err };
     }
   };
+
+
+
 
   // Sign Out
   const signOutUser = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { SupportedLanguage } from "../../data/translations";
-import { Search, Sparkles, Palette } from "lucide-react";
+import { Search, Sparkles, Palette, ShieldCheck, Lock } from "lucide-react";
 import { LearningLevel } from "../../types/sap";
 
 export const Header: React.FC = () => {
@@ -14,6 +14,7 @@ export const Header: React.FC = () => {
     setIsCopilotOpen,
     setIsWelcomeOpen,
     setIsAppearanceOpen,
+    setCurrentView,
     t 
   } = useSap();
 
@@ -162,6 +163,21 @@ export const Header: React.FC = () => {
                 ))}
               </select>
             </div>
+
+            {/* Owner Analytics Tracker Button */}
+            <button
+              onClick={() => setCurrentView("owner_analytics")}
+              style={{
+                backgroundColor: "rgba(245, 158, 11, 0.15)",
+                borderColor: "rgba(245, 158, 11, 0.35)",
+                color: "#d97706"
+              }}
+              className="flex items-center text-xs font-extrabold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105 shadow-sm dark:text-amber-400"
+              title="Access Restricted Owner Analytics & Visitor Tracker"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 sm:mr-1 text-amber-500" />
+              <span className="hidden sm:inline">Owner Tracker</span>
+            </button>
 
             {/* Theme & Palette Library Modal Trigger */}
             <button

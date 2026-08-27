@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { 
   LayoutDashboard,
+  ShieldCheck,
   Brain,
   Search,
   Dna,
@@ -100,6 +101,14 @@ export const Sidebar: React.FC = () => {
         { view: "investigation" as AppView, label: "Consultant Investigation", icon: <Search className="w-4 h-4 text-emerald-400" />, badge: "RCA" },
         { view: "knowledge_map" as AppView, label: "Knowledge Map & Mastery", icon: <Network className="w-4 h-4 text-teal-400" /> },
         { view: "passport" as AppView, label: "Consultant Passport", icon: <Award className="w-4 h-4 text-yellow-400" />, badge: "Skill Radar" }
+      ]
+    },
+    {
+      id: "owner_admin",
+      title: "Owner & Administration",
+      icon: <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />,
+      items: [
+        { view: "owner_analytics" as AppView, label: "Owner Visitor Tracker", icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: "Restricted" }
       ]
     },
     {

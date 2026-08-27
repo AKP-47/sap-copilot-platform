@@ -3,6 +3,7 @@ import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
 import { 
   Package,
+  ShieldCheck,
   Brain,
   Dna,
   Network,
@@ -95,6 +96,14 @@ export const DashboardView: React.FC = () => {
       action: () => setIsCopilotOpen(true),
       bg: "hover:border-purple-400 dark:hover:border-purple-500",
       pill: "AI Advisor"
+    },
+    {
+      title: "Owner Visitor Tracker",
+      desc: "Restricted intelligence & metrics",
+      icon: <ShieldCheck className="w-5 h-5 text-amber-500" />,
+      action: () => setCurrentView("owner_analytics"),
+      bg: "hover:border-amber-400 dark:hover:border-amber-500 bg-amber-500/5",
+      pill: "Owner Only"
     }
   ];
 

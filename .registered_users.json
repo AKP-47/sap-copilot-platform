@@ -1,16 +1,1 @@
-[
-  {
-    "id": "usr_1787835847675_w0jb4",
-    "name": "Akshat Pandey",
-    "email": "akshatpandey12805@gmail.com",
-    "salt": "9a65d1fb199402a56685dc22c28177066aa8e2a1d719be30454341059431c395",
-    "hash": "f2c8d20888be697176c90853d5b67c15a8906a7b9f2c45dfd33ebb049000c18fb5833255c3ba37305b002a1974df290451db985507a941175e067e644a1ec31d",
-    "createdAt": "2026-08-27T13:04:07.675Z",
-    "lastLoginAt": "2026-08-27T13:04:07.675Z",
-    "learningLevel": "BEGINNER",
-    "selectedIndustry": "Automotive",
-    "completedLabsCount": 0,
-    "quizzesTakenCount": 0,
-    "avgQuizScore": null
-  }
-]
+[{"id":"usr_1787839987691_7lju","name":"Learner One","email":"user1_1787839987668@tagskills.com","salt":"956096a5d898716fff68af75ad807c8ce0e9d93241ed675702c3ecb10e7cfcef","hash":"f89be7e8a9bc7e18d7fc94f58cde7c20c2c04c6329f428ddc92fa3822feb47d3bbe1a2ed744ba990aeb761f2a2c386dd3fa046d8fd823f944031ccadea5506e2","learningLevel":"Beginner","selectedIndustry":"Automotive","createdAt":"2026-08-27T14:13:07.691Z","lastLoginAt":"2026-08-27T14:13:07.694Z"},{"id":"usr_1787839987761_lihy","name":"Learner Two","email":"user2_1787839987739@tagskills.com","salt":"90a1fd34fc2aa9a957019c8f83c58aa56545ba4ed3cf1bae8c06e31bf2eeff27","hash":"34443fca215438117b4f826e80255e81191c5807675bd00db402b780a7ec90eb46b577853924a26dfdb6995926244f924c4054cfa7e0a7891caf0b6fe9d15377","learningLevel":"Intermediate","selectedIndustry":"Automotive","createdAt":"2026-08-27T14:13:07.761Z","lastLoginAt":"2026-08-27T14:13:07.761Z"},{"id":"usr_1787840252592_jnqk4","name":"Akshat Pandey","email":"akshatpandey12805@gmail.com","salt":"06028a44b91fa33f371c78dfe11ab4ef7e1de248429c3ec90fc33cf68f4abeb6","hash":"477f778a30ba5d740156ea28386bff9469c5b36208f4118fcacf9b2fc0699e7db6c79d8d1578ba4734a0c19a1364234ef0da0e0832194b9a1454c0dafb6a9e13","createdAt":"2026-08-27T14:17:32.592Z","lastLoginAt":"2026-08-27T14:17:32.592Z","learningLevel":"BEGINNER","selectedIndustry":"Automotive","completedLabsCount":0,"quizzesTakenCount":0,"avgQuizScore":null}]

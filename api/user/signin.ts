@@ -1,4 +1,4 @@
-import { authenticateUser, createUserSessionToken } from "../_lib/userStore";
+import { authenticateUserAsync, createUserSessionToken } from "../_lib/userStore";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
@@ -18,11 +18,11 @@ export default async function handler(req: any, res: any) {
 
   const { email, password } = body || {};
 
-  const authResult = authenticateUser(email, password);
+  const authResult = await authenticateUserAsync(email, password);
 
   if (!authResult.success || !authResult.user) {
     return res.status(401).json({
-      error: authResult.error || "Invalid email or password.",
+      error: authResult.error || "Incorrect email or password.",
       code: "INVALID_CREDENTIALS"
     });
   }

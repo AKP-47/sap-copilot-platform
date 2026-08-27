@@ -1,12 +1,14 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+import { kvGet, kvSet } from "./serverlessDb";
 
 const HASH_ITERATIONS = 100000;
 const HASH_KEYLEN = 64;
 const HASH_DIGEST = "sha512";
 const SERVER_SECRET = process.env.JWT_SECRET || "tagskills-enterprise-sap-user-secret-prod-2026";
 const USERS_FILE_PATH = path.join(process.cwd(), ".registered_users.json");
+const KV_USERS_KEY = "tagskills_registered_users";
 
 export interface RegisteredUserRecord {
   id: string;
@@ -41,27 +43,43 @@ function loadUsersFromDisk(): RegisteredUserRecord[] {
   return inMemoryUsers;
 }
 
-// Initial load
+// Initial local load
 loadUsersFromDisk();
 
-function persistUsersToDisk() {
+// Attempt remote KV sync in background
+kvGet<RegisteredUserRecord[]>(KV_USERS_KEY).then(remoteUsers => {
+  if (Array.isArray(remoteUsers) && remoteUsers.length > 0) {
+    inMemoryUsers = remoteUsers;
+  }
+}).catch(() => null);
+
+function persistUsers() {
   try {
     fs.writeFileSync(USERS_FILE_PATH, JSON.stringify(inMemoryUsers, null, 2), "utf8");
-  } catch (err) {
-    console.warn("User store write exception:", err);
+  } catch {
+    // Disk write might fail on serverless read-only filesystem, which is expected
   }
+
+  // Persist to Serverless KV if configured
+  kvSet(KV_USERS_KEY, inMemoryUsers).catch(() => null);
 }
 
 /**
  * Registers a new learner account with salted PBKDF2-SHA512 hash
  */
-export function registerNewUser(params: {
+export async function registerNewUserAsync(params: {
   name: string;
   email: string;
   password: string;
   learningLevel?: string;
   selectedIndustry?: string;
-}): { success: boolean; user?: RegisteredUserRecord; error?: string; code?: string } {
+}): Promise<{ success: boolean; user?: RegisteredUserRecord; error?: string; code?: string }> {
+  // Sync latest from KV if available
+  const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
+  if (Array.isArray(remote)) {
+    inMemoryUsers = remote;
+  }
+
   const cleanName = params.name?.trim();
   const cleanEmail = params.email?.trim().toLowerCase();
   const cleanPass = params.password?.trim();
@@ -108,7 +126,64 @@ export function registerNewUser(params: {
   };
 
   inMemoryUsers.push(newUser);
-  persistUsersToDisk();
+  persistUsers();
+
+  return { success: true, user: newUser };
+}
+
+export function registerNewUser(params: {
+  name: string;
+  email: string;
+  password: string;
+  learningLevel?: string;
+  selectedIndustry?: string;
+}): { success: boolean; user?: RegisteredUserRecord; error?: string; code?: string } {
+  const cleanName = params.name?.trim();
+  const cleanEmail = params.email?.trim().toLowerCase();
+  const cleanPass = params.password?.trim();
+
+  if (!cleanName || cleanName.length < 2) {
+    return { success: false, error: "Please enter your full name (at least 2 characters).", code: "INVALID_NAME" };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+    return { success: false, error: "Please enter a valid email address.", code: "INVALID_EMAIL" };
+  }
+
+  if (!cleanPass || cleanPass.length < 6) {
+    return { success: false, error: "Password must be at least 6 characters.", code: "WEAK_PASSWORD" };
+  }
+
+  const existing = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
+  if (existing) {
+    return {
+      success: false,
+      error: "This email is already registered.",
+      code: "DUPLICATE_EMAIL"
+    };
+  }
+
+  const salt = crypto.randomBytes(32).toString("hex");
+  const hash = crypto.pbkdf2Sync(cleanPass, salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
+
+  const newUser: RegisteredUserRecord = {
+    id: `usr_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    name: cleanName,
+    email: cleanEmail,
+    salt,
+    hash,
+    createdAt: new Date().toISOString(),
+    lastLoginAt: new Date().toISOString(),
+    learningLevel: params.learningLevel || "BEGINNER",
+    selectedIndustry: params.selectedIndustry || "Automotive",
+    completedLabsCount: 0,
+    quizzesTakenCount: 0,
+    avgQuizScore: null
+  };
+
+  inMemoryUsers.push(newUser);
+  persistUsers();
 
   return { success: true, user: newUser };
 }
@@ -116,6 +191,15 @@ export function registerNewUser(params: {
 /**
  * Authenticates user credentials
  */
+export async function authenticateUserAsync(email: string, password: string): Promise<{ success: boolean; user?: RegisteredUserRecord; error?: string }> {
+  const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
+  if (Array.isArray(remote)) {
+    inMemoryUsers = remote;
+  }
+
+  return authenticateUser(email, password);
+}
+
 export function authenticateUser(email: string, password: string): { success: boolean; user?: RegisteredUserRecord; error?: string } {
   const cleanEmail = email?.trim().toLowerCase();
   const cleanPass = password?.trim();
@@ -143,7 +227,7 @@ export function authenticateUser(email: string, password: string): { success: bo
 
   // Update last login timestamp
   user.lastLoginAt = new Date().toISOString();
-  persistUsersToDisk();
+  persistUsers();
 
   return { success: true, user };
 }
@@ -167,12 +251,12 @@ export function updateUserProfile(userId: string, updates: Partial<Pick<Register
     user.selectedIndustry = updates.selectedIndustry;
   }
 
-  persistUsersToDisk();
+  persistUsers();
   return { success: true, user };
 }
 
 /**
- * Returns all registered users (strictly owner-only view)
+ * Returns all registered users
  */
 export function getAllRegisteredUsers(): Omit<RegisteredUserRecord, "salt" | "hash">[] {
   return inMemoryUsers.map(u => ({

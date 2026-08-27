@@ -3,6 +3,8 @@ import { useOwnerAuth } from "../../context/OwnerAuthContext";
 import { useSap } from "../../context/SapContext";
 import {
   Users,
+  GraduationCap,
+  Mail,
   Eye,
   Activity,
   Award,
@@ -98,8 +100,21 @@ export const OwnerDashboardView: React.FC = () => {
   const [data, setData] = useState<RealOwnerAnalyticsData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [registeredUsers, setRegisteredUsers] = useState<Array<{
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    lastLoginAt: string;
+    learningLevel?: string;
+    selectedIndustry?: string;
+    completedLabsCount: number;
+    quizzesTakenCount: number;
+    avgQuizScore: number | null;
+  }>>([]);
+
   const [activeTab, setActiveTab] = useState<
-    "overview" | "modules" | "industries" | "searches" | "devices" | "live_feed" | "visitors"
+    "overview" | "registered_users" | "modules" | "industries" | "searches" | "devices" | "live_feed" | "visitors"
   >("overview");
 
   const loadRealAnalytics = async () => {
@@ -111,6 +126,18 @@ export const OwnerDashboardView: React.FC = () => {
         const json = await res.json();
         if (json && json.summary) {
           setData(json);
+          // Also fetch registered users
+          try {
+            const usersRes = await fetchWithAuth("/api/admin/users");
+            if (usersRes.ok) {
+              const usersJson = await usersRes.json();
+              if (Array.isArray(usersJson.users)) {
+                setRegisteredUsers(usersJson.users);
+              }
+            }
+          } catch (e) {
+            console.warn("Registered users fetch error:", e);
+          }
           setLoading(false);
           return;
         }
@@ -133,6 +160,7 @@ export const OwnerDashboardView: React.FC = () => {
 
   const tabs = [
     { id: "overview", label: "Overview & Trends", icon: <TrendingUp className="w-4 h-4" /> },
+    { id: "registered_users", label: `Registered Learners (${registeredUsers.length})`, icon: <GraduationCap className="w-4 h-4" /> },
     { id: "modules", label: "Module Views", icon: <Layers className="w-4 h-4" /> },
     { id: "industries", label: "Industries", icon: <Globe className="w-4 h-4" /> },
     { id: "searches", label: "Searches", icon: <Search className="w-4 h-4" /> },
@@ -361,6 +389,73 @@ export const OwnerDashboardView: React.FC = () => {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* 1.5 REGISTERED LEARNERS TAB */}
+        {activeTab === "registered_users" && (
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Registered Learners</h3>
+                <p className="text-xs text-slate-400">Official student accounts registered on TagSkills SAP Copilot</p>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-400/20 text-amber-500 border border-amber-400/30">
+                Total: {registeredUsers.length}
+              </span>
+            </div>
+
+            {registeredUsers.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-mono">
+                      <th className="pb-3 font-bold">Learner Name</th>
+                      <th className="pb-3 font-bold">Email Address</th>
+                      <th className="pb-3 font-bold">Registered</th>
+                      <th className="pb-3 font-bold">Learning Level</th>
+                      <th className="pb-3 font-bold">Industry Focus</th>
+                      <th className="pb-3 font-bold text-right">Completed Labs</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {registeredUsers.map((u) => (
+                      <tr key={u.id} className="py-2.5">
+                        <td className="py-3 font-bold text-slate-900 dark:text-white">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-bold">
+                              {u.name.charAt(0).toUpperCase()}
+                            </div>
+                            <span>{u.name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 text-slate-600 dark:text-slate-300 font-mono">{u.email}</td>
+                        <td className="py-3 text-slate-400 font-mono">
+                          {new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </td>
+                        <td className="py-3">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
+                            {u.learningLevel || "BEGINNER"}
+                          </span>
+                        </td>
+                        <td className="py-3 text-slate-600 dark:text-slate-300">{u.selectedIndustry || "Automotive"}</td>
+                        <td className="py-3 font-mono font-bold text-right text-slate-900 dark:text-white">
+                          {u.completedLabsCount}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-12 text-center space-y-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-dashed border-slate-200 dark:border-slate-800">
+                <GraduationCap className="w-10 h-10 text-slate-400 mx-auto" />
+                <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">No Registered Learners Yet</h4>
+                <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                  When learners create accounts via the Sign Up form, their registered details, level, and progress will appear here in real-time.
+                </p>
+              </div>
+            )}
           </div>
         )}
 

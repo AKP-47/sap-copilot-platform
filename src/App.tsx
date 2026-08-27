@@ -1,3 +1,5 @@
+import { UserAuthProvider } from "./context/UserAuthContext";
+import { UserAuthModal } from "./components/auth/UserAuthModal";
 import { trackEvent, trackPageView } from "./utils/telemetryTracker";
 import { OwnerAuthProvider } from "./context/OwnerAuthContext";
 import { OwnerRouteGuard } from "./components/admin/OwnerRouteGuard";
@@ -179,6 +181,7 @@ const AppContent: React.FC = () => {
       <SearchModal />
       <AppearanceModal />
       <AiCopilotDrawer />
+      <UserAuthModal />
     </div>
   );
 };
@@ -186,11 +189,13 @@ const AppContent: React.FC = () => {
 export function App() {
   return (
     <OwnerAuthProvider>
-      <SapProvider>
-        <AiProvider>
-          <AppContent />
-        </AiProvider>
-      </SapProvider>
+      <UserAuthProvider>
+        <SapProvider>
+          <AiProvider>
+            <AppContent />
+          </AiProvider>
+        </SapProvider>
+      </UserAuthProvider>
     </OwnerAuthProvider>
   );
 }

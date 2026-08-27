@@ -1,3 +1,5 @@
+import { useUserAuth } from "../../context/UserAuthContext";
+import { User as UserIcon } from "lucide-react";
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { SupportedLanguage } from "../../data/translations";
@@ -5,6 +7,7 @@ import { Search, Sparkles, Palette, ShieldCheck, Lock } from "lucide-react";
 import { LearningLevel } from "../../types/sap";
 
 export const Header: React.FC = () => {
+  const { currentUser, isAuthenticated, openAuthModal } = useUserAuth();
   const { 
     learningLevel, 
     setLearningLevel, 
@@ -163,6 +166,45 @@ export const Header: React.FC = () => {
                 ))}
               </select>
             </div>
+
+            {/* User Account / Sign In Trigger */}
+            {isAuthenticated && currentUser ? (
+              <button
+                onClick={() => openAuthModal("profile")}
+                style={{
+                  backgroundColor: "var(--theme-background-secondary)",
+                  borderColor: "var(--theme-border)"
+                }}
+                className="flex items-center space-x-1.5 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
+                title="View Learning Profile"
+              >
+                <div className="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-black">
+                  {currentUser.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="hidden sm:inline truncate max-w-[80px]">{currentUser.name.split(" ")[0]}</span>
+              </button>
+            ) : (
+              <div className="flex items-center space-x-1.5">
+                <button
+                  onClick={() => openAuthModal("signin")}
+                  style={{
+                    backgroundColor: "var(--theme-background-secondary)",
+                    borderColor: "var(--theme-border)",
+                    color: "var(--theme-text-primary)"
+                  }}
+                  className="flex items-center text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
+                >
+                  <UserIcon className="w-3.5 h-3.5 sm:mr-1" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </button>
+                <button
+                  onClick={() => openAuthModal("signup")}
+                  className="hidden md:flex items-center text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-2.5 sm:px-3 py-1.5 rounded-lg shadow-sm transition-all hover:scale-105"
+                >
+                  <span>Sign Up</span>
+                </button>
+              </div>
+            )}
 
             {/* Owner Analytics Tracker Button */}
             <button

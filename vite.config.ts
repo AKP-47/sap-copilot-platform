@@ -10,6 +10,10 @@ import visitorsHandler from "./api/admin/visitors";
 import activityHandler from "./api/admin/activity";
 import quizAnalyticsHandler from "./api/admin/quiz-analytics";
 import trackHandler from "./api/track";
+import signupHandler from "./api/user/signup";
+import signinHandler from "./api/user/signin";
+import profileHandler from "./api/user/profile";
+import adminUsersHandler from "./api/admin/users";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -57,6 +61,18 @@ function apiServerPlugin(): Plugin {
         };
 
         try {
+          if (url === "/api/user/signup") {
+            return await signupHandler(mockReq, mockRes);
+          }
+          if (url === "/api/user/signin") {
+            return await signinHandler(mockReq, mockRes);
+          }
+          if (url === "/api/user/profile" || url === "/api/user/me") {
+            return await profileHandler(mockReq, mockRes);
+          }
+          if (url === "/api/admin/users") {
+            return await adminUsersHandler(mockReq, mockRes);
+          }
           if (url === "/api/track") {
             return await trackHandler(mockReq, mockRes);
           }

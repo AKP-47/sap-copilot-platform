@@ -1,57 +1,43 @@
-import { verifyUserSessionToken, updateUserProfile } from "../_lib/userStore";
+import crypto from "crypto";
+
+const JWT_SECRET = process.env.JWT_SECRET || "tagskills-sap-copilot-secret-2026";
+
+function verifyToken(token: string): { valid: boolean; payload?: any } {
+  if (!token || typeof token !== "string") return { valid: false };
+  const parts = token.split(".");
+  if (parts.length !== 3) return { valid: false };
+  const [h, p, s] = parts;
+  try {
+    const expected = crypto.createHmac("sha256", JWT_SECRET).update(`${h}.${p}`).digest("base64url");
+    const bufA = Buffer.from(s, "base64url");
+    const bufB = Buffer.from(expected, "base64url");
+    if (bufA.length !== bufB.length || !crypto.timingSafeEqual(bufA, bufB)) return { valid: false };
+    const payload = JSON.parse(Buffer.from(p, "base64url").toString("utf8"));
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return { valid: false };
+    return { valid: true, payload };
+  } catch {
+    return { valid: false };
+  }
+}
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
-
-  const authHeader = req.headers?.authorization || req.headers?.Authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "Authentication required." });
-  }
-
+  const authHeader = req.headers?.authorization || req.headers?.Authorization || "";
   const token = authHeader.replace(/^Bearer\s+/i, "");
-  const verification = verifyUserSessionToken(token);
-
-  if (!verification.valid || !verification.payload) {
-    return res.status(401).json({ error: "Invalid or expired session." });
-  }
-
-  const userId = verification.payload.sub;
-
-  if (req.method === "PUT" || req.method === "PATCH") {
-    let body = req.body;
-    if (typeof body === "string") {
-      try {
-        body = JSON.parse(body);
-      } catch {
-        return res.status(400).json({ error: "Invalid JSON" });
-      }
-    }
-
-    const { name, learningLevel, selectedIndustry } = body || {};
-    const result = updateUserProfile(userId, { name, learningLevel, selectedIndustry });
-
-    if (!result.success || !result.user) {
-      return res.status(400).json({ error: result.error || "Profile update failed." });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully.",
-      user: {
-        id: result.user.id,
-        name: result.user.name,
-        email: result.user.email,
-        learningLevel: result.user.learningLevel,
-        selectedIndustry: result.user.selectedIndustry,
-        completedLabsCount: result.user.completedLabsCount,
-        quizzesTakenCount: result.user.quizzesTakenCount,
-        avgQuizScore: result.user.avgQuizScore
-      }
-    });
-  }
+  const { valid, payload } = verifyToken(token);
+  if (!valid || !payload) return res.status(401).json({ error: "Invalid or expired session." });
 
   return res.status(200).json({
     success: true,
-    user: verification.payload
+    user: {
+      id: payload.sub,
+      name: payload.name,
+      email: payload.email,
+      learningLevel: payload.learningLevel,
+      selectedIndustry: payload.selectedIndustry,
+      completedLabsCount: 0,
+      quizzesTakenCount: 0,
+      avgQuizScore: null
+    }
   });
 }

@@ -13,18 +13,12 @@ function apiServerPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url?.split("?")[0] || "";
-
-        if (!url.startsWith("/api/")) {
-          return next();
-        }
+        if (!url.startsWith("/api/")) return next();
 
         const mockRes = {
           statusCode: 200,
           setHeader: (key: string, val: string) => res.setHeader(key, val),
-          status(code: number) {
-            res.statusCode = code;
-            return this;
-          },
+          status(code: number) { res.statusCode = code; return this; },
           json(data: any) {
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify(data));
@@ -34,47 +28,23 @@ function apiServerPlugin(): Plugin {
         let body: any = null;
         if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
           const chunks: any[] = [];
-          for await (const chunk of req) {
-            chunks.push(chunk);
-          }
+          for await (const chunk of req) chunks.push(chunk);
           const raw = Buffer.concat(chunks).toString("utf8");
-          try {
-            body = raw ? JSON.parse(raw) : {};
-          } catch {
-            body = raw;
-          }
+          try { body = raw ? JSON.parse(raw) : {}; } catch { body = raw; }
         }
 
-        const mockReq = {
-          method: req.method,
-          headers: req.headers,
-          url: req.url,
-          body
-        };
+        const mockReq = { method: req.method, headers: req.headers, url: req.url, body };
 
         try {
-          if (url === "/api/user/signup") {
-            return await signupHandler(mockReq, mockRes);
-          }
-          if (url === "/api/user/signin") {
-            return await signinHandler(mockReq, mockRes);
-          }
-          if (url === "/api/user/profile" || url === "/api/user/me") {
-            return await profileHandler(mockReq, mockRes);
-          }
-          if (url === "/api/user/forgot-password") {
-            return await forgotPasswordHandler(mockReq, mockRes);
-          }
-          if (url === "/api/user/reset-password") {
-            return await resetPasswordHandler(mockReq, mockRes);
-          }
-          if (url === "/api/track") {
-            return await trackHandler(mockReq, mockRes);
-          }
-
+          if (url === "/api/user/signup") return await signupHandler(mockReq, mockRes);
+          if (url === "/api/user/signin") return await signinHandler(mockReq, mockRes);
+          if (url === "/api/user/profile" || url === "/api/user/me") return await profileHandler(mockReq, mockRes);
+          if (url === "/api/user/forgot-password") return await forgotPasswordHandler(mockReq, mockRes);
+          if (url === "/api/user/reset-password") return await resetPasswordHandler(mockReq, mockRes);
+          if (url === "/api/track") return await trackHandler(mockReq, mockRes);
           return mockRes.status(404).json({ error: `Route ${url} not found.` });
         } catch (err: any) {
-          console.error("API Middleware execution error:", err);
+          console.error("API error:", err);
           return mockRes.status(500).json({ error: "Internal Server Error", message: err?.message });
         }
       });
@@ -84,8 +54,5 @@ function apiServerPlugin(): Plugin {
 
 export default defineConfig({
   plugins: [react(), apiServerPlugin()],
-  server: {
-    port: 5173,
-    host: true
-  }
+  server: { port: 5173, host: true }
 });

@@ -339,5 +339,149 @@
     "eventId": "evt_1787840334020_77u0rdv",
     "timestamp": "2026-08-27T14:18:54.020Z",
     "timestampMs": 1787840334020
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_HEARTBEAT",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841458788_4o2zz9e",
+    "timestamp": "2026-08-27T14:37:38.788Z",
+    "timestampMs": 1787841458788
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841463360_4ubn91h",
+    "timestamp": "2026-08-27T14:37:43.360Z",
+    "timestampMs": 1787841463360
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841463369_os1yojd",
+    "timestamp": "2026-08-27T14:37:43.369Z",
+    "timestampMs": 1787841463369
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841463370_eaxqahz",
+    "timestamp": "2026-08-27T14:37:43.370Z",
+    "timestampMs": 1787841463370
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841463371_dzaz8kj",
+    "timestamp": "2026-08-27T14:37:43.371Z",
+    "timestampMs": 1787841463371
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "http://localhost:5173/",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841519214_aalzsv3",
+    "timestamp": "2026-08-27T14:38:39.214Z",
+    "timestampMs": 1787841519214
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "http://localhost:5173/",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841519215_aafhzg9",
+    "timestamp": "2026-08-27T14:38:39.215Z",
+    "timestampMs": 1787841519215
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "http://localhost:5173/",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841519217_8gyz161",
+    "timestamp": "2026-08-27T14:38:39.217Z",
+    "timestampMs": 1787841519217
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtblvuq4_jk5kbfjv",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "http://localhost:5173/",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787841519217_ynxtunt",
+    "timestamp": "2026-08-27T14:38:39.217Z",
+    "timestampMs": 1787841519217
   }
 ]

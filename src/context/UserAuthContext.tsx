@@ -157,7 +157,7 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success || !data.user) {
-        const err = data.error || "Invalid email or password.";
+        const err = data.error || "Email or password is incorrect. Please try again.";
         setAuthError(err);
         setAuthLoading(false);
         return { success: false, error: err };

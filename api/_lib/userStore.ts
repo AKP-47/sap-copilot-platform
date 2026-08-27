@@ -26,12 +26,36 @@ export interface RegisteredUserRecord {
   resetTokenExpiry?: number | null;
 }
 
-let inMemoryUsers: RegisteredUserRecord[] = [];
+function loadInitialFromDisk(): RegisteredUserRecord[] {
+  try {
+    const tmp = path.join("/tmp", ".tagskills_registered_users.json");
+    if (fs.existsSync(tmp)) {
+      const raw = fs.readFileSync(tmp, "utf8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {}
+
+  try {
+    const local = path.join(process.cwd(), ".registered_users.json");
+    if (fs.existsSync(local)) {
+      const raw = fs.readFileSync(local, "utf8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {}
+
+  return [];
+}
+
+let inMemoryUsers: RegisteredUserRecord[] = loadInitialFromDisk();
 
 async function syncUsersFromStore(): Promise<RegisteredUserRecord[]> {
   const remote = await kvGet<RegisteredUserRecord[]>(KV_USERS_KEY);
-  if (Array.isArray(remote)) {
+  if (Array.isArray(remote) && remote.length > 0) {
     inMemoryUsers = remote;
+  } else if (inMemoryUsers.length === 0) {
+    inMemoryUsers = loadInitialFromDisk();
   }
   return inMemoryUsers;
 }
@@ -72,7 +96,7 @@ export async function registerNewUserAsync(params: {
     return { success: false, error: "Password must be at least 6 characters.", code: "WEAK_PASSWORD" };
   }
 
-  // Exact error message required for duplicate email
+  // Check duplicate email
   const existing = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
   if (existing) {
     return {
@@ -152,13 +176,12 @@ export async function createPasswordResetToken(email: string): Promise<{ success
 
   const user = inMemoryUsers.find(u => u.email.toLowerCase() === cleanEmail);
   if (!user) {
-    // Return generic success to avoid email enumeration
     return { success: true };
   }
 
-  const resetToken = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit secure code
+  const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
   const tokenHash = crypto.createHmac("sha256", SERVER_SECRET).update(resetToken).digest("hex");
-  const expiry = Date.now() + 15 * 60 * 1000; // 15 mins
+  const expiry = Date.now() + 15 * 60 * 1000;
 
   user.resetTokenHash = tokenHash;
   user.resetTokenExpiry = expiry;
@@ -197,13 +220,12 @@ export async function resetUserPassword(email: string, token: string, newPasswor
     return { success: false, error: "Invalid reset token. Please verify the code entered." };
   }
 
-  // Generate new salt and hash
   const salt = crypto.randomBytes(32).toString("hex");
   const hash = crypto.pbkdf2Sync(cleanPass, salt, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
 
   user.salt = salt;
   user.hash = hash;
-  user.resetTokenHash = null; // Single-use burn
+  user.resetTokenHash = null;
   user.resetTokenExpiry = null;
 
   await persistUsersToStore();

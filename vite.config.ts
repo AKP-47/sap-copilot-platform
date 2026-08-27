@@ -4,6 +4,8 @@ import trackHandler from "./api/track";
 import signupHandler from "./api/user/signup";
 import signinHandler from "./api/user/signin";
 import profileHandler from "./api/user/profile";
+import forgotPasswordHandler from "./api/user/forgot-password";
+import resetPasswordHandler from "./api/user/reset-password";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -59,6 +61,12 @@ function apiServerPlugin(): Plugin {
           }
           if (url === "/api/user/profile" || url === "/api/user/me") {
             return await profileHandler(mockReq, mockRes);
+          }
+          if (url === "/api/user/forgot-password") {
+            return await forgotPasswordHandler(mockReq, mockRes);
+          }
+          if (url === "/api/user/reset-password") {
+            return await resetPasswordHandler(mockReq, mockRes);
           }
           if (url === "/api/track") {
             return await trackHandler(mockReq, mockRes);

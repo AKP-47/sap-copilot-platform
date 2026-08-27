@@ -7,10 +7,10 @@ import {
   Lock, 
   Eye, 
   EyeOff, 
-  ArrowRight, 
   AlertCircle,
   CheckCircle2,
-  KeyRound
+  KeyRound,
+  ShieldCheck
 } from "lucide-react";
 
 export const AuthGatewayScreen: React.FC = () => {
@@ -20,16 +20,17 @@ export const AuthGatewayScreen: React.FC = () => {
   // Mode: signin | signup | forgot | reset
   const [mode, setMode] = useState<"signin" | "signup" | "forgot" | "reset">("signin");
 
-  // Sign In State (Password visibility starts strictly FALSE)
+  // Sign In State
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [showSignInPassword, setShowSignInPassword] = useState(false);
 
-  // Sign Up State (Password visibility starts strictly FALSE)
+  // Sign Up State
   const [name, setName] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(true);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -112,6 +113,11 @@ export const AuthGatewayScreen: React.FC = () => {
       return;
     }
 
+    if (!agreeTerms) {
+      setLocalError("Please accept the Terms of Service & Privacy Policy to register.");
+      return;
+    }
+
     const res = await signUpUser(cleanName, cleanEmail, cleanPass, learningLevel, "Automotive");
     if (!res.success && res.error) {
       setLocalError(res.error);
@@ -140,10 +146,8 @@ export const AuthGatewayScreen: React.FC = () => {
       setResetLoading(false);
 
       if (res.ok) {
-        setResetSuccessMsg("A 6-digit verification code has been sent. Please enter it below to set a new password.");
-        if (data.demoCode) {
-          setResetToken(data.demoCode);
-        }
+        setResetSuccessMsg("A 6-digit verification code has been generated. Enter it below to set a new password.");
+        if (data.demoCode) setResetToken(data.demoCode);
         setMode("reset");
       } else {
         setLocalError(data.error || "Failed to send reset code. Please try again.");
@@ -226,7 +230,7 @@ export const AuthGatewayScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 inline-block mb-1">
-              OFFICIAL INSTITUTE PLATFORM
+              TAGSKILLS LEARNING PLATFORM
             </span>
           </div>
         </div>
@@ -330,7 +334,7 @@ export const AuthGatewayScreen: React.FC = () => {
 
               <div className="text-center pt-3 border-t border-slate-100 dark:border-slate-800">
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  New to SAP Copilot?{" "}
+                  New learner?{" "}
                   <button
                     type="button"
                     onClick={() => switchMode("signup")}
@@ -405,7 +409,10 @@ export const AuthGatewayScreen: React.FC = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+                    <span className="text-[10px] text-slate-400">Min 6 characters</span>
+                  </div>
                   <div className="relative">
                     <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
@@ -458,16 +465,26 @@ export const AuthGatewayScreen: React.FC = () => {
                   </div>
                 </div>
 
-                <p className="text-[11px] text-slate-400 leading-relaxed pt-1">
-                  Your name and email are used to create and manage your learning account and provide a personalized learning experience.
-                </p>
+                {/* Terms and Privacy Checkbox */}
+                <div className="flex items-start space-x-2.5 pt-1">
+                  <input
+                    type="checkbox"
+                    id="termsCheckbox"
+                    checked={agreeTerms}
+                    onChange={(e) => setAgreeTerms(e.target.checked)}
+                    className="mt-1 w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-slate-300 cursor-pointer"
+                  />
+                  <label htmlFor="termsCheckbox" className="text-xs text-slate-500 dark:text-slate-400 leading-snug cursor-pointer">
+                    I agree to the <span className="text-amber-500 font-semibold">Terms of Service</span> and <span className="text-amber-500 font-semibold">Privacy Policy</span>.
+                  </label>
+                </div>
 
                 <button
                   type="submit"
                   disabled={authLoading}
                   className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-sm shadow-xl hover:shadow-2xl transition-all transform hover:scale-[1.01] flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
                 >
-                  <span>{authLoading ? "Creating Account..." : "Create Account →"}</span>
+                  <span>{authLoading ? "Creating Account..." : "Register & Start Learning →"}</span>
                 </button>
               </form>
 
@@ -556,7 +573,7 @@ export const AuthGatewayScreen: React.FC = () => {
                   Enter Verification Code
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
-                  Enter the 6-digit code sent to <strong className="text-slate-900 dark:text-white">{resetEmail}</strong> and choose a new password.
+                  Enter the 6-digit code for <strong className="text-slate-900 dark:text-white">{resetEmail}</strong> and choose a new password.
                 </p>
               </div>
 

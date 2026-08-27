@@ -1,5 +1,4 @@
 import { registerNewUserAsync, createUserSessionToken } from "../_lib/userStore";
-import { sendOwnerNewUserAlert } from "../_lib/notificationService";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
@@ -17,7 +16,7 @@ export default async function handler(req: any, res: any) {
     }
   }
 
-  const { name, email, password, learningLevel, selectedIndustry, learningInterests } = body || {};
+  const { name, email, password, learningLevel, selectedIndustry } = body || {};
 
   const regResult = await registerNewUserAsync({
     name,
@@ -35,21 +34,6 @@ export default async function handler(req: any, res: any) {
   }
 
   const user = regResult.user;
-
-  // Send server-side notification to Website Owner (awaited for serverless guarantee)
-  try {
-    await sendOwnerNewUserAlert({
-      name: user.name,
-      email: user.email,
-      registeredAt: user.createdAt,
-      learningLevel: user.learningLevel,
-      learningInterests: learningInterests || user.selectedIndustry || "SAP MM & SAP EWM",
-      selectedIndustry: user.selectedIndustry
-    });
-  } catch (err) {
-    console.warn("Owner email alert error:", err);
-  }
-
   const session = createUserSessionToken(user);
 
   return res.status(201).json({

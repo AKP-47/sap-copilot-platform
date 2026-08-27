@@ -1,19 +1,9 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import statusHandler from "./api/auth/status";
-import setupHandler from "./api/auth/setup";
-import loginHandler from "./api/auth/login";
-import logoutHandler from "./api/auth/logout";
-import sessionHandler from "./api/auth/session";
-import analyticsHandler from "./api/admin/analytics";
-import visitorsHandler from "./api/admin/visitors";
-import activityHandler from "./api/admin/activity";
-import quizAnalyticsHandler from "./api/admin/quiz-analytics";
 import trackHandler from "./api/track";
 import signupHandler from "./api/user/signup";
 import signinHandler from "./api/user/signin";
 import profileHandler from "./api/user/profile";
-import adminUsersHandler from "./api/admin/users";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -70,38 +60,8 @@ function apiServerPlugin(): Plugin {
           if (url === "/api/user/profile" || url === "/api/user/me") {
             return await profileHandler(mockReq, mockRes);
           }
-          if (url === "/api/admin/users") {
-            return await adminUsersHandler(mockReq, mockRes);
-          }
           if (url === "/api/track") {
             return await trackHandler(mockReq, mockRes);
-          }
-          if (url === "/api/auth/status") {
-            return await statusHandler(mockReq, mockRes);
-          }
-          if (url === "/api/auth/setup") {
-            return await setupHandler(mockReq, mockRes);
-          }
-          if (url === "/api/auth/login") {
-            return await loginHandler(mockReq, mockRes);
-          }
-          if (url === "/api/auth/logout") {
-            return await logoutHandler(mockReq, mockRes);
-          }
-          if (url === "/api/auth/session") {
-            return await sessionHandler(mockReq, mockRes);
-          }
-          if (url === "/api/admin/analytics") {
-            return await analyticsHandler(mockReq, mockRes);
-          }
-          if (url === "/api/admin/visitors") {
-            return await visitorsHandler(mockReq, mockRes);
-          }
-          if (url === "/api/admin/activity") {
-            return await activityHandler(mockReq, mockRes);
-          }
-          if (url === "/api/admin/quiz-analytics") {
-            return await quizAnalyticsHandler(mockReq, mockRes);
           }
 
           return mockRes.status(404).json({ error: `Route ${url} not found.` });
@@ -119,22 +79,5 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true
-  },
-  preview: {
-    port: 5173,
-    host: true
-  },
-  build: {
-    outDir: "dist",
-    sourcemap: false,
-    chunkSizeWarningLimit: 1200,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          "vendor-react": ["react", "react-dom"],
-          "vendor-icons": ["lucide-react"]
-        }
-      }
-    }
   }
 });

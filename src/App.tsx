@@ -1,20 +1,8 @@
+import React, { useEffect } from "react";
 import { AuthGatewayScreen } from "./components/auth/AuthGatewayScreen";
-import { useUserAuth } from "./context/UserAuthContext";
-import { UserAuthProvider } from "./context/UserAuthContext";
+import { UserAuthProvider, useUserAuth } from "./context/UserAuthContext";
 import { UserAuthModal } from "./components/auth/UserAuthModal";
 import { trackEvent, trackPageView } from "./utils/telemetryTracker";
-import { OwnerAuthProvider } from "./context/OwnerAuthContext";
-import { OwnerRouteGuard } from "./components/admin/OwnerRouteGuard";
-import { AdaptiveMasteryView } from "./components/adaptive/AdaptiveMasteryView";
-import { BusinessSapReasoningView } from "./components/reasoning/BusinessSapReasoningView";
-import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
-import { ImpactSimulator } from "./components/consultant/ImpactSimulator";
-import { ConsultantInvestigationView } from "./components/consultant/ConsultantInvestigationView";
-import { ConceptDnaView } from "./components/consultant/ConceptDnaView";
-import { KnowledgeMapView } from "./components/consultant/KnowledgeMapView";
-import { ConsultantPassportView } from "./components/consultant/ConsultantPassportView";
-import { BeginnerFoundationsView } from "./components/foundations/BeginnerFoundationsView";
-import React from "react";
 import { SapProvider, useSap } from "./context/SapContext";
 import { AiProvider } from "./context/AiContext";
 import { Header } from "./components/layout/Header";
@@ -29,6 +17,15 @@ import { AiCopilotDrawer } from "./components/copilot/AiCopilotDrawer";
 
 // Views
 import { DashboardView } from "./components/dashboard/DashboardView";
+import { AdaptiveMasteryView } from "./components/adaptive/AdaptiveMasteryView";
+import { BusinessSapReasoningView } from "./components/reasoning/BusinessSapReasoningView";
+import { EnterpriseConnectionMap } from "./components/consultant/EnterpriseConnectionMap";
+import { ImpactSimulator } from "./components/consultant/ImpactSimulator";
+import { ConsultantInvestigationView } from "./components/consultant/ConsultantInvestigationView";
+import { ConceptDnaView } from "./components/consultant/ConceptDnaView";
+import { KnowledgeMapView } from "./components/consultant/KnowledgeMapView";
+import { ConsultantPassportView } from "./components/consultant/ConsultantPassportView";
+import { BeginnerFoundationsView } from "./components/foundations/BeginnerFoundationsView";
 import { MMExplorer } from "./components/learning/MMExplorer";
 import { EWMExplorer } from "./components/learning/EWMExplorer";
 import { IntegrationExplorer } from "./components/learning/IntegrationExplorer";
@@ -50,14 +47,12 @@ import { FlashcardStudyLab } from "./components/career/FlashcardStudyLab";
 import { StudyNotesView } from "./components/career/StudyNotesView";
 
 const AppContent: React.FC = () => {
-  const { currentView, setCurrentView } = useSap();
-  const { isAuthenticated, currentUser } = useUserAuth();
+  const { currentView } = useSap();
+  const { isAuthenticated } = useUserAuth();
 
-  React.useEffect(() => {
-    // Fire real session start
+  useEffect(() => {
     trackEvent("SESSION_START");
 
-    // Heartbeat every 2.5 minutes for active user tracking
     const heartbeatInterval = setInterval(() => {
       trackEvent("SESSION_HEARTBEAT");
     }, 2.5 * 60 * 1000);
@@ -65,36 +60,14 @@ const AppContent: React.FC = () => {
     return () => clearInterval(heartbeatInterval);
   }, []);
 
-  React.useEffect(() => {
-    if (currentView !== "owner_analytics") {
-      trackPageView(`/${currentView}`, `View: ${currentView}`);
-    }
+  useEffect(() => {
+    trackPageView(`/${currentView}`, `View: ${currentView}`);
   }, [currentView]);
-
-  React.useEffect(() => {
-    // Check initial URL pathname, search query, or hash for /admin or /owner
-    const path = window.location.pathname.toLowerCase();
-    const search = window.location.search.toLowerCase();
-    const hash = window.location.hash.toLowerCase();
-
-    if (
-      path === "/admin" || 
-      path === "/owner" || 
-      search.includes("view=admin") || 
-      search.includes("view=owner") ||
-      hash.includes("/admin") ||
-      hash.includes("/owner")
-    ) {
-      setCurrentView("owner_analytics");
-    }
-  }, [setCurrentView]);
 
   const renderCurrentView = () => {
     switch (currentView) {
       case "dashboard":
         return <DashboardView />;
-      case "owner_analytics":
-        return <OwnerRouteGuard />;
       case "foundations":
         return <BeginnerFoundationsView />;
       case "adaptive_mastery":
@@ -156,18 +129,8 @@ const AppContent: React.FC = () => {
     }
   };
 
-  // If unauthenticated visitor:
+  // If unauthenticated visitor -> Show the Single Unified Sign Up / Sign In Gateway
   if (!isAuthenticated) {
-    // If navigating to owner portal
-    if (currentView === "owner_analytics") {
-      return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col">
-          <OwnerRouteGuard />
-        </div>
-      );
-    }
-
-    // Default First Screen: Full-Screen Enterprise Authentication Gateway
     return <AuthGatewayScreen />;
   }
 
@@ -206,15 +169,13 @@ const AppContent: React.FC = () => {
 
 export function App() {
   return (
-    <OwnerAuthProvider>
-      <UserAuthProvider>
-        <SapProvider>
-          <AiProvider>
-            <AppContent />
-          </AiProvider>
-        </SapProvider>
-      </UserAuthProvider>
-    </OwnerAuthProvider>
+    <UserAuthProvider>
+      <SapProvider>
+        <AiProvider>
+          <AppContent />
+        </AiProvider>
+      </SapProvider>
+    </UserAuthProvider>
   );
 }
 

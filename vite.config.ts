@@ -9,6 +9,7 @@ import analyticsHandler from "./api/admin/analytics";
 import visitorsHandler from "./api/admin/visitors";
 import activityHandler from "./api/admin/activity";
 import quizAnalyticsHandler from "./api/admin/quiz-analytics";
+import trackHandler from "./api/track";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -56,6 +57,9 @@ function apiServerPlugin(): Plugin {
         };
 
         try {
+          if (url === "/api/track") {
+            return await trackHandler(mockReq, mockRes);
+          }
           if (url === "/api/auth/status") {
             return await statusHandler(mockReq, mockRes);
           }

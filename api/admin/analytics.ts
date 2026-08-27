@@ -1,5 +1,5 @@
 import { authenticateOwnerRequest } from "../_lib/auth";
-import { getOwnerAnalyticsData } from "../_lib/analyticsData";
+import { getRealOwnerAnalytics } from "../_lib/realAnalyticsStore";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
@@ -14,10 +14,12 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  const data = getOwnerAnalyticsData();
+  const data = getRealOwnerAnalytics();
 
   return res.status(200).json({
     success: true,
+    isLive: true,
+    totalEventsTracked: data.totalEventsTracked,
     owner: {
       displayName: "Website Owner",
       role: "OWNER"
@@ -27,6 +29,9 @@ export default async function handler(req: any, res: any) {
     moduleEngagements: data.moduleEngagements,
     industryUsage: data.industryUsage,
     deviceBreakdown: data.deviceBreakdown,
-    browserBreakdown: data.browserBreakdown
+    browserBreakdown: data.browserBreakdown,
+    topSearches: data.topSearches,
+    recentActivity: data.recentActivity,
+    visitorList: data.visitorList
   });
 }

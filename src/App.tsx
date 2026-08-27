@@ -1,3 +1,4 @@
+import { trackEvent, trackPageView } from "./utils/telemetryTracker";
 import { OwnerAuthProvider } from "./context/OwnerAuthContext";
 import { OwnerRouteGuard } from "./components/admin/OwnerRouteGuard";
 import { AdaptiveMasteryView } from "./components/adaptive/AdaptiveMasteryView";
@@ -46,6 +47,24 @@ import { StudyNotesView } from "./components/career/StudyNotesView";
 
 const AppContent: React.FC = () => {
   const { currentView, setCurrentView } = useSap();
+
+  React.useEffect(() => {
+    // Fire real session start
+    trackEvent("SESSION_START");
+
+    // Heartbeat every 2.5 minutes for active user tracking
+    const heartbeatInterval = setInterval(() => {
+      trackEvent("SESSION_HEARTBEAT");
+    }, 2.5 * 60 * 1000);
+
+    return () => clearInterval(heartbeatInterval);
+  }, []);
+
+  React.useEffect(() => {
+    if (currentView !== "owner_analytics") {
+      trackPageView(`/${currentView}`, `View: ${currentView}`);
+    }
+  }, [currentView]);
 
   React.useEffect(() => {
     // Check initial URL pathname, search query, or hash for /admin or /owner

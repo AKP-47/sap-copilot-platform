@@ -1,5 +1,5 @@
 import { authenticateOwnerRequest } from "../_lib/auth";
-import { getOwnerAnalyticsData } from "../_lib/analyticsData";
+import { getRealOwnerAnalytics } from "../_lib/realAnalyticsStore";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
@@ -13,10 +13,11 @@ export default async function handler(req: any, res: any) {
     });
   }
 
-  const data = getOwnerAnalyticsData();
+  const data = getRealOwnerAnalytics();
 
   return res.status(200).json({
     success: true,
-    activities: data.recentActivity
+    activity: data.recentActivity,
+    activeUsersNow: data.summary.activeUsersNow
   });
 }

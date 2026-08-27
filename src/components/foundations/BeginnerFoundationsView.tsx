@@ -1,3 +1,4 @@
+import { trackQuizAttempt } from "../../utils/telemetryTracker";
 import React, { useState } from "react";
 import { useSap } from "../../context/SapContext";
 import { PageHeader } from "../common/PageHeader";
@@ -74,7 +75,18 @@ export const BeginnerFoundationsView: React.FC = () => {
   };
 
   const handleSelectQuizOption = (questionId: string, optionIndex: number) => {
-    setQuizAnswers(prev => ({ ...prev, [questionId]: optionIndex }));
+    setQuizAnswers(prev => {
+      const updated = { ...prev, [questionId]: optionIndex };
+      const totalAnswered = Object.keys(updated).length;
+      if (totalAnswered === BEGINNER_QUIZ_QUESTIONS.length) {
+        let score = 0;
+        BEGINNER_QUIZ_QUESTIONS.forEach(q => {
+          if (updated[q.id] === q.correctIndex) score++;
+        });
+        trackQuizAttempt("Beginner Foundations Academy", score, BEGINNER_QUIZ_QUESTIONS.length);
+      }
+      return updated;
+    });
     setShowQuizExplanations(prev => ({ ...prev, [questionId]: true }));
   };
 

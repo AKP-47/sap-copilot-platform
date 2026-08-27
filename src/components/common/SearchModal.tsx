@@ -1,3 +1,4 @@
+import { trackSearchQuery } from "../../utils/telemetryTracker";
 import React, { useState, useEffect } from "react";
 import { useSap } from "../../context/SapContext";
 import { 
@@ -68,6 +69,7 @@ export const SearchModal: React.FC = () => {
 
   const saveRecentSearch = (term: string) => {
     if (!term.trim()) return;
+    trackSearchQuery(term.trim());
     const updated = [term, ...recentSearches.filter(s => s.toLowerCase() !== term.toLowerCase())].slice(0, 6);
     setRecentSearches(updated);
     try {

@@ -1,4 +1,5 @@
 import { authenticateOwnerRequest } from "../_lib/auth";
+import { getRealOwnerAnalytics } from "../_lib/realAnalyticsStore";
 
 export default async function handler(req: any, res: any) {
   res.setHeader("Content-Type", "application/json");
@@ -12,17 +13,12 @@ export default async function handler(req: any, res: any) {
     });
   }
 
+  const data = getRealOwnerAnalytics();
+
   return res.status(200).json({
     success: true,
-    totalQuizzesAttempted: 32600,
-    overallAverageScorePct: 82.4,
-    passRatePct: 78.9,
-    difficultyRankings: [
-      { topic: "Automatic Account Determination (OBYC BSX/WRX)", averageScore: 64.2, failureRate: 35.8, category: "INTEGRATION" },
-      { topic: "Process-Oriented Storage Control (POSC Step Mappings)", averageScore: 68.5, failureRate: 31.5, category: "EWM" },
-      { topic: "Movement Type 101 vs Quality Inspection Lots (QM 01)", averageScore: 81.0, failureRate: 19.0, category: "MM" },
-      { topic: "Logistics Invoice Verification (3-Way Match & Tolerances)", averageScore: 84.6, failureRate: 15.4, category: "MM" },
-      { topic: "Beginner Business & ERP Foundations", averageScore: 94.8, failureRate: 5.2, category: "FOUNDATIONS" }
-    ]
+    totalAttempts: data.summary.totalQuizAttempts,
+    averageScore: data.summary.avgQuizScore,
+    completionsCount: data.summary.totalScenarioCompletions
   });
 }

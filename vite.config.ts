@@ -7,6 +7,8 @@ import analyticsHandler from "./api/admin/analytics";
 import visitorsHandler from "./api/admin/visitors";
 import activityHandler from "./api/admin/activity";
 import quizAnalyticsHandler from "./api/admin/quiz-analytics";
+import passkeyChallengeHandler from "./api/auth/passkey-challenge";
+import passkeyVerifyHandler from "./api/auth/passkey-verify";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -56,6 +58,12 @@ function apiServerPlugin(): Plugin {
         };
 
         try {
+          if (url === "/api/auth/passkey-challenge") {
+            return await passkeyChallengeHandler(mockReq, mockRes);
+          }
+          if (url === "/api/auth/passkey-verify") {
+            return await passkeyVerifyHandler(mockReq, mockRes);
+          }
           if (url === "/api/auth/login") {
             return await loginHandler(mockReq, mockRes);
           }

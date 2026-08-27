@@ -1,33 +1,34 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import trackHandler from "./api/track";
-import signupHandler from "./api/user/signup";
-import signinHandler from "./api/user/signin";
-import profileHandler from "./api/user/profile";
-import forgotPasswordHandler from "./api/user/forgot-password";
-import resetPasswordHandler from "./api/user/reset-password";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const trackHandler = require("./api/track.cjs");
+const signupHandler = require("./api/user/signup.cjs");
+const signinHandler = require("./api/user/signin.cjs");
+const profileHandler = require("./api/user/profile.cjs");
+const forgotPasswordHandler = require("./api/user/forgot-password.cjs");
+const resetPasswordHandler = require("./api/user/reset-password.cjs");
 
 function apiServerPlugin(): Plugin {
   return {
     name: "api-server-middleware",
     configureServer(server) {
-      server.middlewares.use(async (req, res, next) => {
-        const url = req.url?.split("?")[0] || "";
+      server.middlewares.use(async (req: any, res: any, next: any) => {
+        const url = (req.url || "").split("?")[0];
         if (!url.startsWith("/api/")) return next();
 
         const mockRes = {
           statusCode: 200,
           setHeader: (key: string, val: string) => res.setHeader(key, val),
           status(code: number) { res.statusCode = code; return this; },
-          json(data: any) {
-            res.setHeader("Content-Type", "application/json");
-            res.end(JSON.stringify(data));
-          }
+          json(data: any) { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(data)); },
+          end: (data: any) => res.end(data)
         };
 
         let body: any = null;
         if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
-          const chunks: any[] = [];
+          const chunks: Buffer[] = [];
           for await (const chunk of req) chunks.push(chunk);
           const raw = Buffer.concat(chunks).toString("utf8");
           try { body = raw ? JSON.parse(raw) : {}; } catch { body = raw; }
@@ -42,10 +43,10 @@ function apiServerPlugin(): Plugin {
           if (url === "/api/user/forgot-password") return await forgotPasswordHandler(mockReq, mockRes);
           if (url === "/api/user/reset-password") return await resetPasswordHandler(mockReq, mockRes);
           if (url === "/api/track") return await trackHandler(mockReq, mockRes);
-          return mockRes.status(404).json({ error: `Route ${url} not found.` });
+          res.statusCode = 404; res.end(JSON.stringify({ error: `Route ${url} not found.` }));
         } catch (err: any) {
           console.error("API error:", err);
-          return mockRes.status(500).json({ error: "Internal Server Error", message: err?.message });
+          res.statusCode = 500; res.end(JSON.stringify({ error: "Internal Server Error", message: err?.message }));
         }
       });
     }

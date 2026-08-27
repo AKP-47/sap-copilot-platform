@@ -108,7 +108,7 @@ export const Sidebar: React.FC = () => {
       title: "Owner & Administration",
       icon: <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />,
       items: [
-        { view: "owner_analytics" as AppView, label: "Owner Visitor Tracker", icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: "Restricted" }
+        { view: "owner_analytics" as AppView, label: "Learner Sign-Ins", icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: "Restricted" }
       ]
     },
     {

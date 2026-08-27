@@ -100,8 +100,8 @@ export const DashboardView: React.FC = () => {
       pill: "AI Advisor"
     },
     {
-      title: "Owner Visitor Tracker",
-      desc: "Restricted intelligence & metrics",
+      title: "Learner Sign-In Directory",
+      desc: "View registered accounts & sign-ins",
       icon: <ShieldCheck className="w-5 h-5 text-amber-500" />,
       action: () => setCurrentView("owner_analytics"),
       bg: "hover:border-amber-400 dark:hover:border-amber-500 bg-amber-500/5",

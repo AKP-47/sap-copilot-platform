@@ -9,13 +9,7 @@ import {
   EyeOff, 
   ArrowRight, 
   AlertCircle, 
-  ShieldCheck, 
-  GraduationCap, 
-  Sparkles,
-  BookOpen,
-  Layers,
-  Cpu,
-  CheckCircle2
+  ShieldCheck
 } from "lucide-react";
 
 export const AuthGatewayScreen: React.FC = () => {
@@ -396,7 +390,7 @@ export const AuthGatewayScreen: React.FC = () => {
             className="inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-amber-400 transition-colors font-mono"
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Website Owner Portal & Tracker →</span>
+            <span>Website Owner Sign-In Directory →</span>
           </button>
         </div>
 

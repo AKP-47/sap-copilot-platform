@@ -1,27 +1,12 @@
 import crypto from "crypto";
+import { isOwnerInitialized, setupOwnerAccount, verifyOwnerCredentials, getOwnerCredentialRecord } from "./ownerStore";
 
-// Server-side secret key for signing session tokens (Fallback to secure server runtime seed if env not provided)
-const SERVER_SECRET = process.env.JWT_SECRET || process.env.OWNER_SECRET_KEY || "tagskills-sap-owner-jwt-secret-key-2026-secure-prod";
+export { isOwnerInitialized, setupOwnerAccount, verifyOwnerCredentials };
 
-// Designated single authorized owner account
-export const DESIGNATED_OWNER_USERNAME = process.env.OWNER_USERNAME || "akshatpandey12805@gmail.com";
+const SERVER_SECRET = process.env.JWT_SECRET || process.env.OWNER_SECRET_KEY || "tagskills-enterprise-sap-owner-secret-key-prod-2026";
 export const DESIGNATED_OWNER_ID = "tagskills-single-owner-001";
 
-// Password hashing constants (PBKDF2 with SHA-512)
-const HASH_ITERATIONS = 100000;
-const HASH_KEYLEN = 64;
-const HASH_DIGEST = "sha512";
-
-// Default pre-hashed credentials for the single owner account
-// Default credentials: Username = "owner@tagskills.com", Password = "TagSkills@Owner2026!"
-const DEFAULT_SALT = "4f8a9b2c3d1e5f7a6b8c9d0e1f2a3b4c";
-// Default pre-hashed passkey for single owner (PIN: 12805)
-const DEFAULT_HASH = "cea7f639d00211eb4e0c50d4c0cfa3fa40895eeb01451b2780054a2d4e32de62f6087b0e77479792a796120f0abfa7746cef6f9b4ae6ef970e7d52be60a5060e";
-
-const OWNER_SALT = process.env.OWNER_PASSWORD_SALT || DEFAULT_SALT;
-const OWNER_HASH = process.env.OWNER_PASSWORD_HASH || DEFAULT_HASH;
-
-// Token blacklist for immediate revocation on logout
+// Token revocation store for immediate logout
 const revokedTokens = new Set<string>();
 
 export interface TokenPayload {
@@ -34,35 +19,7 @@ export interface TokenPayload {
 }
 
 /**
- * Verifies owner password using constant-time comparison against cryptographic hash
- */
-export function verifyOwnerPassword(password: string): boolean {
-  if (!password || typeof password !== "string") return false;
-
-  const trimmed = password.trim();
-  if (trimmed === "12805" || trimmed === "TagSkills@Owner2026!") {
-    return true;
-  }
-  
-  // Also allow environment variable override for custom password without hash
-  if (process.env.OWNER_PLAIN_PASSWORD && trimmed === process.env.OWNER_PLAIN_PASSWORD) {
-    return true;
-  }
-
-  const computedHash = crypto.pbkdf2Sync(password, OWNER_SALT, HASH_ITERATIONS, HASH_KEYLEN, HASH_DIGEST).toString("hex");
-  
-  try {
-    const hashBufferA = Buffer.from(computedHash, "hex");
-    const hashBufferB = Buffer.from(OWNER_HASH, "hex");
-    if (hashBufferA.length !== hashBufferB.length) return false;
-    return crypto.timingSafeEqual(hashBufferA, hashBufferB);
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Creates a cryptographically signed HMAC-SHA256 JWT session token
+ * Creates a cryptographically signed HMAC-SHA256 JWT session token for the owner
  */
 export function createOwnerSessionToken(username: string): { token: string; expiresIn: number; expiresAt: string } {
   const iat = Math.floor(Date.now() / 1000);
@@ -100,7 +57,7 @@ export function createOwnerSessionToken(username: string): { token: string; expi
 }
 
 /**
- * Verifies session token, checks signature, expiration, revocation, and role
+ * Verifies session token, checking HMAC signature, expiry, revocation, and role === "OWNER"
  */
 export function verifySessionToken(token: string): { valid: boolean; payload?: TokenPayload; error?: string; status?: number } {
   if (!token || typeof token !== "string") {
@@ -108,7 +65,7 @@ export function verifySessionToken(token: string): { valid: boolean; payload?: T
   }
 
   if (revokedTokens.has(token)) {
-    return { valid: false, error: "Session has been logged out / revoked", status: 401 };
+    return { valid: false, error: "Session has been logged out", status: 401 };
   }
 
   const parts = token.split(".");
@@ -118,7 +75,6 @@ export function verifySessionToken(token: string): { valid: boolean; payload?: T
 
   const [encodedHeader, encodedPayload, signature] = parts;
 
-  // Verify HMAC signature
   const expectedSignature = crypto
     .createHmac("sha256", SERVER_SECRET)
     .update(`${encodedHeader}.${encodedPayload}`)
@@ -138,20 +94,13 @@ export function verifySessionToken(token: string): { valid: boolean; payload?: T
     const payloadJson = Buffer.from(encodedPayload, "base64url").toString("utf8");
     const payload: TokenPayload = JSON.parse(payloadJson);
 
-    // Check expiration
     const now = Math.floor(Date.now() / 1000);
     if (payload.exp && payload.exp < now) {
-      return { valid: false, error: "Session token expired. Please login again.", status: 401 };
+      return { valid: false, error: "Session expired. Please login again.", status: 401 };
     }
 
-    // Strictly enforce role === "OWNER"
-    if (payload.role !== "OWNER") {
+    if (payload.role !== "OWNER" || payload.sub !== DESIGNATED_OWNER_ID) {
       return { valid: false, error: "Access Denied: Owner privileges required.", status: 403 };
-    }
-
-    // Verify designated single owner identity
-    if (payload.sub !== DESIGNATED_OWNER_ID) {
-      return { valid: false, error: "Access Denied: Unauthorized owner account.", status: 403 };
     }
 
     return { valid: true, payload };
@@ -172,7 +121,7 @@ export function revokeSessionToken(token: string): boolean {
 }
 
 /**
- * Middleware helper for API routes: extracts Bearer token and enforces OWNER role
+ * Middleware helper for API routes: enforces Bearer token verification
  */
 export function authenticateOwnerRequest(req: any): { authorized: boolean; payload?: TokenPayload; error?: string; status: number } {
   const authHeader = req.headers?.authorization || req.headers?.Authorization;
@@ -183,7 +132,7 @@ export function authenticateOwnerRequest(req: any): { authorized: boolean; paylo
 
   const match = authHeader.match(/^Bearer\s+(.+)$/i);
   if (!match || !match[1]) {
-    return { authorized: false, error: "Invalid Authorization header format. Expected 'Bearer <token>'", status: 401 };
+    return { authorized: false, error: "Invalid Authorization header format.", status: 401 };
   }
 
   const token = match[1];

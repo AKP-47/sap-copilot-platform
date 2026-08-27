@@ -1,7 +1,6 @@
-import { verifyOwnerPassword, createOwnerSessionToken, DESIGNATED_OWNER_USERNAME } from "../_lib/auth";
+import { verifyOwnerCredentials, createOwnerSessionToken, isOwnerInitialized } from "../_lib/auth";
 
 export default async function handler(req: any, res: any) {
-  // CORS & Methods
   res.setHeader("Content-Type", "application/json");
 
   if (req.method !== "POST") {
@@ -17,27 +16,36 @@ export default async function handler(req: any, res: any) {
     }
   }
 
-  const { username, password } = body || {};
+  const { username, passkey, password } = body || {};
+  const secretToVerify = passkey || password;
 
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password are required." });
+  if (!username || !secretToVerify) {
+    return res.status(400).json({
+      error: "Owner identifier and passkey are required.",
+      code: "CREDENTIALS_REQUIRED"
+    });
   }
 
-  // Strictly enforce designated single owner username match
-  const isUsernameMatch = username.trim().toLowerCase() === DESIGNATED_OWNER_USERNAME.toLowerCase() || username.trim() === "owner";
-  const isPasswordValid = verifyOwnerPassword(password);
+  if (!isOwnerInitialized()) {
+    return res.status(400).json({
+      error: "Owner account has not been initialized yet. Please complete initial setup.",
+      code: "NOT_INITIALIZED"
+    });
+  }
 
-  if (!isUsernameMatch || !isPasswordValid) {
-    // Artificial slight delay to prevent timing brute-force attacks
-    await new Promise(resolve => setTimeout(resolve, 300));
+  const clientIp = req.headers?.["x-forwarded-for"] || req.socket?.remoteAddress || "default";
+  const authResult = verifyOwnerCredentials(username, secretToVerify, String(clientIp));
+
+  if (!authResult.valid) {
+    // Artificial 350ms delay to deter timing and brute-force attacks
+    await new Promise(resolve => setTimeout(resolve, 350));
     return res.status(401).json({
-      error: "Invalid owner credentials. Access Denied.",
+      error: authResult.error || "Authentication failed. Please check your credentials.",
       code: "INVALID_CREDENTIALS"
     });
   }
 
-  // Generate secure signed session token
-  const session = createOwnerSessionToken(DESIGNATED_OWNER_USERNAME);
+  const session = createOwnerSessionToken(username.trim().toLowerCase());
 
   return res.status(200).json({
     success: true,
@@ -46,8 +54,7 @@ export default async function handler(req: any, res: any) {
     user: {
       id: "tagskills-single-owner-001",
       role: "OWNER",
-      displayName: "Website Owner",
-      username: DESIGNATED_OWNER_USERNAME
+      displayName: "Website Owner"
     },
     token: session.token,
     expiresIn: session.expiresIn,

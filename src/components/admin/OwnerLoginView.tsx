@@ -11,138 +11,225 @@ import {
   AlertCircle, 
   KeyRound,
   ArrowLeft,
-  Fingerprint
+  CheckCircle2
 } from "lucide-react";
 
 export const OwnerLoginView: React.FC = () => {
-  const { loginOwner, loginWithPasskey, loginWithBiometrics, authLoading, authError } = useOwnerAuth();
+  const { loginOwner, setupOwner, isInitialized, authLoading, authError } = useOwnerAuth();
   const { setCurrentView } = useSap();
 
-  const [authMode, setAuthMode] = useState<"passkey" | "password">("passkey");
-  
-  // Passkey mode state
-  const [passkeyInput, setPasskeyInput] = useState("");
-  
-  // Password mode state
-  const [username, setUsername] = useState("akshatpandey12805@gmail.com");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  // Login form state
+  const [username, setUsername] = useState("");
+  const [passkey, setPasskey] = useState("");
+  const [showPasskey, setShowPasskey] = useState(false);
+
+  // Setup form state (used only on first initialization)
+  const [setupUsername, setSetupUsername] = useState("");
+  const [setupPasskey, setSetupPasskey] = useState("");
+  const [setupConfirm, setSetupConfirm] = useState("");
+  const [showSetupPasskey, setShowSetupPasskey] = useState(false);
+
   const [localError, setLocalError] = useState<string | null>(null);
 
-  // Standard email validation check
-  const isValidEmailFormat = (email: string): boolean => {
-    const trimmed = email.trim();
-    if (!trimmed) return false;
-    // Standard RFC-compliant format check
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(trimmed);
-  };
-
-  const handlePasskeySubmit = async (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
 
-    const cleanPasskey = passkeyInput.trim();
-    if (!cleanPasskey) {
-      setLocalError("Please enter your owner passkey code.");
+    const cleanUser = username.trim();
+    const cleanPass = passkey.trim();
+
+    if (!cleanUser) {
+      setLocalError("Please enter your owner account identifier.");
       return;
     }
 
-    const res = await loginWithPasskey(cleanPasskey);
+    if (!cleanPass) {
+      setLocalError("Please enter your private owner passkey.");
+      return;
+    }
+
+    const res = await loginOwner(cleanUser, cleanPass);
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
   };
 
-  const handleBiometricsClick = async () => {
-    setLocalError(null);
-    const res = await loginWithBiometrics();
-    if (!res.success && res.error) {
-      setLocalError(res.error);
-    }
-  };
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
+  const handleSetupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
 
-    const cleanUsername = username.trim();
-    const cleanPassword = password.trim();
+    const cleanUser = setupUsername.trim();
+    const cleanPass = setupPasskey.trim();
+    const cleanConfirm = setupConfirm.trim();
 
-    if (!cleanUsername) {
-      setLocalError("Please enter your owner email address.");
+    if (!cleanUser || cleanUser.length < 3) {
+      setLocalError("Please choose an owner account identifier (at least 3 characters).");
       return;
     }
 
-    if (cleanUsername.includes("@") && !isValidEmailFormat(cleanUsername)) {
-      setLocalError("Please enter a valid email address (e.g. name@example.com).");
+    if (!cleanPass || cleanPass.length < 4) {
+      setLocalError("Please choose a private passkey of at least 4 characters.");
       return;
     }
 
-    if (!cleanPassword) {
-      setLocalError("Please enter your owner password or passkey.");
+    if (cleanPass !== cleanConfirm) {
+      setLocalError("The confirmation passkey does not match.");
       return;
     }
 
-    const res = await loginOwner(cleanUsername, cleanPassword);
+    const res = await setupOwner(cleanUser, cleanPass);
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
   };
 
+  // Render One-Time Setup if not yet initialized
+  if (isInitialized === false) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in duration-200">
+          
+          <div className="text-center space-y-2">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-inner border border-amber-500/30">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800 inline-block">
+              ONE-TIME CONFIGURATION
+            </span>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              OWNER ACCOUNT SETUP
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Choose your private identifier and secret passkey to initialize the Owner Tracker. This setup cannot be repeated once completed.
+            </p>
+          </div>
+
+          {(localError || authError) && (
+            <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-800 dark:text-rose-200 flex items-start space-x-2 animate-in fade-in duration-150">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+              <span>{localError || authError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSetupSubmit} noValidate className="space-y-4">
+            
+            <div className="space-y-1.5">
+              <label htmlFor="setup-username" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+                <User className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <span>Owner Account Identifier</span>
+              </label>
+              <input
+                id="setup-username"
+                name="username"
+                type="text"
+                autoComplete="username"
+                value={setupUsername}
+                onChange={(e) => {
+                  setSetupUsername(e.target.value);
+                  if (localError) setLocalError(null);
+                }}
+                placeholder="Choose identifier (e.g. your email or username)"
+                className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="setup-passkey" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+                <KeyRound className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <span>Private Owner Passkey</span>
+              </label>
+              <div className="relative">
+                <input
+                  id="setup-passkey"
+                  name="passkey"
+                  type={showSetupPasskey ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={setupPasskey}
+                  onChange={(e) => {
+                    setSetupPasskey(e.target.value);
+                    if (localError) setLocalError(null);
+                  }}
+                  placeholder="Choose your private passkey..."
+                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSetupPasskey(!showSetupPasskey)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                  aria-label={showSetupPasskey ? "Hide passkey" : "Show passkey"}
+                >
+                  {showSetupPasskey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="setup-confirm" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+                <Lock className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <span>Confirm Private Passkey</span>
+              </label>
+              <input
+                id="setup-confirm"
+                name="confirm-passkey"
+                type={showSetupPasskey ? "text" : "password"}
+                autoComplete="new-password"
+                value={setupConfirm}
+                onChange={(e) => {
+                  setSetupConfirm(e.target.value);
+                  if (localError) setLocalError(null);
+                }}
+                placeholder="Re-enter your private passkey..."
+                className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={authLoading}
+              className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-lg transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+            >
+              {authLoading ? (
+                <span>Initializing Owner Security...</span>
+              ) : (
+                <>
+                  <span>Initialize & Secure Owner Account</span>
+                  <CheckCircle2 className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center">
+            <button
+              onClick={() => setCurrentView("dashboard")}
+              className="inline-flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Return to Learning Dashboard</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // Standard Owner Authentication View
   return (
     <div className="min-h-[75vh] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 animate-in fade-in duration-200">
         
-        {/* Header Icon */}
+        {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-amber-400/20 border border-amber-400/40 text-amber-500 flex items-center justify-center mx-auto shadow-inner">
-            <Fingerprint className="w-7 h-7" />
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-inner border border-amber-500/30">
+            <ShieldCheck className="w-7 h-7" />
           </div>
-          <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800 inline-block">
-            RESTRICTED ACCESS PORTAL
-          </span>
           <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Owner Authentication
+            OWNER AUTHENTICATION
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Authorized Account: <strong className="text-slate-700 dark:text-slate-200">akshatpandey12805@gmail.com</strong>
+            Restricted access to private platform analytics.
           </p>
-        </div>
-
-        {/* Mode Selector Tabs */}
-        <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode("passkey");
-              setLocalError(null);
-            }}
-            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
-              authMode === "passkey"
-                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900"
-            }`}
-          >
-            <KeyRound className="w-3.5 h-3.5 text-amber-500" />
-            <span>Passkey Login</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setAuthMode("password");
-              setLocalError(null);
-            }}
-            className={`py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
-              authMode === "password"
-                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900"
-            }`}
-          >
-            <Lock className="w-3.5 h-3.5 text-blue-500" />
-            <span>Password Login</span>
-          </button>
         </div>
 
         {/* Error Callout */}
@@ -153,147 +240,77 @@ export const OwnerLoginView: React.FC = () => {
           </div>
         )}
 
-        {/* ============================================================ */}
-        {/* PASSKEY AUTHENTICATION MODE                                  */}
-        {/* ============================================================ */}
-        {authMode === "passkey" ? (
-          <div className="space-y-4">
-            
-            {/* 1-Click Biometrics / Touch ID / Device Passkey Button */}
-            <button
-              type="button"
-              disabled={authLoading}
-              onClick={handleBiometricsClick}
-              className="w-full py-4 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-xl hover:shadow-2xl transition-all flex items-center justify-center space-x-2.5 transform hover:scale-[1.02] disabled:opacity-50"
-            >
-              <Fingerprint className="w-5 h-5 text-white" />
-              <span>{authLoading ? "Verifying Passkey..." : "Use Device Passkey (Touch ID / Face ID)"}</span>
-            </button>
-
-            <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-              <span className="flex-shrink mx-3 text-[10px] font-mono text-slate-400 uppercase font-bold">OR ENTER PASSKEY PIN</span>
-              <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-            </div>
-
-            {/* Passkey / PIN Entry Form */}
-            <form onSubmit={handlePasskeySubmit} noValidate className="space-y-3">
-              <div className="space-y-1.5">
-                <label htmlFor="owner-passkey" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                  <span className="flex items-center">
-                    <KeyRound className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                    <span>Owner Passkey PIN</span>
-                  </span>
-                </label>
-                <div className="relative">
-                  <input
-                    id="owner-passkey"
-                    name="passkey"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    autoFocus
-                    value={passkeyInput}
-                    onChange={(e) => {
-                      setPasskeyInput(e.target.value);
-                      if (localError) setLocalError(null);
-                    }}
-                    placeholder="Enter Passkey PIN (e.g. 12805)..."
-                    className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full py-3.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-850 dark:bg-slate-800 dark:hover:bg-slate-750 text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
-              >
-                <span>Verify Passkey & Access Dashboard</span>
-                <ArrowRight className="w-4 h-4 text-amber-400" />
-              </button>
-            </form>
-
+        {/* Form */}
+        <form onSubmit={handleLoginSubmit} noValidate className="space-y-4">
+          
+          <div className="space-y-1.5">
+            <label htmlFor="owner-account" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+              <User className="w-3.5 h-3.5 mr-1 text-slate-400" />
+              <span>Owner Account</span>
+            </label>
+            <input
+              id="owner-account"
+              name="username"
+              type="text"
+              autoComplete="username"
+              autoFocus
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                if (localError) setLocalError(null);
+              }}
+              placeholder="Enter your owner account identifier"
+              className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
           </div>
-        ) : (
-          /* ============================================================ */
-          /* PASSWORD AUTHENTICATION MODE                                 */
-          /* ============================================================ */
-          <form onSubmit={handlePasswordSubmit} noValidate className="space-y-4">
-            
-            <div className="space-y-1.5">
-              <label htmlFor="owner-email" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
-                <User className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Owner Email Address</span>
-              </label>
+
+          <div className="space-y-1.5">
+            <label htmlFor="owner-passkey" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+              <span className="flex items-center">
+                <KeyRound className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                <span>Owner Passkey</span>
+              </span>
+            </label>
+            <div className="relative">
               <input
-                id="owner-email"
-                name="username"
-                type="email"
-                autoComplete="username"
-                value={username}
+                id="owner-passkey"
+                name="passkey"
+                type={showPasskey ? "text" : "password"}
+                autoComplete="current-password"
+                value={passkey}
                 onChange={(e) => {
-                  setUsername(e.target.value);
+                  setPasskey(e.target.value);
                   if (localError) setLocalError(null);
                 }}
-                placeholder="akshatpandey12805@gmail.com"
-                className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                placeholder="Enter your private owner passkey"
+                className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
+              <button
+                type="button"
+                onClick={() => setShowPasskey(!showPasskey)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                aria-label={showPasskey ? "Hide passkey" : "Show passkey"}
+              >
+                {showPasskey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
+          </div>
 
-            <div className="space-y-1.5">
-              <label htmlFor="owner-password" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
-                <Lock className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Owner Password / Passkey</span>
-              </label>
-              <div className="relative">
-                <input
-                  id="owner-password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (localError) setLocalError(null);
-                  }}
-                  placeholder="Enter password or 12805..."
-                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={authLoading}
-              className="w-full py-3.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-850 dark:bg-amber-400 dark:hover:bg-amber-300 text-white dark:text-slate-950 font-extrabold text-xs shadow-lg transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
-            >
-              {authLoading ? (
-                <span>Authenticating Password...</span>
-              ) : (
-                <>
-                  <span>Authenticate & Access Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
-        )}
+          <button
+            type="submit"
+            disabled={authLoading}
+            className="w-full py-3.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-850 dark:bg-amber-400 dark:hover:bg-amber-300 text-white dark:text-slate-950 font-extrabold text-xs shadow-lg transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+          >
+            {authLoading ? (
+              <span>Authenticating Passkey...</span>
+            ) : (
+              <>
+                <span>Authenticate & Access Owner Tracker</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </form>
 
         <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center">
           <button

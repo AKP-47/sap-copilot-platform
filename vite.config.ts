@@ -1,5 +1,7 @@
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+import statusHandler from "./api/auth/status";
+import setupHandler from "./api/auth/setup";
 import loginHandler from "./api/auth/login";
 import logoutHandler from "./api/auth/logout";
 import sessionHandler from "./api/auth/session";
@@ -7,8 +9,6 @@ import analyticsHandler from "./api/admin/analytics";
 import visitorsHandler from "./api/admin/visitors";
 import activityHandler from "./api/admin/activity";
 import quizAnalyticsHandler from "./api/admin/quiz-analytics";
-import passkeyChallengeHandler from "./api/auth/passkey-challenge";
-import passkeyVerifyHandler from "./api/auth/passkey-verify";
 
 function apiServerPlugin(): Plugin {
   return {
@@ -21,7 +21,6 @@ function apiServerPlugin(): Plugin {
           return next();
         }
 
-        // Helper response wrapper matching Vercel Serverless Function response interface
         const mockRes = {
           statusCode: 200,
           setHeader: (key: string, val: string) => res.setHeader(key, val),
@@ -35,7 +34,6 @@ function apiServerPlugin(): Plugin {
           }
         };
 
-        // Buffer request body if method is POST/PUT/PATCH
         let body: any = null;
         if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
           const chunks: any[] = [];
@@ -58,11 +56,11 @@ function apiServerPlugin(): Plugin {
         };
 
         try {
-          if (url === "/api/auth/passkey-challenge") {
-            return await passkeyChallengeHandler(mockReq, mockRes);
+          if (url === "/api/auth/status") {
+            return await statusHandler(mockReq, mockRes);
           }
-          if (url === "/api/auth/passkey-verify") {
-            return await passkeyVerifyHandler(mockReq, mockRes);
+          if (url === "/api/auth/setup") {
+            return await setupHandler(mockReq, mockRes);
           }
           if (url === "/api/auth/login") {
             return await loginHandler(mockReq, mockRes);

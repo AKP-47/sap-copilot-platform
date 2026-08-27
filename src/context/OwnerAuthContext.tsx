@@ -4,18 +4,19 @@ export interface OwnerUser {
   id: string;
   role: "OWNER";
   displayName: string;
-  username: string;
+  username?: string;
 }
 
 interface OwnerAuthContextType {
   isOwnerAuthenticated: boolean;
   ownerToken: string | null;
   ownerUser: OwnerUser | null;
+  isInitialized: boolean | null;
   authLoading: boolean;
   authError: string | null;
-  loginOwner: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  loginWithPasskey: (passkey: string) => Promise<{ success: boolean; error?: string }>;
-  loginWithBiometrics: () => Promise<{ success: boolean; error?: string }>;
+  checkAuthStatus: () => Promise<void>;
+  setupOwner: (username: string, passkey: string) => Promise<{ success: boolean; error?: string }>;
+  loginOwner: (username: string, passkey: string) => Promise<{ success: boolean; error?: string }>;
   logoutOwner: () => Promise<void>;
   fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
@@ -23,12 +24,11 @@ interface OwnerAuthContextType {
 const OwnerAuthContext = createContext<OwnerAuthContextType | undefined>(undefined);
 
 const TOKEN_STORAGE_KEY = "tagskills_owner_jwt_session";
-const DESIGNATED_EMAIL = "akshatpandey12805@gmail.com";
 
 export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [ownerToken, setOwnerToken] = useState<string | null>(() => {
     try {
-      return sessionStorage.getItem(TOKEN_STORAGE_KEY) || localStorage.getItem(TOKEN_STORAGE_KEY) || null;
+      return sessionStorage.getItem(TOKEN_STORAGE_KEY) || null;
     } catch {
       return null;
     }
@@ -36,13 +36,12 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [ownerUser, setOwnerUser] = useState<OwnerUser | null>(() => {
     try {
-      const stored = sessionStorage.getItem(TOKEN_STORAGE_KEY) || localStorage.getItem(TOKEN_STORAGE_KEY);
+      const stored = sessionStorage.getItem(TOKEN_STORAGE_KEY);
       if (stored) {
         return {
           id: "tagskills-single-owner-001",
           role: "OWNER",
-          displayName: "Website Owner",
-          username: DESIGNATED_EMAIL
+          displayName: "Website Owner"
         };
       }
       return null;
@@ -53,205 +52,162 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [isOwnerAuthenticated, setIsOwnerAuthenticated] = useState<boolean>(() => {
     try {
-      return !!(sessionStorage.getItem(TOKEN_STORAGE_KEY) || localStorage.getItem(TOKEN_STORAGE_KEY));
+      return !!sessionStorage.getItem(TOKEN_STORAGE_KEY);
     } catch {
       return false;
     }
   });
 
+  const [isInitialized, setIsInitialized] = useState<boolean | null>(null);
   const [authLoading, setAuthLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
-  // Validate session on startup
+  // Check setup status
+  const checkAuthStatus = useCallback(async () => {
+    try {
+      const res = await fetch("/api/auth/status");
+      if (res.ok) {
+        const data = await res.json();
+        setIsInitialized(data.isInitialized);
+      } else {
+        // Fallback default: assume initialized
+        setIsInitialized(true);
+      }
+    } catch {
+      setIsInitialized(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  // Validate active session
   useEffect(() => {
     if (ownerToken) {
       setIsOwnerAuthenticated(true);
       setOwnerUser({
         id: "tagskills-single-owner-001",
         role: "OWNER",
-        displayName: "Website Owner",
-        username: DESIGNATED_EMAIL
+        displayName: "Website Owner"
       });
     }
   }, [ownerToken]);
 
-  // Login with Username & Password
-  const loginOwner = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  // One-time Setup
+  const setupOwner = async (username: string, passkey: string): Promise<{ success: boolean; error?: string }> => {
     setAuthLoading(true);
     setAuthError(null);
 
-    const cleanUsername = username?.trim().toLowerCase() || "";
-    const cleanPassword = password?.trim() || "";
+    const cleanUser = username?.trim();
+    const cleanPass = passkey?.trim();
 
-    if (!cleanUsername) {
-      const err = "Please enter your owner email address.";
+    if (!cleanUser || cleanUser.length < 3) {
+      const err = "Please enter an owner account identifier (at least 3 characters).";
       setAuthError(err);
       setAuthLoading(false);
       return { success: false, error: err };
     }
 
-    if (!cleanPassword) {
-      const err = "Please enter your owner password or passkey.";
+    if (!cleanPass || cleanPass.length < 4) {
+      const err = "Please choose a private passkey of at least 4 characters.";
       setAuthError(err);
       setAuthLoading(false);
       return { success: false, error: err };
     }
 
-    // Try backend verification first
+    try {
+      const res = await fetch("/api/auth/setup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: cleanUser, passkey: cleanPass })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.success || !data.token) {
+        const err = data.error || "Failed to initialize owner account.";
+        setAuthError(err);
+        setAuthLoading(false);
+        return { success: false, error: err };
+      }
+
+      sessionStorage.setItem(TOKEN_STORAGE_KEY, data.token);
+      setOwnerToken(data.token);
+      setIsOwnerAuthenticated(true);
+      setIsInitialized(true);
+      setOwnerUser({
+        id: "tagskills-single-owner-001",
+        role: "OWNER",
+        displayName: "Website Owner"
+      });
+      setAuthLoading(false);
+      return { success: true };
+    } catch {
+      const err = "Network error during owner setup. Please check your connection.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+  };
+
+  // Login
+  const loginOwner = async (username: string, passkey: string): Promise<{ success: boolean; error?: string }> => {
+    setAuthLoading(true);
+    setAuthError(null);
+
+    const cleanUser = username?.trim();
+    const cleanPass = passkey?.trim();
+
+    if (!cleanUser) {
+      const err = "Please enter your owner account identifier.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+
+    if (!cleanPass) {
+      const err = "Please enter your private owner passkey.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: cleanUsername, password: cleanPassword })
+        body: JSON.stringify({ username: cleanUser, passkey: cleanPass })
       });
-      const data = await res.json().catch(() => null);
-      if (data && data.success && data.token) {
-        sessionStorage.setItem(TOKEN_STORAGE_KEY, data.token);
-        setOwnerToken(data.token);
-        setIsOwnerAuthenticated(true);
-        setOwnerUser(data.user || {
-          id: "tagskills-single-owner-001",
-          role: "OWNER",
-          displayName: "Website Owner",
-          username: DESIGNATED_EMAIL
-        });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.success || !data.token) {
+        const err = data.error || "Authentication failed. Please check your credentials.";
+        setAuthError(err);
         setAuthLoading(false);
-        return { success: true };
+        return { success: false, error: err };
       }
-    } catch {
-      // Backend request fallback
-    }
 
-    // Direct cryptographic check
-    const isUserValid = cleanUsername === DESIGNATED_EMAIL.toLowerCase() || cleanUsername === "owner" || cleanUsername === "owner@tagskills.com";
-    const isPassValid = cleanPassword === "12805" || cleanPassword === "TagSkills@Owner2026!";
-
-    if (isUserValid && isPassValid) {
-      const syntheticToken = `owner_session_${Date.now()}_akshatpandey12805`;
-      sessionStorage.setItem(TOKEN_STORAGE_KEY, syntheticToken);
-      setOwnerToken(syntheticToken);
+      sessionStorage.setItem(TOKEN_STORAGE_KEY, data.token);
+      setOwnerToken(data.token);
       setIsOwnerAuthenticated(true);
       setOwnerUser({
         id: "tagskills-single-owner-001",
         role: "OWNER",
-        displayName: "Website Owner",
-        username: DESIGNATED_EMAIL
+        displayName: "Website Owner"
       });
-      setAuthError(null);
       setAuthLoading(false);
       return { success: true };
-    } else {
-      const errMessage = "Owner authentication failed. Please check your credentials.";
-      setAuthError(errMessage);
-      setAuthLoading(false);
-      return { success: false, error: errMessage };
-    }
-  };
-
-  // Login with Passkey PIN (12805)
-  const loginWithPasskey = async (passkey: string): Promise<{ success: boolean; error?: string }> => {
-    setAuthLoading(true);
-    setAuthError(null);
-
-    const cleanPasskey = passkey?.trim() || "";
-    if (!cleanPasskey) {
-      const err = "Please enter your owner passkey PIN.";
+    } catch {
+      const err = "Unable to connect to authentication server. Please try again.";
       setAuthError(err);
       setAuthLoading(false);
       return { success: false, error: err };
     }
-
-    // Try backend verification first
-    try {
-      const res = await fetch("/api/auth/passkey-verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientPasskey: cleanPasskey })
-      });
-      const data = await res.json().catch(() => null);
-      if (data && data.success && data.token) {
-        sessionStorage.setItem(TOKEN_STORAGE_KEY, data.token);
-        setOwnerToken(data.token);
-        setIsOwnerAuthenticated(true);
-        setOwnerUser(data.user || {
-          id: "tagskills-single-owner-001",
-          role: "OWNER",
-          displayName: "Website Owner",
-          username: DESIGNATED_EMAIL
-        });
-        setAuthLoading(false);
-        return { success: true };
-      }
-    } catch {
-      // Backend request fallback
-    }
-
-    // Verify 12805 or Master Passkey directly
-    if (cleanPasskey === "12805" || cleanPasskey === "TagSkills@Owner2026!") {
-      const syntheticToken = `owner_session_${Date.now()}_akshatpandey12805`;
-      sessionStorage.setItem(TOKEN_STORAGE_KEY, syntheticToken);
-      setOwnerToken(syntheticToken);
-      setIsOwnerAuthenticated(true);
-      setOwnerUser({
-        id: "tagskills-single-owner-001",
-        role: "OWNER",
-        displayName: "Website Owner",
-        username: DESIGNATED_EMAIL
-      });
-      setAuthError(null);
-      setAuthLoading(false);
-      return { success: true };
-    } else {
-      const errMessage = "Invalid Passkey PIN. Access Denied.";
-      setAuthError(errMessage);
-      setAuthLoading(false);
-      return { success: false, error: errMessage };
-    }
   };
 
-  // Login with Biometrics (Touch ID / Face ID / WebAuthn)
-  const loginWithBiometrics = async (): Promise<{ success: boolean; error?: string }> => {
-    setAuthLoading(true);
-    setAuthError(null);
-
-    // If WebAuthn is available in browser, prompt device
-    if (typeof window !== "undefined" && window.PublicKeyCredential) {
-      try {
-        const challenge = new Uint8Array(32);
-        window.crypto.getRandomValues(challenge);
-        const options: PublicKeyCredentialRequestOptions = {
-          challenge: challenge.buffer as ArrayBuffer,
-          timeout: 60000,
-          rpId: window.location.hostname || "localhost",
-          userVerification: "preferred"
-        };
-        try {
-          await navigator.credentials.get({ publicKey: options });
-        } catch {
-          // Biometric prompt completed
-        }
-      } catch {
-        // Fallback
-      }
-    }
-
-    // Issue owner authenticated session
-    const syntheticToken = `owner_session_${Date.now()}_akshatpandey12805_biometrics`;
-    sessionStorage.setItem(TOKEN_STORAGE_KEY, syntheticToken);
-    setOwnerToken(syntheticToken);
-    setIsOwnerAuthenticated(true);
-    setOwnerUser({
-      id: "tagskills-single-owner-001",
-      role: "OWNER",
-      displayName: "Website Owner",
-      username: DESIGNATED_EMAIL
-    });
-    setAuthError(null);
-    setAuthLoading(false);
-    return { success: true };
-  };
-
-  // Logout handler
+  // Logout
   const logoutOwner = async () => {
     setAuthLoading(true);
     try {
@@ -265,7 +221,6 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       // Ignore
     } finally {
       sessionStorage.removeItem(TOKEN_STORAGE_KEY);
-      localStorage.removeItem(TOKEN_STORAGE_KEY);
       setOwnerToken(null);
       setIsOwnerAuthenticated(false);
       setOwnerUser(null);
@@ -274,7 +229,7 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
-  // Authenticated fetch helper
+  // Authenticated Fetch
   const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
     const headers = new Headers(options.headers || {});
     if (ownerToken) {
@@ -289,11 +244,12 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         isOwnerAuthenticated,
         ownerToken,
         ownerUser,
+        isInitialized,
         authLoading,
         authError,
+        checkAuthStatus,
+        setupOwner,
         loginOwner,
-        loginWithPasskey,
-        loginWithBiometrics,
         logoutOwner,
         fetchWithAuth
       }}

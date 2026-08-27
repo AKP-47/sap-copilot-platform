@@ -103,14 +103,7 @@ export const Sidebar: React.FC = () => {
         { view: "passport" as AppView, label: "Consultant Passport", icon: <Award className="w-4 h-4 text-yellow-400" />, badge: "Skill Radar" }
       ]
     },
-    {
-      id: "owner_admin",
-      title: "Owner & Administration",
-      icon: <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />,
-      items: [
-        { view: "owner_analytics" as AppView, label: "Learner Sign-Ins", icon: <ShieldCheck className="w-4 h-4 text-amber-500" />, badge: "Restricted" }
-      ]
-    },
+
     {
       id: "career",
       title: "Career & Interview",

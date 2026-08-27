@@ -383,16 +383,7 @@ export const AuthGatewayScreen: React.FC = () => {
 
         </div>
 
-        {/* Website Owner Direct Link */}
-        <div className="text-center">
-          <button
-            onClick={() => setCurrentView("owner_analytics")}
-            className="inline-flex items-center space-x-1.5 text-xs text-slate-400 hover:text-amber-400 transition-colors font-mono"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Website Owner Sign-In Directory →</span>
-          </button>
-        </div>
+
 
       </div>
 

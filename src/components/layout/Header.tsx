@@ -206,20 +206,7 @@ export const Header: React.FC = () => {
               </div>
             )}
 
-            {/* Owner Learner Sign-Ins Button */}
-            <button
-              onClick={() => setCurrentView("owner_analytics")}
-              style={{
-                backgroundColor: "rgba(245, 158, 11, 0.15)",
-                borderColor: "rgba(245, 158, 11, 0.35)",
-                color: "#d97706"
-              }}
-              className="flex items-center text-xs font-extrabold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105 shadow-sm dark:text-amber-400"
-              title="View Registered Users & Sign-Ins"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 sm:mr-1 text-amber-500" />
-              <span className="hidden sm:inline">Learner Sign-Ins</span>
-            </button>
+
 
             {/* Theme & Palette Library Modal Trigger */}
             <button

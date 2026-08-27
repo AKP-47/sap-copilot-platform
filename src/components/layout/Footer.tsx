@@ -133,15 +133,7 @@ export const Footer: React.FC = () => {
             </a>
             <span>•</span>
             <span>Bengaluru, Karnataka, India</span>
-            <span>•</span>
-            <button
-              onClick={() => setCurrentView("owner_analytics")}
-              className="hover:text-amber-400 text-slate-500 transition-colors flex items-center space-x-1"
-              title="Restricted Website Owner Access"
-            >
-              <Lock className="w-3 h-3" />
-              <span>Owner Portal</span>
-            </button>
+
           </div>
         </div>
 

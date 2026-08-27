@@ -97,5 +97,53 @@
     "eventId": "evt_1787835847704_qmf6imd",
     "timestamp": "2026-08-27T13:04:07.704Z",
     "timestampMs": 1787835847704
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_HEARTBEAT",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835887790_tly73tj",
+    "timestamp": "2026-08-27T13:04:47.790Z",
+    "timestampMs": 1787835887790
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_HEARTBEAT",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787836037888_agc74ua",
+    "timestamp": "2026-08-27T13:07:17.888Z",
+    "timestampMs": 1787836037888
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Akshat Pandey",
+    "eventType": "SESSION_HEARTBEAT",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787836187988_e6nvnbq",
+    "timestamp": "2026-08-27T13:09:47.988Z",
+    "timestampMs": 1787836187988
   }
 ]

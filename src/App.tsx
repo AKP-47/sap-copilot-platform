@@ -1,3 +1,5 @@
+import { AuthGatewayScreen } from "./components/auth/AuthGatewayScreen";
+import { useUserAuth } from "./context/UserAuthContext";
 import { UserAuthProvider } from "./context/UserAuthContext";
 import { UserAuthModal } from "./components/auth/UserAuthModal";
 import { trackEvent, trackPageView } from "./utils/telemetryTracker";
@@ -49,6 +51,7 @@ import { StudyNotesView } from "./components/career/StudyNotesView";
 
 const AppContent: React.FC = () => {
   const { currentView, setCurrentView } = useSap();
+  const { isAuthenticated, currentUser } = useUserAuth();
 
   React.useEffect(() => {
     // Fire real session start
@@ -152,6 +155,21 @@ const AppContent: React.FC = () => {
         return <DashboardView />;
     }
   };
+
+  // If unauthenticated visitor:
+  if (!isAuthenticated) {
+    // If navigating to owner portal
+    if (currentView === "owner_analytics") {
+      return (
+        <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col">
+          <OwnerRouteGuard />
+        </div>
+      );
+    }
+
+    // Default First Screen: Full-Screen Enterprise Authentication Gateway
+    return <AuthGatewayScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200 pb-16 md:pb-0">

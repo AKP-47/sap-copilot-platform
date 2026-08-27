@@ -1,3 +1,4 @@
+import { useUserAuth } from "../../context/UserAuthContext";
 import React from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
@@ -37,6 +38,7 @@ import { MM_TOPICS } from "../../data/mmTopics";
 import { EWM_TOPICS } from "../../data/ewmTopics";
 
 export const DashboardView: React.FC = () => {
+  const { currentUser } = useUserAuth();
   const { 
     setCurrentView, 
     setSelectedTopicId, 
@@ -256,8 +258,15 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Learn SAP. Practice Real Scenarios. Become Job-Ready.
+            {currentUser ? (
+              <span>Welcome, <span className="text-amber-400">{currentUser.name.split(" ")[0]}</span> 👋</span>
+            ) : (
+              <span>Learn SAP. Practice Real Scenarios. Become Job-Ready.</span>
+            )}
           </h1>
+          <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
+            {currentUser ? "Let's start building your SAP journey from fundamentals to job-ready consultant mastery." : "Master SAP Materials Management (MM) & Extended Warehouse Management (EWM) through real enterprise business problems, live execution, and consultant reasoning."}
+          </p>
 
           <p className="text-xs sm:text-base text-slate-300 max-w-2xl leading-relaxed">
             A comprehensive consultant-level learning platform for <strong className="text-white">SAP MM</strong> (Sourcing & Procurement) and <strong className="text-white">SAP EWM</strong> (Warehouse Execution) with live simulators, real-world case studies, and AI assistance.

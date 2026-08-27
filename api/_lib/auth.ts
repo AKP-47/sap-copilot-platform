@@ -4,7 +4,7 @@ import crypto from "crypto";
 const SERVER_SECRET = process.env.JWT_SECRET || process.env.OWNER_SECRET_KEY || "tagskills-sap-owner-jwt-secret-key-2026-secure-prod";
 
 // Designated single authorized owner account
-export const DESIGNATED_OWNER_USERNAME = process.env.OWNER_USERNAME || "owner@tagskills.com";
+export const DESIGNATED_OWNER_USERNAME = process.env.OWNER_USERNAME || "akshatpandey12805@gmail.com";
 export const DESIGNATED_OWNER_ID = "tagskills-single-owner-001";
 
 // Password hashing constants (PBKDF2 with SHA-512)

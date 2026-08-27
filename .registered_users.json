@@ -1,0 +1,16 @@
+[
+  {
+    "id": "usr_1787835847675_w0jb4",
+    "name": "Akshat Pandey",
+    "email": "akshatpandey12805@gmail.com",
+    "salt": "9a65d1fb199402a56685dc22c28177066aa8e2a1d719be30454341059431c395",
+    "hash": "f2c8d20888be697176c90853d5b67c15a8906a7b9f2c45dfd33ebb049000c18fb5833255c3ba37305b002a1974df290451db985507a941175e067e644a1ec31d",
+    "createdAt": "2026-08-27T13:04:07.675Z",
+    "lastLoginAt": "2026-08-27T13:04:07.675Z",
+    "learningLevel": "BEGINNER",
+    "selectedIndustry": "Automotive",
+    "completedLabsCount": 0,
+    "quizzesTakenCount": 0,
+    "avgQuizScore": null
+  }
+]

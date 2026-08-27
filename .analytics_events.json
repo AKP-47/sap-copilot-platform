@@ -1,0 +1,101 @@
+[
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Anonymous Visitor",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835737779_4z4d7lq",
+    "timestamp": "2026-08-27T13:02:17.779Z",
+    "timestampMs": 1787835737779
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Anonymous Visitor",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835737780_jfdlmfj",
+    "timestamp": "2026-08-27T13:02:17.780Z",
+    "timestampMs": 1787835737780
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Anonymous Visitor",
+    "eventType": "SESSION_START",
+    "path": "/",
+    "title": "SAP Copilot – TagSkills Intelligent SAP MM & EWM Learning Platform",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835737782_zblpehn",
+    "timestamp": "2026-08-27T13:02:17.782Z",
+    "timestampMs": 1787835737782
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Anonymous Visitor",
+    "eventType": "PAGE_VIEW",
+    "path": "/dashboard",
+    "title": "View: dashboard",
+    "metadata": {
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835737783_05vc9oc",
+    "timestamp": "2026-08-27T13:02:17.783Z",
+    "timestampMs": 1787835737783
+  },
+  {
+    "visitorId": "usr_akshatpandey12805@gmail.com",
+    "sessionId": "sess_1787835847699",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/registered",
+    "title": "New Learner Account: Akshat Pandey",
+    "metadata": {
+      "learningLevel": "BEGINNER",
+      "industryName": "Automotive",
+      "city": "Registered Learner",
+      "country": "akshatpandey12805@gmail.com"
+    },
+    "eventId": "evt_1787835847699_jxko6of",
+    "timestamp": "2026-08-27T13:04:07.699Z",
+    "timestampMs": 1787835847699
+  },
+  {
+    "visitorId": "vis_mtbj8k31_ew21l50y",
+    "sessionId": "sess_mtbj8k31_byu33olg",
+    "userName": "Akshat Pandey",
+    "eventType": "PAGE_VIEW",
+    "path": "/",
+    "title": "Welcome Akshat Pandey",
+    "metadata": {
+      "learningLevel": "BEGINNER",
+      "industryName": "Automotive",
+      "deviceType": "Desktop",
+      "referrer": "",
+      "browser": "Safari"
+    },
+    "eventId": "evt_1787835847704_qmf6imd",
+    "timestamp": "2026-08-27T13:04:07.704Z",
+    "timestampMs": 1787835847704
+  }
+]

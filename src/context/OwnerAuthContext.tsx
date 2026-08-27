@@ -24,6 +24,29 @@ const OwnerAuthContext = createContext<OwnerAuthContextType | undefined>(undefin
 
 const TOKEN_STORAGE_KEY = "tagskills_owner_jwt_session";
 
+/**
+ * Safe Base64URL to Uint8Array decoder that guarantees valid padding
+ */
+function safeBase64UrlToUint8Array(base64UrlStr: string): Uint8Array {
+  try {
+    if (!base64UrlStr || typeof base64UrlStr !== "string") {
+      return new Uint8Array(32);
+    }
+    let base64 = base64UrlStr.replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4 !== 0) {
+      base64 += "=";
+    }
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  } catch {
+    return new Uint8Array(32);
+  }
+}
+
 export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [ownerToken, setOwnerToken] = useState<string | null>(() => {
     try {
@@ -75,8 +98,7 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         setOwnerToken(null);
       }
-    } catch (err: any) {
-      console.warn("Owner session validation network error:", err);
+    } catch {
       setIsOwnerAuthenticated(false);
       setOwnerUser(null);
     } finally {
@@ -93,19 +115,36 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setAuthLoading(true);
     setAuthError(null);
 
+    const cleanUsername = username?.trim() || "";
+    const cleanPassword = password?.trim() || "";
+
+    if (!cleanUsername) {
+      const err = "Please enter your owner email address.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+
+    if (!cleanPassword) {
+      const err = "Please enter your owner password or passkey.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username: cleanUsername, password: cleanPassword })
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success || !data.token) {
-        const errMessage = data.error || "Authentication failed. Access Denied.";
+        const errMessage = data.error || "Owner authentication failed. Please check your credentials.";
         setAuthError(errMessage);
         setIsOwnerAuthenticated(false);
         setOwnerUser(null);
@@ -123,8 +162,8 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setOwnerUser(data.user);
       setAuthError(null);
       return { success: true };
-    } catch (err: any) {
-      const msg = err?.message || "Network error during authentication.";
+    } catch {
+      const msg = "Unable to connect to the authentication server. Please try again.";
       setAuthError(msg);
       return { success: false, error: msg };
     } finally {
@@ -137,19 +176,27 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setAuthLoading(true);
     setAuthError(null);
 
+    const cleanPasskey = passkey?.trim() || "";
+    if (!cleanPasskey) {
+      const err = "Please enter your owner passkey code.";
+      setAuthError(err);
+      setAuthLoading(false);
+      return { success: false, error: err };
+    }
+
     try {
       const res = await fetch("/api/auth/passkey-verify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ clientPasskey: passkey })
+        body: JSON.stringify({ clientPasskey: cleanPasskey })
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.success || !data.token) {
-        const errMessage = data.error || "Invalid Passkey. Access Denied.";
+        const errMessage = data.error || "Owner authentication failed. Please check your credentials.";
         setAuthError(errMessage);
         setIsOwnerAuthenticated(false);
         setOwnerUser(null);
@@ -167,8 +214,8 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setOwnerUser(data.user);
       setAuthError(null);
       return { success: true };
-    } catch (err: any) {
-      const msg = err?.message || "Passkey verification failed.";
+    } catch {
+      const msg = "Passkey verification failed. Please check your passkey PIN.";
       setAuthError(msg);
       return { success: false, error: msg };
     } finally {
@@ -193,26 +240,22 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
       const challengeData = await challengeRes.json();
 
-      // Convert challenge string to ArrayBuffer for WebAuthn API if supported
+      // Convert challenge string to ArrayBuffer for WebAuthn API safely
       if (typeof window !== "undefined" && window.PublicKeyCredential) {
         try {
-          const rawChallenge = Uint8Array.from(atob(challengeData.challenge.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
-          const userId = Uint8Array.from(atob(challengeData.user.id.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
+          const rawChallenge = safeBase64UrlToUint8Array(challengeData.challenge);
 
-          // Try native device passkey authentication
           const publicKeyCredentialRequestOptions: PublicKeyCredentialRequestOptions = {
-            challenge: rawChallenge.buffer,
+            challenge: rawChallenge.buffer as ArrayBuffer,
             timeout: 60000,
             rpId: window.location.hostname || "localhost",
             userVerification: "preferred"
           };
 
-          // Try get assertion (or prompt user with WebAuthn)
-          // If browser rejects or user cancels, gracefully fallback to challenge verification
           try {
             await navigator.credentials.get({ publicKey: publicKeyCredentialRequestOptions });
-          } catch (biometricErr) {
-            console.info("WebAuthn assertion prompted or simulated:", biometricErr);
+          } catch (biometricErr: any) {
+            console.info("Biometric prompt note:", biometricErr?.message);
           }
         } catch (e) {
           console.info("WebAuthn client execution note:", e);
@@ -249,7 +292,7 @@ export const OwnerAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setAuthError(null);
       return { success: true };
     } catch (err: any) {
-      const msg = err?.message || "Biometric authentication failed.";
+      const msg = err?.message || "Biometric authentication failed. Please enter your passkey PIN.";
       setAuthError(msg);
       return { success: false, error: msg };
     } finally {

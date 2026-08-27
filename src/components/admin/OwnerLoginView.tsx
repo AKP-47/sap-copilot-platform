@@ -11,9 +11,7 @@ import {
   AlertCircle, 
   KeyRound,
   ArrowLeft,
-  Fingerprint,
-  Smartphone,
-  Sparkles
+  Fingerprint
 } from "lucide-react";
 
 export const OwnerLoginView: React.FC = () => {
@@ -31,16 +29,26 @@ export const OwnerLoginView: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
+  // Standard email validation check
+  const isValidEmailFormat = (email: string): boolean => {
+    const trimmed = email.trim();
+    if (!trimmed) return false;
+    // Standard RFC-compliant format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(trimmed);
+  };
+
   const handlePasskeySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
 
-    if (!passkeyInput.trim()) {
-      setLocalError("Please enter your Owner Passkey.");
+    const cleanPasskey = passkeyInput.trim();
+    if (!cleanPasskey) {
+      setLocalError("Please enter your owner passkey code.");
       return;
     }
 
-    const res = await loginWithPasskey(passkeyInput.trim());
+    const res = await loginWithPasskey(cleanPasskey);
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
@@ -58,12 +66,25 @@ export const OwnerLoginView: React.FC = () => {
     e.preventDefault();
     setLocalError(null);
 
-    if (!username.trim() || !password.trim()) {
-      setLocalError("Please enter both owner username and password.");
+    const cleanUsername = username.trim();
+    const cleanPassword = password.trim();
+
+    if (!cleanUsername) {
+      setLocalError("Please enter your owner email address.");
       return;
     }
 
-    const res = await loginOwner(username.trim(), password);
+    if (cleanUsername.includes("@") && !isValidEmailFormat(cleanUsername)) {
+      setLocalError("Please enter a valid email address (e.g. name@example.com).");
+      return;
+    }
+
+    if (!cleanPassword) {
+      setLocalError("Please enter your owner password or passkey.");
+      return;
+    }
+
+    const res = await loginOwner(cleanUsername, cleanPassword);
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
@@ -151,32 +172,39 @@ export const OwnerLoginView: React.FC = () => {
 
             <div className="relative flex py-1 items-center">
               <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-              <span className="flex-shrink mx-3 text-[10px] font-mono text-slate-400 uppercase font-bold">OR ENTER PASSKEY</span>
+              <span className="flex-shrink mx-3 text-[10px] font-mono text-slate-400 uppercase font-bold">OR ENTER PASSKEY PIN</span>
               <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
             </div>
 
             {/* Passkey / PIN Entry Form */}
-            <form onSubmit={handlePasskeySubmit} className="space-y-3">
+            <form onSubmit={handlePasskeySubmit} noValidate className="space-y-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+                <label htmlFor="owner-passkey" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
                   <span className="flex items-center">
                     <KeyRound className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                    <span>Owner Security Passkey</span>
+                    <span>Owner Passkey PIN</span>
                   </span>
                 </label>
                 <div className="relative">
                   <input
+                    id="owner-passkey"
+                    name="passkey"
                     type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     autoFocus
                     value={passkeyInput}
-                    onChange={(e) => setPasskeyInput(e.target.value)}
+                    onChange={(e) => {
+                      setPasskeyInput(e.target.value);
+                      if (localError) setLocalError(null);
+                    }}
                     placeholder="Enter Passkey PIN (e.g. 12805)..."
-                    className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -198,39 +226,52 @@ export const OwnerLoginView: React.FC = () => {
           /* ============================================================ */
           /* PASSWORD AUTHENTICATION MODE                                 */
           /* ============================================================ */
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <form onSubmit={handlePasswordSubmit} noValidate className="space-y-4">
             
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+              <label htmlFor="owner-email" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
                 <User className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Owner Account Identifier</span>
+                <span>Owner Email Address</span>
               </label>
               <input
-                type="text"
+                id="owner-email"
+                name="username"
+                type="email"
+                autoComplete="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="e.g. akshatpandey12805@gmail.com"
-                className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (localError) setLocalError(null);
+                }}
+                placeholder="akshatpandey12805@gmail.com"
+                className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
+              <label htmlFor="owner-password" className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center">
                 <Lock className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                <span>Owner Password</span>
+                <span>Owner Password / Passkey</span>
               </label>
               <div className="relative">
                 <input
+                  id="owner-password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••••••"
-                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (localError) setLocalError(null);
+                  }}
+                  placeholder="Enter password or 12805..."
+                  className="w-full px-4 py-3 pr-10 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>

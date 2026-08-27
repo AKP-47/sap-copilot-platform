@@ -3,12 +3,6 @@ import react from "@vitejs/plugin-react";
 import { createRequire } from "module";
 
 const require = createRequire(import.meta.url);
-const trackHandler = require("./api/track.cjs");
-const signupHandler = require("./api/user/signup.cjs");
-const signinHandler = require("./api/user/signin.cjs");
-const profileHandler = require("./api/user/profile.cjs");
-const forgotPasswordHandler = require("./api/user/forgot-password.cjs");
-const resetPasswordHandler = require("./api/user/reset-password.cjs");
 
 function apiServerPlugin(): Plugin {
   return {
@@ -17,6 +11,14 @@ function apiServerPlugin(): Plugin {
       server.middlewares.use(async (req: any, res: any, next: any) => {
         const url = (req.url || "").split("?")[0];
         if (!url.startsWith("/api/")) return next();
+
+        // Lazy-load handlers to avoid ESM/CJS conflicts at config-parse time
+        const { default: signupHandler }          = await import("./api/user/signup.mjs");
+        const { default: signinHandler }           = await import("./api/user/signin.mjs");
+        const { default: profileHandler }          = await import("./api/user/profile.mjs");
+        const { default: forgotPasswordHandler }   = await import("./api/user/forgot-password.mjs");
+        const { default: resetPasswordHandler }    = await import("./api/user/reset-password.mjs");
+        const { default: trackHandler }            = await import("./api/track.mjs");
 
         const mockRes = {
           statusCode: 200,
@@ -37,12 +39,12 @@ function apiServerPlugin(): Plugin {
         const mockReq = { method: req.method, headers: req.headers, url: req.url, body };
 
         try {
-          if (url === "/api/user/signup") return await signupHandler(mockReq, mockRes);
-          if (url === "/api/user/signin") return await signinHandler(mockReq, mockRes);
+          if (url === "/api/user/signup")          return await signupHandler(mockReq, mockRes);
+          if (url === "/api/user/signin")           return await signinHandler(mockReq, mockRes);
           if (url === "/api/user/profile" || url === "/api/user/me") return await profileHandler(mockReq, mockRes);
           if (url === "/api/user/forgot-password") return await forgotPasswordHandler(mockReq, mockRes);
-          if (url === "/api/user/reset-password") return await resetPasswordHandler(mockReq, mockRes);
-          if (url === "/api/track") return await trackHandler(mockReq, mockRes);
+          if (url === "/api/user/reset-password")  return await resetPasswordHandler(mockReq, mockRes);
+          if (url === "/api/track")                return await trackHandler(mockReq, mockRes);
           res.statusCode = 404; res.end(JSON.stringify({ error: `Route ${url} not found.` }));
         } catch (err: any) {
           console.error("API error:", err);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useUserAuth } from "../../context/UserAuthContext";
 import { useSap } from "../../context/SapContext";
 import { 
@@ -60,6 +60,8 @@ export const UserAuthModal: React.FC = () => {
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
 
   const [localError, setLocalError] = useState<string | null>(null);
+  const submittingRef = useRef(false); // prevents concurrent/double-click submissions
+
 
   useEffect(() => {
     setShowPassword(false);
@@ -82,36 +84,54 @@ export const UserAuthModal: React.FC = () => {
     e.preventDefault();
     setLocalError(null);
 
-    const cleanName = name.trim();
-    const cleanEmail = email.trim();
-    const cleanPass = password.trim();
+    // Prevent double-click / concurrent submissions
+    if (submittingRef.current || authLoading) return;
+    submittingRef.current = true;
+
+    const cleanName  = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass  = password.trim();
 
     if (!cleanName || cleanName.length < 2) {
       setLocalError("Please enter your full name.");
+      submittingRef.current = false;
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!cleanEmail || !emailRegex.test(cleanEmail)) {
       setLocalError("Please enter a valid email address.");
+      submittingRef.current = false;
       return;
     }
 
     if (!cleanPass || cleanPass.length < 6) {
       setLocalError("Password must be at least 6 characters.");
+      submittingRef.current = false;
       return;
     }
 
     if (cleanPass !== confirmPassword.trim()) {
       setLocalError("Passwords do not match.");
+      submittingRef.current = false;
+      return;
+    }
+
+    // Frontend duplicate-email guard: check localStorage for existing credential token
+    const existingCred = localStorage.getItem("tagskills_cred_" + cleanEmail);
+    if (existingCred) {
+      setLocalError("An account with this email already exists. Please sign in instead.");
+      submittingRef.current = false;
       return;
     }
 
     const res = await signUpUser(cleanName, cleanEmail, cleanPass, learningLevel, "Automotive");
+    submittingRef.current = false;
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
   };
+
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

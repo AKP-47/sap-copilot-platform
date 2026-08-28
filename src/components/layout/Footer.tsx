@@ -120,7 +120,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Copyright Bar */}
         <div className="pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
           <div>
-            <span>© {new Date().getFullYear()} TagSkills Enterprise Academy. All Rights Reserved.</span>
+            <span>© {new Date().getFullYear()} TagSkills. All Rights Reserved.</span>
           </div>
           <div className="flex items-center space-x-4">
             <a 

@@ -17,10 +17,7 @@ export const TagSkillsBanner: React.FC = () => {
         <div className="space-y-2 max-w-2xl">
           <div className="flex items-center space-x-2">
             <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-red-600 text-white rounded">
-              Official Institute
-            </span>
-            <span className="text-xs font-semibold text-slate-300">
-              TagSkills Enterprise SAP Academy
+              TagSkills
             </span>
           </div>
 

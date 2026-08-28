@@ -53,35 +53,24 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           
-          {/* Logo & Institute Branding (Top-Left) */}
+          {/* Logo & Brand (Top-Left) */}
           <div className="flex items-center space-x-3 shrink-0">
             <button
               onClick={() => setIsWelcomeOpen(true)}
               className="flex items-center space-x-2.5 p-1 rounded-lg hover:bg-theme-surface-hover transition-colors focus:outline-none"
-              title="TagSkills Official Institute – Click for Institute Overview"
+              title="TagSkills – Click for Overview"
             >
               <img 
                 src="/tagskills-logo.jpg" 
-                alt="TagSkills Official Institute Logo" 
+                alt="TagSkills Logo" 
                 className="h-8 w-auto object-contain" 
               />
-              <div 
-                style={{ borderColor: "var(--theme-border)" }}
-                className="hidden lg:block text-left pl-2 border-l"
+              <span
+                style={{ color: "var(--theme-text-primary)" }}
+                className="hidden lg:block text-sm font-extrabold tracking-tight leading-none"
               >
-                <span 
-                  style={{ color: "var(--theme-text-muted)" }}
-                  className="text-[10px] uppercase font-bold tracking-wider block leading-none"
-                >
-                  Official Institute
-                </span>
-                <span 
-                  style={{ color: "var(--theme-text-primary)" }}
-                  className="text-xs font-extrabold tracking-tight leading-tight"
-                >
-                  TagSkills Academy
-                </span>
-              </div>
+                TagSkills
+              </span>
             </button>
           </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUserAuth } from "../../context/UserAuthContext";
 import { useSap } from "../../context/SapContext";
+import { PrivacyPolicyModal } from "./PrivacyPolicyModal";
 import { 
   User, 
   Mail, 
@@ -10,7 +11,8 @@ import {
   AlertCircle,
   CheckCircle2,
   KeyRound,
-  ShieldCheck
+  ShieldCheck,
+  Shield
 } from "lucide-react";
 
 export const AuthGatewayScreen: React.FC = () => {
@@ -30,9 +32,12 @@ export const AuthGatewayScreen: React.FC = () => {
   const [signUpEmail, setSignUpEmail] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(true);
+  const [agreeTerms, setAgreeTerms] = useState(false);          // must be explicitly checked
+  const [marketingConsent, setMarketingConsent] = useState(false); // optional
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   // Forgot / Reset Password State
   const [resetEmail, setResetEmail] = useState("");
@@ -114,15 +119,16 @@ export const AuthGatewayScreen: React.FC = () => {
     }
 
     if (!agreeTerms) {
-      setLocalError("Please accept the Terms of Service & Privacy Policy to register.");
+      setLocalError("Please read and agree to the Privacy Policy before creating your account.");
       return;
     }
 
-    const res = await signUpUser(cleanName, cleanEmail, cleanPass, learningLevel, "Automotive");
+    const res = await signUpUser(cleanName, cleanEmail, cleanPass, learningLevel, "Automotive", true, marketingConsent);
     if (!res.success && res.error) {
       setLocalError(res.error);
     }
   };
+
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,6 +215,7 @@ export const AuthGatewayScreen: React.FC = () => {
   };
 
   return (
+    <>
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 bg-slate-950 selection:bg-amber-500 selection:text-white relative overflow-hidden">
       
       {/* Background Decorative Glows */}
@@ -465,18 +472,65 @@ export const AuthGatewayScreen: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Terms and Privacy Checkbox */}
-                <div className="flex items-start space-x-2.5 pt-1">
-                  <input
-                    type="checkbox"
-                    id="termsCheckbox"
-                    checked={agreeTerms}
-                    onChange={(e) => setAgreeTerms(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-slate-300 cursor-pointer"
-                  />
-                  <label htmlFor="termsCheckbox" className="text-xs text-slate-500 dark:text-slate-400 leading-snug cursor-pointer">
-                    I agree to the <span className="text-amber-500 font-semibold">Terms of Service</span> and <span className="text-amber-500 font-semibold">Privacy Policy</span>.
-                  </label>
+                {/* ── Privacy Policy & Consent Section ── */}
+                <div
+                  className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4 space-y-3"
+                  role="group"
+                  aria-labelledby="consent-section-heading"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span id="consent-section-heading" className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                      Privacy Policy &amp; Consent
+                    </span>
+                  </div>
+
+                  {/* REQUIRED — Privacy Consent */}
+                  <div className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      id="privacyConsent"
+                      checked={agreeTerms}
+                      onChange={(e) => {
+                        setAgreeTerms(e.target.checked);
+                        if (localError) setLocalError(null);
+                      }}
+                      className="mt-0.5 w-5 h-5 rounded accent-amber-500 cursor-pointer shrink-0 focus:ring-2 focus:ring-amber-400 focus:ring-offset-1"
+                      aria-required="true"
+                    />
+                    <label htmlFor="privacyConsent" className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed cursor-pointer">
+                      <span className="inline-block px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded mr-1.5 align-middle">
+                        Required
+                      </span>
+                      I have read and agree to the{" "}
+                      <button
+                        type="button"
+                        onClick={() => setShowPrivacyPolicy(true)}
+                        className="text-amber-500 font-semibold hover:underline focus:outline-none focus:underline"
+                        aria-label="Open Privacy Policy"
+                      >
+                        Privacy Policy
+                      </button>{" "}
+                      and consent to TagSkills EdTech Pvt. Ltd. collecting, storing, and using my personal information for candidate registration, course counselling, communication, training-related services, and other purposes described in the Privacy Policy. I understand that my information will be handled in accordance with the applicable privacy and data-protection laws.
+                    </label>
+                  </div>
+
+                  {/* OPTIONAL — Marketing Consent */}
+                  <div className="flex items-start space-x-3 pt-1 border-t border-slate-200 dark:border-slate-700">
+                    <input
+                      type="checkbox"
+                      id="marketingConsent"
+                      checked={marketingConsent}
+                      onChange={(e) => setMarketingConsent(e.target.checked)}
+                      className="mt-0.5 w-5 h-5 rounded accent-amber-500 cursor-pointer shrink-0 focus:ring-2 focus:ring-amber-400 focus:ring-offset-1"
+                    />
+                    <label htmlFor="marketingConsent" className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed cursor-pointer">
+                      <span className="inline-block px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded mr-1.5 align-middle">
+                        Optional
+                      </span>
+                      I agree to receive relevant updates, course information, counselling calls, and communications from TagSkills EdTech Pvt. Ltd.
+                    </label>
+                  </div>
                 </div>
 
                 <button
@@ -679,5 +733,10 @@ export const AuthGatewayScreen: React.FC = () => {
       </div>
 
     </div>
+      <PrivacyPolicyModal
+        isOpen={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+      />
+    </>
   );
 };

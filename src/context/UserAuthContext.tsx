@@ -23,7 +23,7 @@ interface UserAuthContextType {
   openAuthModal: (mode?: "signin" | "signup" | "profile" | "forgot") => void;
   closeAuthModal: () => void;
   setAuthModalMode: (mode: "signin" | "signup" | "profile" | "forgot") => void;
-  signUpUser: (name: string, email: string, pass: string, level?: string, ind?: string) => Promise<{ success: boolean; error?: string }>;
+  signUpUser: (name: string, email: string, pass: string, level?: string, ind?: string, privacyConsent?: boolean, marketingConsent?: boolean) => Promise<{ success: boolean; error?: string }>;
   signInUser: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
   signOutUser: () => void;
   updateProfile: (name: string, level?: string, ind?: string) => Promise<{ success: boolean; error?: string }>;
@@ -100,15 +100,26 @@ export const UserAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   // Sign Up
-  const signUpUser = async (name: string, email: string, pass: string, level?: string, ind?: string): Promise<{ success: boolean; error?: string }> => {
+  const signUpUser = async (name: string, email: string, pass: string, level?: string, ind?: string, privacyConsent?: boolean, marketingConsent?: boolean): Promise<{ success: boolean; error?: string }> => {
     setAuthLoading(true);
     setAuthError(null);
 
     try {
+      const consentTimestamp = new Date().toISOString();
       const res = await fetch("/api/user/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password: pass, learningLevel: level, selectedIndustry: ind })
+        body: JSON.stringify({
+          name,
+          email,
+          password: pass,
+          learningLevel: level,
+          selectedIndustry: ind,
+          privacyConsent: privacyConsent === true,
+          privacyConsentTimestamp: privacyConsent ? consentTimestamp : null,
+          marketingConsent: marketingConsent === true,
+          marketingConsentTimestamp: marketingConsent ? consentTimestamp : null
+        })
       });
 
       const data = await res.json().catch(() => ({}));

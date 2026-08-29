@@ -70,7 +70,7 @@ export default async function handler(req, res) {
   }
 
   // Input extraction + normalization
-  const { name, email, password, learningLevel, selectedIndustry } = body || {};
+  const { name, email, password, learningLevel, selectedIndustry, privacyConsent, privacyConsentTimestamp, marketingConsent, marketingConsentTimestamp } = body || {};
   const cleanName  = String(name  || "").trim().slice(0, 120);
   const cleanEmail = String(email || "").trim().toLowerCase().slice(0, 254);
   const cleanPass  = String(password || "").trim();
@@ -84,6 +84,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Password must be at least 6 characters." });
   if (cleanPass.length > 128)
     return res.status(400).json({ error: "Password must be fewer than 128 characters." });
+
+  // ── Server-side privacy consent check ───────────────────────────────────
+  // Must be explicitly true — cannot be bypassed by the frontend
+  if (privacyConsent !== true) {
+    return res.status(400).json({
+      error: "Please read and agree to the Privacy Policy before creating your account.",
+      code: "PRIVACY_CONSENT_REQUIRED"
+    });
+  }
 
   // ── Duplicate email check (server-side, Lambda-scoped) ──────────────────
   const fingerprint = emailFingerprint(cleanEmail);
@@ -105,17 +114,22 @@ export default async function handler(req, res) {
 
     // Credential token — permanent, signed, contains password hash (stored in client localStorage)
     const credentialToken = sign({
-      type:             "CREDENTIAL",
-      sub:              userId,
-      name:             cleanName,
-      email:            cleanEmail,
+      type:                        "CREDENTIAL",
+      sub:                         userId,
+      name:                        cleanName,
+      email:                       cleanEmail,
       salt,
       hash,
       createdAt,
-      learningLevel:    learningLevel || "Beginner",
-      selectedIndustry: selectedIndustry || "Automotive",
+      learningLevel:               learningLevel || "Beginner",
+      selectedIndustry:            selectedIndustry || "Automotive",
+      // Consent audit record
+      privacyConsentAccepted:      true,
+      privacyConsentTimestamp:     privacyConsentTimestamp || createdAt,
+      marketingConsentAccepted:    marketingConsent === true,
+      marketingConsentTimestamp:   marketingConsent === true ? (marketingConsentTimestamp || createdAt) : null,
       // fingerprintHint lets client detect cross-browser duplicates without exposing email
-      fp:               fingerprint.slice(0, 16)
+      fp:                          fingerprint.slice(0, 16)
     });
 
     // Session token — short-lived, no sensitive fields

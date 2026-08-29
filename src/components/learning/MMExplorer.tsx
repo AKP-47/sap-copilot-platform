@@ -8,18 +8,30 @@ import { Package, ArrowRight, Bookmark, Search } from "lucide-react";
 
 export const MMExplorer: React.FC = () => {
   const { selectedTopicId, setSelectedTopicId, bookmarks, toggleBookmark } = useSap();
+  const [selectedLevel, setSelectedLevel] = useState<string>("All");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const categories = ["All", "Master Data", "Procurement", "Inventory Management", "Logistics Invoice Verification", "Enterprise Structure"];
+  const levels = [
+    { id: "All", label: "All Levels", count: MM_TOPICS.length },
+    { id: "BEGINNER", label: "Level 1: Beginner", count: MM_TOPICS.filter(t => t.level === "BEGINNER").length },
+    { id: "INTERMEDIATE", label: "Level 2: Intermediate", count: MM_TOPICS.filter(t => t.level === "INTERMEDIATE").length },
+    { id: "ADVANCED", label: "Level 3: Advanced", count: MM_TOPICS.filter(t => t.level === "ADVANCED").length },
+    { id: "CONSULTANT", label: "Level 4 & 5: Consultant & Project", count: MM_TOPICS.filter(t => t.level === "CONSULTANT" || t.level === "PROJECT").length }
+  ];
+
+  const categories = ["All", "Foundations", "Master Data", "Procurement", "Inventory Management", "Configuration", "FI Integration", "Invoicing", "Troubleshooting", "Consulting", "Cloud Transformation", "Project Implementation", "Data Migration", "RICEFW", "Documentation", "Integration"];
 
   const filteredTopics = MM_TOPICS.filter((topic) => {
+    const matchesLevel = selectedLevel === "All" || 
+      topic.level === selectedLevel || 
+      (selectedLevel === "CONSULTANT" && (topic.level === "CONSULTANT" || topic.level === "PROJECT"));
     const matchesCategory = selectedCategory === "All" || topic.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       topic.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
       topic.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       topic.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    return matchesLevel && matchesCategory && matchesSearch;
   });
 
   const activeTopic = MM_TOPICS.find(t => t.id === selectedTopicId);
@@ -33,27 +45,49 @@ export const MMExplorer: React.FC = () => {
       
       {/* Standardized Page Header with Breadcrumbs & Learning Outcomes */}
       <PageHeader
-        badge="Procure-to-Pay (P2P) Curriculum"
+        badge="TagSkills SAP S/4HANA MM Consultant Curriculum"
         badgeColor="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 border-amber-200 dark:border-amber-800"
-        title="SAP MM – Sourcing & Procurement"
-        description="Comprehensive curriculum covering Enterprise Structure, Master Data (Material, BP, PIR), Purchasing (PR, PO, Release Strategies), Inventory Management (MIGO 101/261/311), LIV 3-Way Match, OBYC Account Determination, and SPRO Customizing."
+        title="SAP S/4HANA MM – Sourcing & Procurement"
+        description="Comprehensive 5-level curriculum covering Enterprise Structure, Master Data, P2P Lifecycle, Outline Agreements, Flexible Workflow, Pricing Procedures, Batch Management, MRP Live, Special Procurement, OBYC Account Determination, MIRO 3-Way Match, SPRO Customizing, RCA Troubleshooting, RISE/GROW Cloud ERP, SAP Activate Implementation, Data Migration (LTMC), RICEFW FSDs, and MM+EWM Deep Integration."
         breadcrumbs={[
           { label: "Learn SAP", view: "mm" },
           { label: "SAP MM (Sourcing & Procurement)" }
         ]}
         learningOutcomes={[
-          "Enterprise Structure & Plant Setup",
-          "Material Master & Business Partner (BP)",
-          "Purchasing PR ➔ PO & Release Strategy",
-          "MIGO Goods Receipt & Movement Types",
-          "MIRO 3-Way Invoice Match & OBYC Postings"
+          "Level 1: Enterprise Structure & Master Data (Material, BP, PIR)",
+          "Level 2: Pricing, Workflows, MRP Live & Special Procurement",
+          "Level 3: SPRO Customizing & Cross-Module RCA Troubleshooting",
+          "Level 4: Consultant Problem-Solving & RISE/GROW Cloud ERP",
+          "Level 5: SAP Activate, LTMC Migration, RICEFW FSDs & EWM Hub"
         ]}
       />
+
+      {/* 5-Level Progressive Learning Level Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-800">
+        {levels.map((lvl) => (
+          <button
+            key={lvl.id}
+            onClick={() => setSelectedLevel(lvl.id)}
+            className={`px-3.5 py-2 rounded-t-xl text-xs font-bold shrink-0 transition-all border-b-2 flex items-center gap-1.5 ${
+              selectedLevel === lvl.id
+                ? "border-amber-500 text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-950/20"
+                : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <span>{lvl.label}</span>
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+              selectedLevel === lvl.id ? "bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200" : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+            }`}>
+              {lvl.count}
+            </span>
+          </button>
+        ))}
+      </div>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto pb-1">
-          {categories.map((cat) => (
+          {categories.slice(0, 8).map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -72,7 +106,7 @@ export const MMExplorer: React.FC = () => {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search MM topics..."
+            placeholder="Search 29 MM topics, t-codes, tables..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-9 pr-3 py-1.5 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"

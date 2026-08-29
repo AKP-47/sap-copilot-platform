@@ -257,11 +257,9 @@ export const DashboardView: React.FC = () => {
             )}
           </h1>
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
-            {currentUser ? "Let's start building your SAP journey from fundamentals to job-ready consultant mastery." : "Master SAP Materials Management (MM) & Extended Warehouse Management (EWM) through real enterprise business problems, live execution, and consultant reasoning."}
-          </p>
-
-          <p className="text-xs sm:text-base text-slate-300 max-w-2xl leading-relaxed">
-            A comprehensive consultant-level learning platform for <strong className="text-white">SAP MM</strong> (Sourcing & Procurement) and <strong className="text-white">SAP EWM</strong> (Warehouse Execution) with live simulators, real-world case studies, and AI assistance.
+            {currentUser 
+              ? "Let's learn step by step. Master SAP MM and EWM through real business situations, practical exercises, and clear explanations."
+              : "Understand how businesses run on SAP S/4HANA. Learn concepts with simple examples, practice live configuration and transactions, and build confident consulting skills."}
           </p>
 
           {/* Prominent Hero Search Bar */}

@@ -116,18 +116,18 @@ export const InterviewPrepView: React.FC = () => {
         cleanCoreAwareness: cleanCoreScore,
         strengths: [
           `Identified ${matchedKeywords.length} core SAP technical terms (${matchedKeywords.slice(0, 3).join(", ") || "Key functional concepts"})`,
-          lower.length > 120 ? "Demonstrated detailed domain comprehension" : "Addressed the question directly without filler",
-          total >= 80 ? "Strong consultant mindset and structured response" : "Good conceptual baseline"
+          lower.length > 120 ? "Gave a detailed, well-explained business explanation" : "Addressed the core question directly and clearly",
+          total >= 80 ? "Demonstrated clear consultant reasoning and structured delivery" : "Solid conceptual foundation"
         ],
         improvements: [
-          matchedKeywords.length < currentMockQ.keyKeywords.length ? `Incorporate missed technical terms: ${currentMockQ.keyKeywords.filter(k => !lower.includes(k.toLowerCase())).slice(0, 3).join(", ")}` : "Excellent technical coverage",
-          !userAnswer.includes("Step") && !userAnswer.includes("1)") ? "Structure your answer with numbered steps or bulleted points for higher clarity" : "Clear communication structure maintained"
+          matchedKeywords.length < currentMockQ.keyKeywords.length ? `Try adding these key SAP terms next time: ${currentMockQ.keyKeywords.filter(k => !lower.includes(k.toLowerCase())).slice(0, 3).join(", ")}` : "Great technical coverage!",
+          !userAnswer.includes("Step") && !userAnswer.includes("1)") ? "Tip: Structuring your answer in numbered steps (1, 2, 3) makes it much easier for interviewers to follow" : "Clear, structured flow maintained"
         ],
         feedback: total >= 85 
-          ? "Outstanding response! You demonstrated strong technical mastery, precise SAP terminology, and consultative business context."
+          ? "Outstanding answer! You demonstrated solid technical knowledge, precise SAP terms, and clear business reasoning."
           : total >= 70
-          ? "Good functional answer. To achieve Principal Consultant score, weave in specific SPRO transaction codes, table names, and accounting journal impacts."
-          : "Developing response. Review the model benchmark answer below and practice incorporating the required SAP technical keywords."
+          ? "Good attempt! You have a solid grasp of the concept. To make it even stronger, mention specific transaction codes, table names, and accounting impacts."
+          : "You're on the right track! Take a look at the model benchmark answer below to see how to organize your answer and what keywords to include."
       };
 
       setEvaluation(evalResult);
@@ -344,7 +344,7 @@ export const InterviewPrepView: React.FC = () => {
                     <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 space-y-2">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Key Strengths Identified</span>
+                        <span>What you did well:</span>
                       </div>
                       <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
                         {evaluation.strengths.map((s, idx) => (
@@ -359,7 +359,7 @@ export const InterviewPrepView: React.FC = () => {
                     <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 space-y-2">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
                         <AlertCircle className="w-4 h-4 text-amber-600" />
-                        <span>Areas for Refinement</span>
+                        <span>How to make it even stronger:</span>
                       </div>
                       <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
                         {evaluation.improvements.map((imp, idx) => (
@@ -376,7 +376,7 @@ export const InterviewPrepView: React.FC = () => {
                   <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
                     <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-blue-600" />
-                      <span>TagSkills Model Benchmark Answer:</span>
+                      <span>How a Consultant would answer this question:</span>
                     </span>
                     <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                       {currentMockQ.idealBenchMark}

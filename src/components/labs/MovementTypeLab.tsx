@@ -243,9 +243,25 @@ export const MovementTypeLab: React.FC = () => {
               </div>
 
               {showExplanation && (
-                <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-xl text-xs text-purple-950 space-y-1">
-                  <strong>Consultant Reasoning:</strong>
-                  <p>{activeIndustryScenario.consultantReasoning}</p>
+                <div className={`p-4 rounded-xl border space-y-1 text-xs ${
+                  selectedQuizOpt === activeIndustryScenario.correctIndex
+                    ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200"
+                    : "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-950 dark:text-blue-200"
+                }`}>
+                  <div className="flex items-center gap-1.5 font-bold">
+                    {selectedQuizOpt === activeIndustryScenario.correctIndex ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-emerald-800 dark:text-emerald-300">CORRECT ✓ Great thinking! Here is why:</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-blue-600 dark:text-blue-400">💡</span>
+                        <span className="text-blue-900 dark:text-blue-300">Good attempt! You're close. Let's see why:</span>
+                      </>
+                    )}
+                  </div>
+                  <p className="leading-relaxed pt-0.5">{activeIndustryScenario.consultantReasoning}</p>
                 </div>
               )}
             </div>

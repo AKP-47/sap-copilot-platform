@@ -279,7 +279,7 @@ export const DashboardView: React.FC = () => {
             <span>TagSkills S4PILOT</span>
           </div>
 
-          <div className="space-y-1.5 sm:space-y-2">
+          <div className="space-y-1 sm:space-y-2">
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
               <span>
                 {greetingInfo.text},{" "}
@@ -287,15 +287,10 @@ export const DashboardView: React.FC = () => {
                 <span>{greetingInfo.emoji}</span>
               </span>
             </h1>
-            <p className="text-base sm:text-xl font-bold text-amber-300/90 tracking-wide">
+            <p className="text-lg sm:text-2xl font-bold text-amber-300/95 tracking-normal">
               Your Copilot for SAP.
             </p>
           </div>
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
-            {currentUser 
-              ? "Continue your SAP journey step by step. Master MM & EWM through real business situations, practical exercises, and consultant reasoning."
-              : "Understand how businesses run on SAP S/4HANA. Learn concepts with simple examples, practice live transactions, and build confident consulting skills."}
-          </p>
 
           {/* Prominent Hero Search Bar */}
           <div className="pt-2">

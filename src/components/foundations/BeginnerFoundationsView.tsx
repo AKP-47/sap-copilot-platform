@@ -2,6 +2,7 @@ import { trackQuizAttempt } from "../../utils/telemetryTracker";
 import React, { useState } from "react";
 import { useSap } from "../../context/SapContext";
 import { PageHeader } from "../common/PageHeader";
+import { WhoBuiltSapSection } from "./WhoBuiltSapSection";
 import { 
   BUSINESS_FOUNDATION_STAGES,
   BUSINESS_FUNCTIONS,
@@ -514,52 +515,11 @@ export const BeginnerFoundationsView: React.FC = () => {
       )}
 
       {/* ============================================================ */}
-      {/* TAB 4: FOUNDERS & GLOBAL HEADQUARTERS                        */}
+      {/* TAB 4: WHO BUILT SAP? (FOUNDERS, ORIGIN & TIMELINE)          */}
       {/* ============================================================ */}
       {activeTab === "founders" && (
         <div className="space-y-8 animate-in fade-in duration-200">
-          
-          <div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
-              FOUNDING STORY (1972)
-            </span>
-            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white mt-1">
-              Meet the Five IBM Engineers Who Built SAP
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              In 1972, five former IBM software engineers in Mannheim, Germany left their jobs to fulfill a bold vision: creating standard business software that processes enterprise data in real time instead of punch cards.
-            </p>
-          </div>
-
-          {/* 5 Founders Profile Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {SAP_FOUNDERS.map((founder, idx) => (
-              <div key={idx} className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
-                      <Award className="w-5 h-5" />
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-400">{founder.years}</span>
-                  </div>
-                  <h4 className="text-base font-extrabold text-slate-900 dark:text-white mt-2">
-                    {founder.name}
-                  </h4>
-                  <p className="text-[11px] font-semibold text-theme-primary">
-                    {founder.role}
-                  </p>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
-                    {founder.contribution}
-                  </p>
-                </div>
-
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-850 text-[11px] text-slate-500 dark:text-slate-400 border border-slate-100 dark:border-slate-800">
-                  <span className="font-bold text-slate-700 dark:text-slate-300">Legacy Note: </span>
-                  <span>{founder.funFact}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <WhoBuiltSapSection isEmbedded={true} />
 
           {/* Global Locations */}
           <div className="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">

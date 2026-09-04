@@ -37,7 +37,8 @@ export type AppView =
   | "flashcards"
   | "study_notes"
   | "career"
-  | "about_creator";
+  | "about_creator"
+  | "who_built_sap";
 
 interface SapContextType {
   currentView: AppView;

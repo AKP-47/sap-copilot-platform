@@ -33,7 +33,8 @@ import {
   ChevronRight,
   BookOpen,
   FlaskConical,
-  Target
+  Target,
+  Users
 } from "lucide-react";
 
 export const Sidebar: React.FC = () => {
@@ -55,7 +56,8 @@ export const Sidebar: React.FC = () => {
     title: "Beginner Academy (Start Here)",
     icon: <Sparkles className="w-3.5 h-3.5 text-amber-400" />,
     items: [
-      { view: "foundations" as AppView, label: "Business & SAP Foundations", icon: <Building2 className="w-4 h-4 text-emerald-400" />, badge: "Zero Pre-req" }
+      { view: "foundations" as AppView, label: "Business & SAP Foundations", icon: <Building2 className="w-4 h-4 text-emerald-400" />, badge: "Zero Pre-req" },
+      { view: "who_built_sap" as AppView, label: "Who Built SAP? (Founders)", icon: <Users className="w-4 h-4 text-amber-400" />, badge: "1972" }
     ]
   };
 
@@ -115,6 +117,7 @@ export const Sidebar: React.FC = () => {
         { view: "flashcards" as AppView, label: "Interactive Flashcards", icon: <Layers className="w-4 h-4 text-cyan-400" /> },
         { view: "study_notes" as AppView, label: "Study Notes & Configs", icon: <Bookmark className="w-4 h-4 text-emerald-400" /> },
         { view: "career" as AppView, label: "Career Roadmap & Cert", icon: <Award className="w-4 h-4 text-amber-400" /> },
+        { view: "who_built_sap" as AppView, label: "Who Built SAP? (1972)", icon: <Users className="w-4 h-4 text-sky-400" />, badge: "Origin" },
         { view: "about_creator" as AppView, label: "About the Creator", icon: <Sparkles className="w-4 h-4 text-amber-400" />, badge: "Akshat" }
       ]
     }

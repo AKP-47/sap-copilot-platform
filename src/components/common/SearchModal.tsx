@@ -124,11 +124,22 @@ export const SearchModal: React.FC = () => {
     "s/4hana evolution".includes(q)
   );
 
+  const isWhoBuiltSapMatch = !q ||
+    "who built sap".includes(q) ||
+    "founders".includes(q) ||
+    "dietmar hopp".includes(q) ||
+    "hasso plattner".includes(q) ||
+    "klaus tschira".includes(q) ||
+    "hector".includes(q) ||
+    "wellenreuther".includes(q) ||
+    "1972".includes(q) ||
+    "ibm engineers".includes(q);
+
   const matchedErrors = ERROR_DOCTOR_DATA.filter(e =>
     !q || e.errorCode.toLowerCase().includes(q) || e.title.toLowerCase().includes(q) || e.messageText.toLowerCase().includes(q)
   ).slice(0, 2);
 
-  const hasAnyResults = isAdaptiveMatch || isReasoningMatch || isFoundationsMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
+  const hasAnyResults = isAdaptiveMatch || isReasoningMatch || isFoundationsMatch || isWhoBuiltSapMatch || matchedMMTopics.length > 0 || matchedEWMTopics.length > 0 || matchedMovements.length > 0 || matchedTcodes.length > 0 || matchedErrors.length > 0;
 
   return (
     <div 
@@ -294,10 +305,38 @@ export const SearchModal: React.FC = () => {
                         🎓 Business Foundations, What is ERP & SAP Origin
                       </div>
                       <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Zero prerequisites: 10-stage process flow, pronunciation, 5 founders, Walldorf HQ & S/4HANA timeline.
+                        Zero prerequisites: 10-stage process flow, pronunciation, Walldorf HQ & S/4HANA timeline.
                       </div>
                     </div>
                     <ArrowRight className="w-4 h-4 text-emerald-600 group-hover:translate-x-1 transition-transform shrink-0" />
+                  </button>
+                </div>
+              )}
+
+              {/* Category: Who Built SAP? (Founders & 1972 Origin) */}
+              {isWhoBuiltSapMatch && (
+                <div className="space-y-2">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center">
+                    <Sparkles className="w-3.5 h-3.5 mr-1" />
+                    <span>Who Built SAP? (Origin Story)</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      saveRecentSearch("Who Built SAP?");
+                      setCurrentView("who_built_sap");
+                      setIsSearchOpen(false);
+                    }}
+                    className="w-full text-left p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-300 dark:border-amber-700 hover:border-amber-500 transition-all flex items-center justify-between group"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-amber-600">
+                        🏛️ Who Built SAP? (Five Engineers & Real-Time Processing)
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        1972 Origin: Dietmar Hopp, Hasso Plattner, Klaus Tschira, Hans-Werner Hector, Claus Wellenreuther & 50-year evolution.
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform shrink-0" />
                   </button>
                 </div>
               )}

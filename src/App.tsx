@@ -26,6 +26,7 @@ import { ConceptDnaView } from "./components/consultant/ConceptDnaView";
 import { KnowledgeMapView } from "./components/consultant/KnowledgeMapView";
 import { ConsultantPassportView } from "./components/consultant/ConsultantPassportView";
 import { BeginnerFoundationsView } from "./components/foundations/BeginnerFoundationsView";
+import { WhoBuiltSapView } from "./components/foundations/WhoBuiltSapView";
 import { MMExplorer } from "./components/learning/MMExplorer";
 import { EWMExplorer } from "./components/learning/EWMExplorer";
 import { IntegrationExplorer } from "./components/learning/IntegrationExplorer";
@@ -127,6 +128,8 @@ const AppContent: React.FC = () => {
         return <StudyNotesView />;
       case "about_creator":
         return <AboutCreatorView />;
+      case "who_built_sap":
+        return <WhoBuiltSapView />;
       default:
         return <DashboardView />;
     }

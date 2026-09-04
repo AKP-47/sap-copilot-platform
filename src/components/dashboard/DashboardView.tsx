@@ -493,13 +493,21 @@ export const DashboardView: React.FC = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => setCurrentView("foundations")}
-            className="inline-flex items-center justify-center space-x-2 py-3 px-5 rounded-2xl bg-white text-slate-950 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105 interactive-btn"
-          >
-            <span>Open Beginner Academy</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+            <button
+              onClick={() => setCurrentView("who_built_sap")}
+              className="inline-flex items-center justify-center space-x-1.5 py-3 px-4 rounded-2xl bg-white/15 hover:bg-white/25 border border-white/30 text-white font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105 interactive-btn"
+            >
+              <span>Who Built SAP? (1972)</span>
+            </button>
+            <button
+              onClick={() => setCurrentView("foundations")}
+              className="inline-flex items-center justify-center space-x-2 py-3 px-5 rounded-2xl bg-white text-slate-950 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105 interactive-btn"
+            >
+              <span>Open Beginner Academy</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       )}
 

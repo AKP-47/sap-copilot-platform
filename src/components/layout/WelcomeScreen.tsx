@@ -30,9 +30,12 @@ export const WelcomeScreen: React.FC = () => {
             />
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-            Welcome to the TagSkills SAP Learning Platform
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-1">
+            Welcome to TagSkills S4PILOT
           </h1>
+          <p className="text-sm font-bold text-amber-300 mb-2">
+            Your Copilot for SAP.
+          </p>
           <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
             Master SAP MM & EWM through concepts, real-world industry scenarios, simulations, and interview preparation.
           </p>

@@ -188,7 +188,7 @@ export const AssistanceModal: React.FC = () => {
           <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 space-y-2">
             <div className="flex items-center space-x-2 text-xs font-bold text-blue-900">
               <GraduationCap className="w-4 h-4 text-blue-600" />
-              <span>TagSkills Enterprise SAP Academy</span>
+              <span>TagSkills Enterprise Mentorship</span>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-blue-900 gap-2">
               <span className="flex items-center">

@@ -43,7 +43,7 @@ export const AboutCreatorSection: React.FC<{ isEmbedded?: boolean }> = ({ isEmbe
             About the Creator
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Meet the person behind TagSkills SAP Copilot
+            Meet the person behind TagSkills S4PILOT
           </p>
         </div>
       )}
@@ -61,7 +61,7 @@ export const AboutCreatorSection: React.FC<{ isEmbedded?: boolean }> = ({ isEmbe
             <div className="relative w-full aspect-[3/4] max-w-sm mx-auto rounded-2xl overflow-hidden shadow-md border border-slate-200/80 dark:border-slate-700/80 bg-slate-900">
               <img
                 src="/images/akshat-pandey.jpeg"
-                alt="Akshat Pandey — Creator and Developer of TagSkills SAP Copilot"
+                alt="Akshat Pandey — Creator and Developer of TagSkills S4PILOT"
                 className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
                 loading="eager"
               />
@@ -75,7 +75,7 @@ export const AboutCreatorSection: React.FC<{ isEmbedded?: boolean }> = ({ isEmbe
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-300 font-medium leading-tight">
-                  Creator & Developer of TagSkills SAP Copilot
+                  Creator & Developer of TagSkills S4PILOT
                 </p>
               </div>
             </div>
@@ -128,13 +128,13 @@ export const AboutCreatorSection: React.FC<{ isEmbedded?: boolean }> = ({ isEmbe
                 <span>Akshat Pandey</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">
-                Creator & Developer of TagSkills SAP Copilot
+                Creator & Developer of TagSkills S4PILOT
               </h3>
             </div>
 
             <div className="space-y-3.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
               <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">
-                TagSkills SAP Copilot was created with a simple idea: SAP should not feel impossible to learn.
+                TagSkills S4PILOT was created with a simple idea: SAP should not feel impossible to learn.
               </p>
               <p>
                 I wanted to build a platform where learners can understand SAP through simple explanations, real business situations, step-by-step learning, and practical problem solving.
@@ -143,7 +143,7 @@ export const AboutCreatorSection: React.FC<{ isEmbedded?: boolean }> = ({ isEmbe
                 The goal is not just to help someone remember SAP terms, but to help them understand why SAP works the way it does — and eventually think like a consultant.
               </p>
               <p>
-                TagSkills SAP Copilot is built to make that journey clearer, more practical, and more approachable.
+                TagSkills S4PILOT is built to make that journey clearer, more practical, and more approachable.
               </p>
             </div>
           </div>
@@ -273,13 +273,13 @@ export const AboutCreatorView: React.FC = () => {
         badge="Creator & Purpose"
         badgeColor="bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800"
         title="About the Creator"
-        description="Meet the person behind TagSkills SAP Copilot"
+        description="Meet the person behind TagSkills S4PILOT"
         breadcrumbs={[
           { label: "Platform", view: "dashboard" },
           { label: "About the Creator" }
         ]}
         learningOutcomes={[
-          "Understand why TagSkills SAP Copilot was built",
+          "Understand why TagSkills S4PILOT was built",
           "Discover our core step-by-step learning philosophy",
           "A personal message of encouragement for your SAP journey"
         ]}

@@ -276,16 +276,21 @@ export const DashboardView: React.FC = () => {
           
           <div className="inline-flex items-center space-x-2 px-3 py-1 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-[11px] font-mono font-extrabold uppercase tracking-wider rounded-full shadow-sm">
             <Flame className="w-3.5 h-3.5 text-amber-400" />
-            <span>TagSkills Enterprise SAP Platform</span>
+            <span>TagSkills S4PILOT</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            <span>
-              {greetingInfo.text},{" "}
-              <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span>{" "}
-              <span>{greetingInfo.emoji}</span>
-            </span>
-          </h1>
+          <div className="space-y-1.5 sm:space-y-2">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+              <span>
+                {greetingInfo.text},{" "}
+                <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span>{" "}
+                <span>{greetingInfo.emoji}</span>
+              </span>
+            </h1>
+            <p className="text-base sm:text-xl font-bold text-amber-300/90 tracking-wide">
+              Your Copilot for SAP.
+            </p>
+          </div>
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
             {currentUser 
               ? "Continue your SAP journey step by step. Master MM & EWM through real business situations, practical exercises, and consultant reasoning."

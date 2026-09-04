@@ -28,8 +28,8 @@ export interface TranslationDictionary {
 
 export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
   en: {
-    appName: "SAP Copilot",
-    tagline: "Intelligent SAP MM & EWM Learning, Simulation & Career Assistant",
+    appName: "TagSkills S4PILOT",
+    tagline: "Your Copilot for SAP.",
     poweredBy: "Powered by TagSkills",
     startLearning: "Start Learning",
     visitTagSkills: "Visit TagSkills",
@@ -53,7 +53,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "Consultant"
   },
   hi: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "बुद्धिमान SAP MM और EWM लर्निंग, सिमुलेशन और करियर सहायक",
     poweredBy: "TagSkills द्वारा संचालित",
     startLearning: "सीखना शुरू करें",
@@ -78,7 +78,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "कंसल्टेंट"
   },
   de: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "Intelligente SAP MM & EWM Lern-, Simulations- und Karriereplattform",
     poweredBy: "Unterstützt von TagSkills",
     startLearning: "Lernen beginnen",
@@ -103,7 +103,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "Berater"
   },
   es: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "Plataforma Inteligente de Aprendizaje y Simulación SAP MM & EWM",
     poweredBy: "Desarrollado por TagSkills",
     startLearning: "Empezar a Aprender",
@@ -128,7 +128,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "Consultor"
   },
   fr: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "Plateforme Intelligente d'Apprentissage et de Simulation SAP MM & EWM",
     poweredBy: "Propulsé par TagSkills",
     startLearning: "Commencer l'apprentissage",
@@ -153,7 +153,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "Consultant"
   },
   te: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "ఇంటెలిజెంట్ SAP MM & EWM లెర్నింగ్, సిమ్యులేషన్ మరియు కెరీర్ అసిస్టెంట్",
     poweredBy: "TagSkills ద్వారా అందించబడింది",
     startLearning: "నేర్చుకోవడం ప్రారంభించండి",
@@ -178,7 +178,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "కన్సల్టెంట్"
   },
   ta: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "அறிவார்ந்த SAP MM & EWM கற்றல் மற்றும் தொழில்முறை உதவியாளர்",
     poweredBy: "TagSkills மூலம் இயக்கப்படுகிறது",
     startLearning: "கற்க தொடங்குங்கள்",
@@ -203,7 +203,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, TranslationDictionary> = {
     levelConsultant: "ஆலோசகர்"
   },
   mr: {
-    appName: "SAP Copilot",
+    appName: "TagSkills S4PILOT",
     tagline: "बुद्धिमान SAP MM आणि EWM शिक्षण, सिम्युलेशन आणि करिअर सहाय्यक",
     poweredBy: "TagSkills द्वारे समर्थित",
     startLearning: "शिकणे सुरू करा",

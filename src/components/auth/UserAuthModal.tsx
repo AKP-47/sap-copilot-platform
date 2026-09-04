@@ -281,7 +281,7 @@ export const UserAuthModal: React.FC = () => {
           <div className="space-y-5">
             <div className="space-y-1.5 text-center">
               <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Welcome to TagSkills SAP Copilot
+                Welcome to TagSkills S4PILOT
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Create your account and start your SAP learning journey.
@@ -407,7 +407,7 @@ export const UserAuthModal: React.FC = () => {
           <div className="space-y-5">
             <div className="space-y-1.5 text-center">
               <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                Welcome to TagSkills SAP Copilot
+                Welcome to TagSkills S4PILOT
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Sign in to continue your SAP learning journey.
@@ -482,7 +482,7 @@ export const UserAuthModal: React.FC = () => {
 
             <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
               <p className="text-xs text-slate-500">
-                New to SAP Copilot?{" "}
+                New to TagSkills S4PILOT?{" "}
                 <button
                   type="button"
                   onClick={() => setAuthModalMode("signup")}

@@ -45,8 +45,8 @@ export const AiCopilotDrawer: React.FC = () => {
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold">TagSkills SAP Copilot</h3>
-              <p className="text-[10px] text-slate-400">Enterprise AI Consultant & Mentor</p>
+              <h3 className="text-sm font-bold">TagSkills S4PILOT AI Copilot</h3>
+              <p className="text-[10px] text-amber-300/90 font-medium">Your Copilot for SAP</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">

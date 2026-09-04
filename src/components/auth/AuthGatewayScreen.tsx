@@ -237,7 +237,7 @@ export const AuthGatewayScreen: React.FC = () => {
           </div>
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 inline-block mb-1">
-              TAGSKILLS LEARNING PLATFORM
+              TAGSKILLS S4PILOT
             </span>
           </div>
         </div>
@@ -252,7 +252,7 @@ export const AuthGatewayScreen: React.FC = () => {
             <div className="space-y-5 animate-in fade-in duration-200">
               <div className="space-y-1 text-center">
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  Welcome to TagSkills SAP Copilot
+                  Welcome to TagSkills S4PILOT
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
                   Sign in to continue your SAP learning journey.
@@ -361,7 +361,7 @@ export const AuthGatewayScreen: React.FC = () => {
             <div className="space-y-5 animate-in fade-in duration-200">
               <div className="space-y-1 text-center">
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                  Welcome to TagSkills SAP Copilot
+                  Welcome to TagSkills S4PILOT
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
                   Create your account and start your SAP learning journey.

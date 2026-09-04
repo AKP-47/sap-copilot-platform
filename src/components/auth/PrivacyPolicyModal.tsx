@@ -50,7 +50,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, 
 
           <div>
             <h3 className="font-bold text-slate-900 dark:text-white mb-1">1. Data Controller</h3>
-            <p>TagSkills EdTech Pvt. Ltd. ("TagSkills", "we", "us") operates the SAP Copilot learning platform. We are the data controller for personal information collected through this platform.</p>
+            <p>TagSkills EdTech Pvt. Ltd. ("TagSkills", "we", "us") operates the TagSkills S4PILOT learning platform. We are the data controller for personal information collected through this platform.</p>
           </div>
 
           <div>

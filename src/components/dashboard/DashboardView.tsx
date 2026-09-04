@@ -250,16 +250,15 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            {currentUser ? (
-              <span>Welcome, <span className="text-amber-400">{currentUser.name.split(" ")[0]}</span> 👋</span>
-            ) : (
-              <span>Learn SAP. Practice Real Scenarios. Become Job-Ready.</span>
-            )}
+            <span>
+              {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"},{" "}
+              <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span> 👋
+            </span>
           </h1>
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
             {currentUser 
-              ? "Let's learn step by step. Master SAP MM and EWM through real business situations, practical exercises, and clear explanations."
-              : "Understand how businesses run on SAP S/4HANA. Learn concepts with simple examples, practice live configuration and transactions, and build confident consulting skills."}
+              ? "Continue your SAP journey step by step. Master MM & EWM through real business situations, practical exercises, and consultant reasoning."
+              : "Understand how businesses run on SAP S/4HANA. Learn concepts with simple examples, practice live transactions, and build confident consulting skills."}
           </p>
 
           {/* Prominent Hero Search Bar */}
@@ -311,12 +310,140 @@ export const DashboardView: React.FC = () => {
 
       </div>
 
+      {/* ============================================================ */}
+      {/* PERSONALIZED CONTINUE LEARNING & CURRICULUM PROGRESS CARD    */}
+      {/* ============================================================ */}
+      <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-purple-900/30 border border-blue-600/30 dark:border-blue-500/30 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-5 genz-card bg-white dark:bg-slate-900">
+        <div className="space-y-2 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/15 text-blue-600 dark:text-blue-300 border border-blue-500/30">
+              CONTINUE WHERE YOU LEFT OFF
+            </span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Current Stage: <strong className="text-slate-900 dark:text-white capitalize">{learningLevel.toLowerCase()}</strong>
+            </span>
+          </div>
+          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+            Procurement Lifecycle ➔ Purchase Order (ME21N) & Goods Receipt (MIGO)
+          </h3>
+          <div className="space-y-1.5 pt-1 max-w-md">
+            <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300">
+              <span>Learning Track Progress</span>
+              <span className="font-bold text-amber-600 dark:text-amber-400">
+                {Math.max(40, Math.min(100, completedScenarios.length * 15 + 40))}% Completed
+              </span>
+            </div>
+            <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-amber-400 via-blue-500 to-indigo-500 rounded-full transition-all duration-700 ease-out" 
+                style={{ width: `${Math.max(40, Math.min(100, completedScenarios.length * 15 + 40))}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => setCurrentView("mm")}
+            className="inline-flex items-center space-x-2 py-2.5 px-5 rounded-2xl bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 text-white font-extrabold text-xs shadow-md transition-all interactive-btn hover:scale-105"
+          >
+            <span>Resume Learning →</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ============================================================ */}
+      {/* INTERACTIVE ESSENTIAL CONCEPT CARDS (HOVER REVEAL LOOKUP)    */}
+      {/* ============================================================ */}
+      <div className="space-y-3">
+        <div>
+          <div className="inline-flex items-center space-x-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>INTERACTIVE CONCEPT CARDS</span>
+          </div>
+          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
+            Core SAP Architecture at a Glance
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Hover or tap to inspect key transactional shortcuts, table links, and execution paths.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {[
+            {
+              title: "MOVEMENT TYPES",
+              subtitle: "Tell SAP what happened to the material",
+              tags: ["101 GR", "201 Cost Center", "261 Order", "311 Transfer"],
+              view: "movement_lab" as const,
+              accent: "border-emerald-200 dark:border-emerald-800/60 hover:border-emerald-400 bg-emerald-50/20 dark:bg-emerald-950/20",
+              badge: "40+ Codes"
+            },
+            {
+              title: "OBYC DETERMINATION",
+              subtitle: "Automatic FI-MM General Ledger postings",
+              tags: ["BSX Inventory", "WRX GR/IR", "PRD Price Diff", "GBB Consump"],
+              view: "obyc_sim" as const,
+              accent: "border-blue-200 dark:border-blue-800/60 hover:border-blue-400 bg-blue-50/20 dark:bg-blue-950/20",
+              badge: "T-Accounts"
+            },
+            {
+              title: "3-WAY INVOICE MATCH",
+              subtitle: "Verify PO vs Goods Receipt vs Invoice",
+              tags: ["ME21N PO", "MIGO Goods Receipt", "MIRO Invoice", "MRBR Release"],
+              view: "mm" as const,
+              accent: "border-purple-200 dark:border-purple-800/60 hover:border-purple-400 bg-purple-50/20 dark:bg-purple-950/20",
+              badge: "P2P Core"
+            },
+            {
+              title: "EWM POSC ROUTING",
+              subtitle: "Multi-step complex warehouse execution",
+              tags: ["Unload (IB01)", "Count (IB02)", "Quality (IB03)", "Putaway (IB04)"],
+              view: "posc_visualizer" as const,
+              accent: "border-amber-200 dark:border-amber-800/60 hover:border-amber-400 bg-amber-50/20 dark:bg-amber-950/20",
+              badge: "Warehouse"
+            }
+          ].map((card, cIdx) => (
+            <div
+              key={cIdx}
+              onClick={() => setCurrentView(card.view)}
+              className={`p-4 sm:p-5 rounded-2xl border ${card.accent} bg-white dark:bg-slate-900 shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3.5 genz-card group interactive-btn`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    {card.title}
+                  </span>
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    {card.badge}
+                  </span>
+                </div>
+                <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-theme-primary transition-colors">
+                  {card.subtitle}
+                </h4>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {card.tags.map((t, tIdx) => (
+                    <span key={tIdx} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs font-bold text-theme-primary pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                <span>Explore Concept</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* ============================================================ */}
       {/* BEGINNER-ONLY ACADEMY LAUNCHPAD BANNER                       */}
       {/* ============================================================ */}
       {learningLevel === "BEGINNER" && (
-        <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-200">
+        <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in duration-200 genz-card">
           <div className="space-y-1.5 max-w-2xl">
             <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-white/20 rounded-full text-[10px] font-mono font-bold uppercase">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
@@ -332,7 +459,7 @@ export const DashboardView: React.FC = () => {
 
           <button
             onClick={() => setCurrentView("foundations")}
-            className="inline-flex items-center justify-center space-x-2 py-3 px-5 rounded-2xl bg-white text-slate-950 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105"
+            className="inline-flex items-center justify-center space-x-2 py-3 px-5 rounded-2xl bg-white text-slate-950 hover:bg-emerald-50 font-extrabold text-xs shadow-md transition-all shrink-0 hover:scale-105 interactive-btn"
           >
             <span>Open Beginner Academy</span>
             <ArrowRight className="w-4 h-4" />
@@ -361,7 +488,7 @@ export const DashboardView: React.FC = () => {
             <button
               key={idx}
               onClick={item.action}
-              className={`p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left transition-all hover:shadow-md flex flex-col justify-between space-y-3 group ${item.bg}`}
+              className={`p-3.5 sm:p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-left transition-all hover:shadow-md flex flex-col justify-between space-y-3 group genz-card interactive-btn ${item.bg}`}
             >
               <div className="flex items-center justify-between">
                 <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:scale-110 transition-transform">
@@ -373,7 +500,7 @@ export const DashboardView: React.FC = () => {
               </div>
 
               <div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-theme-primary transition-colors leading-snug">
                   {item.title}
                 </h3>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-tight">
@@ -381,7 +508,7 @@ export const DashboardView: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-1 flex items-center text-[11px] font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform">
+              <div className="pt-1 flex items-center text-[11px] font-bold text-theme-primary group-hover:translate-x-1 transition-transform">
                 <span>Open</span>
                 <ChevronRight className="w-3 h-3 ml-0.5" />
               </div>
@@ -453,7 +580,7 @@ export const DashboardView: React.FC = () => {
           {primaryModules.map((module, idx) => (
             <div
               key={idx}
-              className={`p-6 rounded-3xl border ${module.bg} shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-5 bg-white dark:bg-slate-900`}
+              className={`p-6 rounded-3xl border ${module.bg} shadow-sm hover:shadow-lg transition-all flex flex-col justify-between space-y-5 bg-white dark:bg-slate-900 genz-card`}
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -484,7 +611,7 @@ export const DashboardView: React.FC = () => {
                   setCurrentView(module.view);
                   setSelectedTopicId(null);
                 }}
-                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 transition-colors shadow-sm group"
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 transition-colors shadow-sm group interactive-btn"
               >
                 <span>{module.btnText}</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -512,7 +639,7 @@ export const DashboardView: React.FC = () => {
           {industryScenarios.map((scen, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3"
+              className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between space-y-3 genz-card"
             >
               <div>
                 <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">
@@ -529,7 +656,7 @@ export const DashboardView: React.FC = () => {
 
               <button
                 onClick={() => setCurrentView(scen.actionView)}
-                className="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline pt-1"
+                className="inline-flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline pt-1 interactive-btn"
               >
                 <span>Practice Scenario Flow</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-1" />

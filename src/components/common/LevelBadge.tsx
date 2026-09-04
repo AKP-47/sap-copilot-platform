@@ -8,6 +8,7 @@ export const LevelBadge: React.FC<{ level: LearningLevel; className?: string }> 
     ADVANCED: { bg: "bg-indigo-100 border-indigo-300", text: "text-indigo-800", label: "Advanced" },
     PROFESSIONAL: { bg: "bg-purple-100 border-purple-300", text: "text-purple-800", label: "Professional" },
     CONSULTANT: { bg: "bg-amber-100 border-amber-300", text: "text-amber-900", label: "Consultant" },
+    ARCHITECT: { bg: "bg-indigo-100 border-indigo-300", text: "text-indigo-900", label: "Enterprise Architect" },
     PROJECT: { bg: "bg-teal-100 border-teal-300", text: "text-teal-900", label: "Project Architecture" },
     INTERVIEW: { bg: "bg-rose-100 border-rose-300", text: "text-rose-800", label: "Interview" }
   };

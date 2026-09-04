@@ -1,11 +1,10 @@
-import { LogOut } from "lucide-react";
 import { useUserAuth } from "../../context/UserAuthContext";
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, LogOut, Search, Sparkles, Palette, ShieldCheck, Lock } from "lucide-react";
 import React from "react";
 import { useSap } from "../../context/SapContext";
 import { SupportedLanguage } from "../../data/translations";
-import { Search, Sparkles, Palette, ShieldCheck, Lock } from "lucide-react";
-import { LearningLevel } from "../../types/sap";
+import { ThemeModeToggle } from "./ThemeModeToggle";
+import { InteractiveLevelSelector } from "./InteractiveLevelSelector";
 
 export const Header: React.FC = () => {
   const { currentUser, isAuthenticated, openAuthModal, signOutUser } = useUserAuth();
@@ -21,14 +20,6 @@ export const Header: React.FC = () => {
     setCurrentView,
     t 
   } = useSap();
-
-  const levels: { key: LearningLevel; label: string }[] = [
-    { key: "BEGINNER", label: t.levelBeginner },
-    { key: "INTERMEDIATE", label: t.levelIntermediate },
-    { key: "PROFESSIONAL", label: t.levelProfessional },
-    { key: "CONSULTANT", label: t.levelConsultant },
-    { key: "INTERVIEW", label: "Interview Prep" }
-  ];
 
   const languages: { key: SupportedLanguage; label: string }[] = [
     { key: "en", label: "English" },
@@ -114,27 +105,10 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Controls: Level Selector, Language, Theme Palette, AI Copilot */}
+          {/* Controls: Level Selector, Language, Theme Switcher, AI Copilot */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Level Selector */}
-            <div className="relative hidden sm:block">
-              <select
-                value={learningLevel}
-                onChange={(e) => setLearningLevel(e.target.value as LearningLevel)}
-                style={{
-                  backgroundColor: "var(--theme-background-secondary)",
-                  borderColor: "var(--theme-border)",
-                  color: "var(--theme-text-primary)"
-                }}
-                className="text-xs font-medium py-1.5 pl-3 pr-7 rounded-lg border cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {levels.map(l => (
-                  <option key={l.key} value={l.key}>
-                    🎓 Level: {l.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <InteractiveLevelSelector />
 
             {/* Language Selector */}
             <div className="relative">
@@ -146,7 +120,7 @@ export const Header: React.FC = () => {
                   borderColor: "var(--theme-border)",
                   color: "var(--theme-text-primary)"
                 }}
-                className="text-xs font-medium py-1.5 pl-2.5 pr-6 rounded-lg border cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-xs font-medium py-1.5 pl-2.5 pr-6 rounded-lg border cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 interactive-btn shadow-sm"
                 title="Select Explanation Language"
               >
                 {languages.map(lang => (
@@ -166,7 +140,7 @@ export const Header: React.FC = () => {
                     backgroundColor: "var(--theme-background-secondary)",
                     borderColor: "var(--theme-border)"
                   }}
-                  className="flex items-center space-x-1.5 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
+                  className="flex items-center space-x-1.5 text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105 interactive-btn shadow-sm"
                   title="View Learning Profile & Settings"
                 >
                   <div className="w-4 h-4 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-black">
@@ -180,7 +154,7 @@ export const Header: React.FC = () => {
                     backgroundColor: "var(--theme-background-secondary)",
                     borderColor: "var(--theme-border)"
                   }}
-                  className="p-1.5 rounded-lg border text-slate-400 hover:text-rose-500 transition-colors"
+                  className="p-1.5 rounded-lg border text-slate-400 hover:text-rose-500 transition-colors interactive-btn shadow-sm"
                   title="Sign Out of SAP Copilot"
                   aria-label="Sign Out"
                 >
@@ -196,37 +170,22 @@ export const Header: React.FC = () => {
                     borderColor: "var(--theme-border)",
                     color: "var(--theme-text-primary)"
                   }}
-                  className="flex items-center text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105"
+                  className="flex items-center text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105 interactive-btn"
                 >
                   <UserIcon className="w-3.5 h-3.5 sm:mr-1" />
                   <span className="hidden sm:inline">Sign In</span>
                 </button>
                 <button
                   onClick={() => openAuthModal("signup")}
-                  className="hidden md:flex items-center text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-2.5 sm:px-3 py-1.5 rounded-lg shadow-sm transition-all hover:scale-105"
+                  className="hidden md:flex items-center text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-2.5 sm:px-3 py-1.5 rounded-lg shadow-sm transition-all hover:scale-105 interactive-btn"
                 >
                   <span>Sign Up</span>
                 </button>
               </div>
             )}
 
-
-
-            {/* Theme & Palette Library Modal Trigger */}
-            <button
-              onClick={() => setIsAppearanceOpen(true)}
-              style={{
-                backgroundColor: "var(--theme-primary-soft)",
-                borderColor: "var(--theme-primary-border)",
-                color: "var(--theme-primary)"
-              }}
-              className="flex items-center text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all hover:scale-105 shadow-sm"
-              title="Appearance & Color Palette Library"
-              aria-label="Open Appearance and Color Theme Library"
-            >
-              <Palette className="w-3.5 h-3.5 sm:mr-1.5 text-theme-primary" />
-              <span className="hidden md:inline">Themes</span>
-            </button>
+            {/* Theme & Appearance Switcher */}
+            <ThemeModeToggle />
 
             {/* AI Copilot Drawer Trigger */}
             <button
@@ -234,7 +193,7 @@ export const Header: React.FC = () => {
               style={{
                 backgroundImage: "var(--theme-gradient)"
               }}
-              className="flex items-center text-xs font-bold text-white px-3 py-1.5 rounded-lg shadow-sm transition-all transform hover:scale-105"
+              className="flex items-center text-xs font-bold text-white px-3 py-1.5 rounded-lg shadow-sm transition-all transform hover:scale-105 interactive-btn"
               title="Open AI SAP Expert Copilot"
             >
               <Sparkles className="w-3.5 h-3.5 mr-1" />

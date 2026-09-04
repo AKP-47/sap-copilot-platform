@@ -102,9 +102,37 @@ export function applyTheme(themeId: string, mode: AppearanceMode) {
   root.style.setProperty("--theme-danger", "#EF4444");
   root.style.setProperty("--theme-info", "#06B6D4");
 
+  // 8. Standard Generic Design Tokens
+  root.style.setProperty("--background", bg);
+  root.style.setProperty("--bg-primary", bg);
+  root.style.setProperty("--bg-surface", surface);
+  root.style.setProperty("--bg-surface-secondary", bgSec);
+  root.style.setProperty("--bg-surface-elevated", surfaceElevated);
+  root.style.setProperty("--bg-surface-hover", surfaceHover);
+
+  root.style.setProperty("--surface", surface);
+  root.style.setProperty("--surface-secondary", bgSec);
+  root.style.setProperty("--surface-elevated", surfaceElevated);
+  root.style.setProperty("--card", card);
+  root.style.setProperty("--card-hover", cardHover);
+
+  root.style.setProperty("--border", border);
+  root.style.setProperty("--border-subtle", border);
+  root.style.setProperty("--border-prominent", isDark ? (scale[700] || "#334155") : (scale[300] || "#CBD5E1"));
+
+  root.style.setProperty("--text-primary", isDark ? "#F8FAFC" : "#0F172A");
+  root.style.setProperty("--text-secondary", isDark ? "#94A3B8" : "#475569");
+  root.style.setProperty("--text-muted", isDark ? "#64748B" : "#94A3B8");
+
+  root.style.setProperty("--accent-primary", theme.primary);
+  root.style.setProperty("--accent-hover", scale[600] || theme.primary);
+  root.style.setProperty("--accent-subtle", isDark ? `rgba(${primaryRgb}, 0.12)` : (scale[100] || "#E0E7FF"));
+
+  root.style.setProperty("--success", "#10B981");
+  root.style.setProperty("--warning", "#F59E0B");
+  root.style.setProperty("--error", "#EF4444");
+  root.style.setProperty("--shadow", isDark ? "0 10px 30px -5px rgba(0, 0, 0, 0.6)" : "0 4px 20px -2px rgba(0, 0, 0, 0.05)");
+
   // Synchronize with Legacy variable aliases
   root.style.setProperty("--primary", theme.primary);
-  root.style.setProperty("--background", bg);
-  root.style.setProperty("--surface", surface);
-  root.style.setProperty("--border", border);
 }

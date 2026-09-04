@@ -2,7 +2,7 @@
 
 export type ModuleType = "MM" | "EWM" | "INTEGRATION";
 
-export type LearningLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "PROFESSIONAL" | "CONSULTANT" | "INTERVIEW" | "PROJECT";
+export type LearningLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "PROFESSIONAL" | "CONSULTANT" | "ARCHITECT" | "INTERVIEW" | "PROJECT";
 
 export type IndustryKey = string;
 

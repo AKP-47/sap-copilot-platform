@@ -100,18 +100,27 @@ export const SapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [appearanceMode, setAppearanceModeState] = useState<AppearanceMode>(() => {
     try {
       const saved = localStorage.getItem("selectedAppearanceMode");
-      return saved === "dark" || saved === "system" || saved === "light" ? saved : "light";
+      return saved === "dark" || saved === "system" || saved === "light" ? saved : "system";
     } catch {
-      return "light";
+      return "system";
     }
   });
 
   const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(false);
 
-  // Apply theme tokens to DOM dynamically
+  // Apply theme tokens to DOM dynamically + live system theme change listener
   useEffect(() => {
     const activeTheme = previewTheme || colorTheme;
     applyTheme(activeTheme, appearanceMode);
+
+    if (appearanceMode === "system" && typeof window !== "undefined" && window.matchMedia) {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handler = () => {
+        applyTheme(activeTheme, "system");
+      };
+      mediaQuery.addEventListener("change", handler);
+      return () => mediaQuery.removeEventListener("change", handler);
+    }
   }, [colorTheme, previewTheme, appearanceMode]);
 
   const setColorTheme = (themeId: string) => {

@@ -31,9 +31,9 @@ export const MobileNavBar: React.FC = () => {
           setCurrentView("dashboard");
           setSelectedTopicId(null);
         }}
-        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] ${
+        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] interactive-btn ${
           currentView === "dashboard"
-            ? "text-blue-600 dark:text-blue-400"
+            ? "text-blue-600 dark:text-blue-400 font-black"
             : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
         }`}
       >
@@ -47,9 +47,9 @@ export const MobileNavBar: React.FC = () => {
           setCurrentView("mm");
           setSelectedTopicId(null);
         }}
-        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] ${
+        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] interactive-btn ${
           isLearnActive
-            ? "text-blue-600 dark:text-blue-400"
+            ? "text-blue-600 dark:text-blue-400 font-black"
             : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
         }`}
       >
@@ -60,7 +60,7 @@ export const MobileNavBar: React.FC = () => {
       {/* 3. Global Search */}
       <button
         onClick={() => setIsSearchOpen(true)}
-        className="flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all min-w-[56px]"
+        className="flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all min-w-[56px] interactive-btn"
       >
         <Search className="w-4 h-4 mb-0.5" />
         <span>Search</span>
@@ -72,9 +72,9 @@ export const MobileNavBar: React.FC = () => {
           setCurrentView("movement_lab");
           setSelectedTopicId(null);
         }}
-        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] ${
+        className={`flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold transition-all min-w-[56px] interactive-btn ${
           isPracticeActive
-            ? "text-blue-600 dark:text-blue-400"
+            ? "text-blue-600 dark:text-blue-400 font-black"
             : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
         }`}
       >
@@ -85,7 +85,7 @@ export const MobileNavBar: React.FC = () => {
       {/* 5. AI Copilot */}
       <button
         onClick={() => setIsCopilotOpen(true)}
-        className="flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20 min-w-[56px]"
+        className="flex flex-col items-center justify-center p-1.5 rounded-xl text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20 min-w-[56px] interactive-btn"
       >
         <Sparkles className="w-4 h-4 mb-0.5" />
         <span>Copilot</span>

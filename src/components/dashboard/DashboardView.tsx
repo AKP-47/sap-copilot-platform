@@ -279,18 +279,13 @@ export const DashboardView: React.FC = () => {
             <span>TagSkills S4PILOT</span>
           </div>
 
-          <div className="space-y-1 sm:space-y-2">
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              <span>
-                {greetingInfo.text},{" "}
-                <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span>{" "}
-                <span>{greetingInfo.emoji}</span>
-              </span>
-            </h1>
-            <p className="text-lg sm:text-2xl font-bold text-amber-300/95 tracking-normal">
-              Your Copilot for SAP.
-            </p>
-          </div>
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <span>
+              {greetingInfo.text},{" "}
+              <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span>{" "}
+              <span>{greetingInfo.emoji}</span>
+            </span>
+          </h1>
 
           {/* Prominent Hero Search Bar */}
           <div className="pt-2">

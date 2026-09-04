@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, Quote, Sparkles, UserCheck, Crown, ArrowUpRight, Sparkle } from "lucide-react";
+import { MessageSquare, Quote, Sparkles, UserCheck, Crown, ArrowUpRight } from "lucide-react";
 import { LEADERSHIP_PROFILE } from "../../data/contacts";
 import { InteractiveExecutivePortrait } from "./InteractiveExecutivePortrait";
-import { useSap } from "../../context/SapContext";
 
 export const LeadershipAndAssistanceSection: React.FC = () => {
-  const { setCurrentView } = useSap();
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   
@@ -211,17 +209,9 @@ export const LeadershipAndAssistanceSection: React.FC = () => {
                 </div>
 
                 {/* Subtle Official Footer Tag */}
-                <div className="pt-1 flex flex-wrap items-center justify-between text-[11px] text-slate-400 gap-2">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
-                    <span>Official TagSkills Leadership & Career Mentorship</span>
-                  </div>
-                  <button
-                    onClick={() => setCurrentView("about_creator")}
-                    className="text-amber-400 hover:text-amber-300 transition-colors"
-                  >
-                    About the Creator (Akshat Pandey) ➔
-                  </button>
+                <div className="pt-1 flex items-center space-x-2 text-[11px] text-slate-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+                  <span>Official TagSkills Leadership & Career Mentorship</span>
                 </div>
 
               </div>

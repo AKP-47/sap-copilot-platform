@@ -2,7 +2,6 @@ import { useUserAuth } from "../../context/UserAuthContext";
 import React from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
-import { AboutCreatorSection } from "../about/AboutCreatorView";
 import { 
   Package,
   ShieldCheck,
@@ -685,12 +684,7 @@ export const DashboardView: React.FC = () => {
 
 
       {/* ============================================================ */}
-      {/* SECTION 7: ABOUT THE CREATOR (AKSHAT PANDEY)                 */}
-      {/* ============================================================ */}
-      <AboutCreatorSection isEmbedded={true} />
-
-      {/* ============================================================ */}
-      {/* SECTION 8: EXECUTIVE CEO & MENTOR SHOWCASE                   */}
+      {/* SECTION 7: EXECUTIVE CEO & MENTOR SHOWCASE                   */}
       {/* ============================================================ */}
       <LeadershipAndAssistanceSection />
 

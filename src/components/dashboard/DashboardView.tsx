@@ -1,7 +1,23 @@
+import React, { useState, useEffect } from "react";
 import { useUserAuth } from "../../context/UserAuthContext";
-import React from "react";
 import { useSap, AppView } from "../../context/SapContext";
 import { LeadershipAndAssistanceSection } from "../common/LeadershipAndAssistanceSection";
+
+interface LocalGreetingInfo {
+  text: string;
+  emoji: string;
+}
+
+const getLocalGreeting = (now: Date = new Date()): LocalGreetingInfo => {
+  const hour = now.getHours();
+  if (hour >= 5 && hour < 12) {
+    return { text: "Good morning", emoji: "🌅" };
+  } else if (hour >= 12 && hour < 17) {
+    return { text: "Good afternoon", emoji: "☀️" };
+  } else {
+    return { text: "Good evening", emoji: "🌆" };
+  }
+};
 import { 
   Package,
   ShieldCheck,
@@ -48,6 +64,20 @@ export const DashboardView: React.FC = () => {
     completedScenarios, 
     bookmarks 
   } = useSap();
+
+  // Dynamic client-side local timezone greeting with auto-updating interval
+  const [greetingInfo, setGreetingInfo] = useState<LocalGreetingInfo>(() => getLocalGreeting());
+
+  useEffect(() => {
+    const updateGreeting = () => {
+      setGreetingInfo(getLocalGreeting());
+    };
+    updateGreeting();
+
+    // Check periodically so the greeting updates automatically as time passes
+    const interval = setInterval(updateGreeting, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // 6 Primary Quick Action Launchers
   const quickActions = [
@@ -251,8 +281,9 @@ export const DashboardView: React.FC = () => {
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             <span>
-              {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 18 ? "Good afternoon" : "Good evening"},{" "}
-              <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span> 👋
+              {greetingInfo.text},{" "}
+              <span className="text-amber-400">{currentUser ? currentUser.name.split(" ")[0] : "Learner"}</span>{" "}
+              <span>{greetingInfo.emoji}</span>
             </span>
           </h1>
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">

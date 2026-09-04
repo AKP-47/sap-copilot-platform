@@ -4,7 +4,7 @@ import { X, Phone, MessageSquare, MapPin, ExternalLink, GraduationCap, Quote, Sp
 import { LEADERSHIP_PROFILE, ASSISTANCE_CONTACTS, TAGSKILLS_INSTITUTE_INFO } from "../../data/contacts";
 
 export const AssistanceModal: React.FC = () => {
-  const { isAssistanceOpen, setIsAssistanceOpen } = useSap();
+  const { isAssistanceOpen, setIsAssistanceOpen, setCurrentView } = useSap();
 
   if (!isAssistanceOpen) return null;
 
@@ -210,7 +210,16 @@ export const AssistanceModal: React.FC = () => {
         </div>
 
         {/* Modal Footer */}
-        <div className="bg-slate-50 px-6 py-3.5 border-t border-slate-200 flex justify-end shrink-0">
+        <div className="bg-slate-50 px-6 py-3.5 border-t border-slate-200 flex items-center justify-between shrink-0">
+          <button
+            onClick={() => {
+              setIsAssistanceOpen(false);
+              setCurrentView("about_creator");
+            }}
+            className="text-xs font-bold text-amber-700 hover:text-amber-800 transition-colors"
+          >
+            Meet the Creator (Akshat Pandey) ➔
+          </button>
           <button
             onClick={() => setIsAssistanceOpen(false)}
             className="px-4 py-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl transition-colors"

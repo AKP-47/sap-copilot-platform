@@ -114,7 +114,8 @@ export const Sidebar: React.FC = () => {
         { view: "wricef_builder" as AppView, label: "WRICEF Spec Builder", icon: <FileCode2 className="w-4 h-4 text-indigo-400" /> },
         { view: "flashcards" as AppView, label: "Interactive Flashcards", icon: <Layers className="w-4 h-4 text-cyan-400" /> },
         { view: "study_notes" as AppView, label: "Study Notes & Configs", icon: <Bookmark className="w-4 h-4 text-emerald-400" /> },
-        { view: "career" as AppView, label: "Career Roadmap & Cert", icon: <Award className="w-4 h-4 text-amber-400" /> }
+        { view: "career" as AppView, label: "Career Roadmap & Cert", icon: <Award className="w-4 h-4 text-amber-400" /> },
+        { view: "about_creator" as AppView, label: "About the Creator", icon: <Sparkles className="w-4 h-4 text-amber-400" />, badge: "Akshat" }
       ]
     }
   ];

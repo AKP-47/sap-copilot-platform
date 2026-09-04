@@ -36,7 +36,8 @@ export type AppView =
   | "wricef_builder"
   | "flashcards"
   | "study_notes"
-  | "career";
+  | "career"
+  | "about_creator";
 
 interface SapContextType {
   currentView: AppView;

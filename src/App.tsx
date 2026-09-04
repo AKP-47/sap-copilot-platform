@@ -45,6 +45,7 @@ import { CareerRoadmapView } from "./components/career/CareerRoadmapView";
 import { WricefSpecBuilder } from "./components/career/WricefSpecBuilder";
 import { FlashcardStudyLab } from "./components/career/FlashcardStudyLab";
 import { StudyNotesView } from "./components/career/StudyNotesView";
+import { AboutCreatorView } from "./components/about/AboutCreatorView";
 
 const AppContent: React.FC = () => {
   const { currentView } = useSap();
@@ -124,6 +125,8 @@ const AppContent: React.FC = () => {
         return <FlashcardStudyLab />;
       case "study_notes":
         return <StudyNotesView />;
+      case "about_creator":
+        return <AboutCreatorView />;
       default:
         return <DashboardView />;
     }

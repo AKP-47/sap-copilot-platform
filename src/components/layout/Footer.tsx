@@ -123,6 +123,13 @@ export const Footer: React.FC = () => {
             <span>© {new Date().getFullYear()} TagSkills. All Rights Reserved.</span>
           </div>
           <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setCurrentView("about_creator")}
+              className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
+            >
+              About the Creator
+            </button>
+            <span>•</span>
             <a 
               href={TAGSKILLS_INSTITUTE_INFO.websiteUrl} 
               target="_blank" 
@@ -133,7 +140,6 @@ export const Footer: React.FC = () => {
             </a>
             <span>•</span>
             <span>Bengaluru, Karnataka, India</span>
-
           </div>
         </div>
 
